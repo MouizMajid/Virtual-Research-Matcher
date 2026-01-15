@@ -1,11 +1,36 @@
 
-function App() {
+import { BrowserRouter, Routes, Route, createBrowserRouter, Router, RouterProvider } from "react-router-dom";
+import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import ResearcherDashboard from "./pages/RDB";
+import StudentDashboard from "./pages/SDB";
+import NotFound from "./pages/NotFound";
 
-  return (
-    <>
-      <h1 className="p-9 text-gray-500">Hndsello</h1>
-    </>
-  )
-}
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Landing />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/researcher",
+    element: <ResearcherDashboard />,
+  },
+  {
+    path: "/student",
+    element: <StudentDashboard />,
+  },
+  {
+    path: "*",
+    element: <NotFound />
+  }
+])
 
-export default App
+const App = () => (
+  <RouterProvider router={router} />
+);
+
+export default App;

@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import ResearcherDashboard from "./pages/RDB";
 import StudentDashboard from "./pages/SDB";
 import NotFound from "./pages/NotFound";
+import Register from "./pages/Register";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: "/student",
     element: <StudentDashboard />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
   {
     path: "*",

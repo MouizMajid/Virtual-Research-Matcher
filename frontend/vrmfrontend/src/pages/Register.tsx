@@ -1,46 +1,49 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 import { Briefcase, GraduationCap, Users } from "lucide-react";
-import ThemeToggle from "../components/ThemeToggle";
 import Header from "../components/Header";
 
 type FormFields = {
   email: string;
   password: string;
+  confirmPassword: string;
 };
 
-const Login = () => {
-  const [searchParams] = useSearchParams();
+const Register = () => {
+    useEffect(() => {
+    document.title = "Register - ResearchConnect";
+  }, []);
+    const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [role, setRole] = useState<"researcher" | "student">(searchParams.get("role") === "student" ? "student" : "researcher");
-  
-  useEffect(() => {
-    document.title = "Login - ResearchConnect";
-  }, []);
-  useEffect(() => {
+    useEffect(() => {
     const newRole = searchParams.get("role") === "student" ? "student" : "researcher";
     setRole(newRole);
   }, [searchParams]);
+    
   
   const {
     register,
     handleSubmit,
     setError,
-    formState: { errors, isSubmitting },
+    watch,
+    formState: { errors, isSubmitting},
   } = useForm<FormFields>();
+
+  const passwordValue = watch("password");
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
-      console.log("Submitting", data);
+      console.log("Registering", data);
     } catch (error) {
       setError("root", {
-        message: "We did not recognize this email/password combination",
+        message: "Something went wrong while creating your account",
       });
-      console.error("Login error:", error);
-    }
-    navigate(role === "researcher" ? "/researcher" : "/student");
+      console.error("Register error:", error);
+    }   
+    navigate(`/login?role=${role}`);
   };
 
   return (
@@ -48,15 +51,15 @@ const Login = () => {
       {/* Header */}
       <Header/>
 
-      {/* Login Form */}
+      {/* Register Form */}
       <main
         className="auth-shell"
         style={{ minHeight: "calc(100vh - 65px)" }}
       >
         <div className="auth-card stack">
           <div className="stack gap-1 text-center">
-            <h1 className="h2">Welcome!</h1>
-            <p className="muted">Sign in as a {role}</p>
+            <h1 className="h2">Create an Account</h1>
+            <p className="muted">Register as a {role}</p>
           </div>
 
           {/* Role Tabs */}
@@ -111,11 +114,26 @@ const Login = () => {
                     message: "Password must be at least 6 characters",
                   },
                 })}
-                type="password"
+                type="text"
                 placeholder="••••••"
                 className="input"
               />
               <p className="error min-h-[.8rem]">{errors.password?.message}</p>
+            </div>
+            {/* Confirm Password */}
+            <div className="stack gap-1">
+              <label className="label">Confirm Password</label>
+              <input
+                {...register("confirmPassword", {
+                  required: "Confirm Password is required",
+                  validate: (value) =>
+                    value === passwordValue || "Passwords do not match",
+                })}
+                type="text"
+                placeholder="••••••"
+                className="input"
+              />
+              <p className="error min-h-[.8rem]">{errors.confirmPassword?.message}</p>
             </div>
 
             {/* Submit */}
@@ -124,17 +142,16 @@ const Login = () => {
               type="submit"
               className="btn btn-primary btn-full"
             >
-              {isSubmitting ? "Logging in..." : "Login"}
+              {isSubmitting ? "Registering..." : "Register"}
             </button>
 
             <p className="error text-center">{errors.root?.message}</p>
           </form>
 
           <p className="help text-center">
-            Don&apos;t have an account?{" "}
             <span className="underline cursor-pointer font-bold">
-              <Link to={`/register?role=${role}`}>
-              Create One!
+              <Link to={`/login?role=${role}`}>
+              Back to Login
               </Link>
             </span>
           </p>
@@ -144,4 +161,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

@@ -1,115 +1,124 @@
 import { Link } from "react-router-dom";
-import { 
-  Briefcase, 
-  Plus, 
-  FileText, 
-  Users, 
+import {
+  Briefcase,
+  Plus,
+  FileText,
+  Users,
   Clock,
-  LogOut
+  LogOut,
 } from "lucide-react";
+import ThemeToggle from "../components/ThemeToggle";
+import Header from "../components/Header";
+import UserHeader from "../components/UserHeader";
+import { useEffect } from "react";
 
 const ResearcherDashboard = () => {
+  useEffect (() => {
+    document.title = "Researcher Dashboard - ResearchConnect";
+  }, []);
+  
   return (
-    <div className="min-h-screen bg-background">
+    <div className="page">
       {/* Header */}
-      <header className="border-b-2 border-border bg-background">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Briefcase className="h-6 w-6" />
-            <span className="text-xl font-bold tracking-tight">ResearchConnect</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">
-              Dr. Jane Smith
-            </span>
-            <Link to="/">
-              <button  className="border-2">
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-              </button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <UserHeader />
 
       {/* Main Content */}
-      <main className="container py-8">
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-            <p className="mt-1 text-muted-foreground">
+      <main className="container-page py-8 stack gap-10">
+        {/* Top Row */}
+        <div className="row justify-between">
+          <div className="stack gap-1">
+            <h1 className="h2">Dashboard</h1>
+            <p className="muted">
               Manage your job postings and applications
             </p>
           </div>
-          <button className="shadow-sm">
-            <Plus className="mr-2 h-4 w-4" />
+
+          <button className="btn btn-primary">
+            <Plus className="h-4 w-4" />
             New Posting
           </button>
         </div>
 
         {/* Stats Grid */}
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="border-2 border-border bg-card p-6 shadow-sm transition-all hover:shadow-md hover:-translate-x-0.5 hover:-translate-y-0.5">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center border-2 border-border bg-secondary">
+          {/* Active Postings */}
+          <div className="card card-pad">
+            <div className="row gap-4">
+              <div className="rounded-xl bg-[hsl(var(--muted))] p-3">
                 <FileText className="h-5 w-5" />
               </div>
-              <div>
-                <p className="text-2xl font-bold">5</p>
-                <p className="text-sm text-muted-foreground">Active Postings</p>
+              <div className="stack gap-0">
+                <p className="text-2xl font-semibold">5</p>
+                <p className="muted">Active Postings</p>
               </div>
             </div>
           </div>
 
-          <div className="border-2 border-border bg-card p-6 shadow-sm transition-all hover:shadow-md hover:-translate-x-0.5 hover:-translate-y-0.5">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center border-2 border-border bg-secondary">
+          {/* Total Applicants */}
+          <div className="card card-pad">
+            <div className="row gap-4">
+              <div className="rounded-xl bg-[hsl(var(--muted))] p-3">
                 <Users className="h-5 w-5" />
               </div>
-              <div>
-                <p className="text-2xl font-bold">23</p>
-                <p className="text-sm text-muted-foreground">Total Applicants</p>
+              <div className="stack gap-0">
+                <p className="text-2xl font-semibold">23</p>
+                <p className="muted">Total Applicants</p>
               </div>
             </div>
           </div>
 
-          <div className="border-2 border-border bg-card p-6 shadow-sm transition-all hover:shadow-md hover:-translate-x-0.5 hover:-translate-y-0.5">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center border-2 border-border bg-secondary">
+          {/* Pending Review */}
+          <div className="card card-pad">
+            <div className="row gap-4">
+              <div className="rounded-xl bg-[hsl(var(--muted))] p-3">
                 <Clock className="h-5 w-5" />
               </div>
-              <div>
-                <p className="text-2xl font-bold">8</p>
-                <p className="text-sm text-muted-foreground">Pending Review</p>
+              <div className="stack gap-0">
+                <p className="text-2xl font-semibold">8</p>
+                <p className="muted">Pending Review</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Recent Postings */}
-        <div className="mt-8">
-          <h2 className="mb-4 text-xl font-bold">Recent Postings</h2>
-          <div className="space-y-4">
+        <div className="stack gap-4">
+          <h2 className="h3">Recent Postings</h2>
+
+          <div className="card divide-y">
             {[
-              { title: "Machine Learning Research Assistant", applicants: 12, status: "Active" },
-              { title: "Data Analysis Intern", applicants: 7, status: "Active" },
-              { title: "Lab Technician", applicants: 4, status: "Active" },
+              {
+                title: "Machine Learning Research Assistant",
+                applicants: 12,
+                status: "Active",
+              },
+              {
+                title: "Data Analysis Intern",
+                applicants: 7,
+                status: "Active",
+              },
+              {
+                title: "Lab Technician",
+                applicants: 4,
+                status: "Active",
+              },
             ].map((posting, index) => (
-              <div 
+              <div
                 key={index}
-                className="flex items-center justify-between border-2 border-border bg-card p-4 shadow-sm transition-all hover:shadow-md"
+                className="row justify-between px-5 py-4"
               >
-                <div>
+                <div className="stack gap-1">
                   <h3 className="font-medium">{posting.title}</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="muted text-sm">
                     {posting.applicants} applicants
                   </p>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="border border-border bg-secondary px-2 py-1 text-xs font-medium">
+
+                <div className="row gap-4">
+                  <span className="rounded-full bg-[hsl(var(--muted))] px-3 py-1 text-xs font-medium">
                     {posting.status}
                   </span>
-                  <button className="border-2">
+                  <button className="btn btn-ghost">
                     View
                   </button>
                 </div>

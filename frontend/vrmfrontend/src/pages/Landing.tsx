@@ -1,105 +1,102 @@
 import { Link } from "react-router-dom";
 import { Briefcase, Users, GraduationCap, ArrowRight } from "lucide-react";
+import ThemeToggle from "../components/ThemeToggle";
+import Header from "../components/Header";
+import { useEffect } from "react";
 
 const Landing = () => {
+
+  useEffect(() => {
+    document.title = "ResearchConnect - Connect Research. Build Futures.";
+  }, []);
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="page">
       {/* Header */}
-      <header className="border-b-2 border-border bg-background">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Briefcase className="h-6 w-6" />
-            <span className="text-xl font-bold tracking-tight">ResearchConnect</span>
-          </div>
-          <Link to="/login">
-            <button>Login</button>
-          </Link>
-        </div>
-      </header>
+      <Header/>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden border-b-2 border-border">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-        //   style={{ backgroundImage: `url(${heroBg})` }}
-        />
-        <div className="absolute inset-0 bg-background/80" />
-        <div className="container relative py-24 md:py-32">
-          <div className="max-w-3xl">
-            <h1 className="text-5xl font-bold tracking-tight md:text-7xl">
-              Connect Research.<br />
-              <span className="text-muted-foreground">Build Futures.</span>
+      <section className="relative">
+        <div className="container-page py-24 text-center">
+          <div className="stack items-center gap-6">
+            <h1 className="h1 max-w-2xl">
+              Connect Research.
+              <br />
+              <span className="text-[hsl(var(--accent))]">Build Futures.</span>
             </h1>
-            <p className="mt-6 text-lg text-muted-foreground md:text-xl">
-              The platform bridging researchers and students for groundbreaking 
+
+            <p className="muted max-w-xl">
+              The platform bridging researchers and students for groundbreaking
               opportunities in academia and industry.
             </p>
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <Link to="/login">
-                <button className="w-full shadow-md sm:w-auto">
-                  Get Started
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </button>
-              </Link>
-            </div>
+
+            <Link to="/login">
+              <button className="btn btn-primary">
+                Get Started
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="border-b-2 border-border py-16 md:py-24">
-        <div className="container">
-          <h2 className="text-center text-3xl font-bold tracking-tight md:text-4xl">
-            How It Works
-          </h2>
-          <div className="mt-12 grid gap-8 md:grid-cols-2">
+      <section className="bg-[hsl(var(--muted))] py-20">
+        <div className="container-page stack gap-12">
+          <h2 className="h2 text-center">How It Works</h2>
+
+          <div className="grid gap-6 md:grid-cols-2">
             {/* For Researchers */}
-            <div className="border-2 border-border bg-card p-8 shadow-md transition-all hover:shadow-lg hover:-translate-x-1 hover:-translate-y-1">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center border-2 border-border bg-secondary">
-                <Users className="h-6 w-6" />
+            <div className="card card-pad stack">
+              <div className="row">
+                <Users className="h-6 w-6 text-[hsl(var(--accent))]" />
+                <h3 className="h3">For Researchers</h3>
               </div>
-              <h3 className="text-xl font-bold">For Researchers</h3>
-              <p className="mt-2 text-muted-foreground">
-                Post research opportunities and find talented students to join 
+
+              <p className="muted">
+                Post research opportunities and find talented students to join
                 your projects. Manage applications and build your team.
               </p>
-              <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 bg-foreground" />
+
+              <ul className="stack gap-2">
+                <li className="row">
+                  <span className="h-2 w-2 rounded-full bg-[hsl(var(--accent))]" />
                   Create job postings
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 bg-foreground" />
+                <li className="row">
+                  <span className="h-2 w-2 rounded-full bg-[hsl(var(--accent))]" />
                   Review applications
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 bg-foreground" />
+                <li className="row">
+                  <span className="h-2 w-2 rounded-full bg-[hsl(var(--accent))]" />
                   Manage your team
                 </li>
               </ul>
             </div>
 
             {/* For Students */}
-            <div className="border-2 border-border bg-card p-8 shadow-md transition-all hover:shadow-lg hover:-translate-x-1 hover:-translate-y-1">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center border-2 border-border bg-secondary">
-                <GraduationCap className="h-6 w-6" />
+            <div className="card card-pad stack">
+              <div className="row">
+                <GraduationCap className="h-6 w-6 text-[hsl(var(--accent))]" />
+                <h3 className="h3">For Students</h3>
               </div>
-              <h3 className="text-xl font-bold">For Students</h3>
-              <p className="mt-2 text-muted-foreground">
-                Discover research positions that match your skills and interests. 
+
+              <p className="muted">
+                Discover research positions that match your skills and interests.
                 Apply with ease and track your applications.
               </p>
-              <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 bg-foreground" />
+
+              <ul className="stack gap-2">
+                <li className="row">
+                  <span className="h-2 w-2 rounded-full bg-[hsl(var(--accent))]" />
                   Browse opportunities
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 bg-foreground" />
+                <li className="row">
+                  <span className="h-2 w-2 rounded-full bg-[hsl(var(--accent))]" />
                   Easy application process
                 </li>
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 bg-foreground" />
+                <li className="row">
+                  <span className="h-2 w-2 rounded-full bg-[hsl(var(--accent))]" />
                   Track your progress
                 </li>
               </ul>
@@ -109,48 +106,48 @@ const Landing = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="border-b-2 border-border bg-secondary py-16">
-        <div className="container">
+      <section className="py-20">
+        <div className="container-page">
           <div className="grid gap-8 text-center md:grid-cols-3">
-            <div>
-              <p className="text-4xl font-bold md:text-5xl">500+</p>
-              <p className="mt-2 text-muted-foreground">Active Researchers</p>
+            <div className="stack gap-1">
+              <p className="text-3xl font-semibold">500+</p>
+              <p className="muted">Active Researchers</p>
             </div>
-            <div>
-              <p className="text-4xl font-bold md:text-5xl">2,000+</p>
-              <p className="mt-2 text-muted-foreground">Students Connected</p>
+            <div className="stack gap-1">
+              <p className="text-3xl font-semibold">2,000+</p>
+              <p className="muted">Students Connected</p>
             </div>
-            <div>
-              <p className="text-4xl font-bold md:text-5xl">1,200+</p>
-              <p className="mt-2 text-muted-foreground">Positions Filled</p>
+            <div className="stack gap-1">
+              <p className="text-3xl font-semibold">1,200+</p>
+              <p className="muted">Positions Filled</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-24">
-        <div className="container text-center">
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-            Ready to Get Started?
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-            Join thousands of researchers and students already using 
+      <section className="bg-[hsl(var(--muted))] py-24">
+        <div className="container-page text-center stack gap-6">
+          <h2 className="h2">Ready to Get Started?</h2>
+
+          <p className="muted max-w-xl mx-auto">
+            Join thousands of researchers and students already using
             ResearchConnect to build meaningful connections.
           </p>
-          <Link to="/login" className="mt-8 inline-block">
-            <button  className="shadow-md">
+
+          <Link to="/login">
+            <button className="btn btn-primary">
               Login Now
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="h-4 w-4" />
             </button>
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t-2 border-border bg-secondary py-8">
-        <div className="container text-center text-sm text-muted-foreground">
-          <p>© 2024 ResearchConnect. All rights reserved.</p>
+      <footer className="border-t py-6">
+        <div className="container-page text-center muted">
+          © 2024 ResearchConnect. All rights reserved.
         </div>
       </footer>
     </div>

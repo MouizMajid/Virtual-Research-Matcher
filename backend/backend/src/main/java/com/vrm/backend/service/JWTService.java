@@ -18,9 +18,9 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JWTService {
-    @Value("${jwt.secret}")
+    @Value("${security.jwt.secret}")
     private String secretKey;
-    @Value("${jwt.expiration}")
+    @Value("${security.jwt.expiration}")
     private Long expirationTime;
 
     public String extractUsername(String token) {
@@ -61,7 +61,7 @@ public class JWTService {
             .setSubject(userDetails.getUsername())
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-            .signWith(getSignInKey(), SignatureAlgorithm.ES256).compact();
+            .signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
     }
    
     public boolean isTokenValid(String token, UserDetails userDetails) {

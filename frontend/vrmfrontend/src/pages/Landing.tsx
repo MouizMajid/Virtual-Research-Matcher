@@ -147,11 +147,11 @@ const Landing = () => {
       {/* Footer */}
       <footer className="border-t py-6">
         <div className="container-page text-center muted">
-          © 2024 ResearchConnect. All rights reserved.
+          © 2026 ResearchConnect. All rights reserved.
         </div>
       </footer>
     </div>
   );
-};
+}; 
 
 export default Landing;

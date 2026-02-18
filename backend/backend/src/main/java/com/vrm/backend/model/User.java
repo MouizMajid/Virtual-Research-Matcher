@@ -31,21 +31,25 @@ public class User implements UserDetails {
     private Long id; 
 
     @Column(unique = true, nullable = false)
-    private String username;
+    private String email;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
+    @Column
     private String firstName;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
+    @Column
     private String lastName;
 
-    @Column(nullable = false)
+    // @Column(nullable = false)
+    @Column
     private String role;
 
-    @Column(nullable = false)
+    // @Column(nullable = false)
+    @Column
     private boolean enabled;
 
     @Column(name= "verification_code", length = 64)
@@ -54,18 +58,15 @@ public class User implements UserDetails {
     @Column(name = "verification_expired", length = 64)
     private LocalDateTime verificationExpired;
 
-    public User( String username, String password) {
-        this.username = username;
+    public User( String email, String password) {
+        this.email = email;
         this.password = password;
     }
+    @Override
+    public String getUsername() {
+        return email; 
+    }
 
-    // @Override 
-    // public String getUsername() {
-    //     return username;
-    // }
-    // public String getPassword() {
-    //     return password;
-    // }
     @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
             return List.of(new SimpleGrantedAuthority("ROLE_" + role));

@@ -1,22 +1,21 @@
 import { Link } from "react-router-dom";
 import {
   Briefcase,
-  Plus,
-  FileText,
-  Users,
+  Search,
+  FileCheck,
   Clock,
+  CheckCircle,
   LogOut,
 } from "lucide-react";
-import ThemeToggle from "../components/ThemeToggle";
-import Header from "../components/Header";
-import UserHeader from "../components/UserHeader";
+import Header from "../../components/Header";
+import UserHeader from "../../components/UserHeader";
 import { useEffect } from "react";
 
-const ResearcherDashboard = () => {
+const StudentDashboard = () => {
+
   useEffect (() => {
-    document.title = "Researcher Dashboard - ResearchConnect";
+    document.title = "Student Dashboard - ResearchConnect";
   }, []);
-  
   return (
     <div className="page">
       {/* Header */}
@@ -24,103 +23,95 @@ const ResearcherDashboard = () => {
 
       {/* Main Content */}
       <main className="container-page py-8 stack gap-10">
-        {/* Top Row */}
         <div className="row justify-between">
           <div className="stack gap-1">
             <h1 className="h2">Dashboard</h1>
-            <p className="muted">
-              Manage your job postings and applications
-            </p>
+            <p className="muted">Find opportunities and track your applications</p>
           </div>
 
           <button className="btn btn-primary">
-            <Plus className="h-4 w-4" />
-            New Posting
+            <Search className="h-4 w-4" />
+            Browse Jobs
           </button>
         </div>
 
         {/* Stats Grid */}
         <div className="grid gap-6 md:grid-cols-3">
-          {/* Active Postings */}
           <div className="card card-pad">
             <div className="row gap-4">
               <div className="rounded-xl bg-[hsl(var(--muted))] p-3">
-                <FileText className="h-5 w-5" />
+                <FileCheck className="h-5 w-5" />
               </div>
               <div className="stack gap-0">
-                <p className="text-2xl font-semibold">5</p>
-                <p className="muted">Active Postings</p>
+                <p className="text-2xl font-semibold">4</p>
+                <p className="muted">Applications Sent</p>
               </div>
             </div>
           </div>
 
-          {/* Total Applicants */}
-          <div className="card card-pad">
-            <div className="row gap-4">
-              <div className="rounded-xl bg-[hsl(var(--muted))] p-3">
-                <Users className="h-5 w-5" />
-              </div>
-              <div className="stack gap-0">
-                <p className="text-2xl font-semibold">23</p>
-                <p className="muted">Total Applicants</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Pending Review */}
           <div className="card card-pad">
             <div className="row gap-4">
               <div className="rounded-xl bg-[hsl(var(--muted))] p-3">
                 <Clock className="h-5 w-5" />
               </div>
               <div className="stack gap-0">
-                <p className="text-2xl font-semibold">8</p>
-                <p className="muted">Pending Review</p>
+                <p className="text-2xl font-semibold">2</p>
+                <p className="muted">Under Review</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="card card-pad">
+            <div className="row gap-4">
+              <div className="rounded-xl bg-[hsl(var(--muted))] p-3">
+                <CheckCircle className="h-5 w-5" />
+              </div>
+              <div className="stack gap-0">
+                <p className="text-2xl font-semibold">1</p>
+                <p className="muted">Interviews Scheduled</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Recent Postings */}
+        {/* Applications List */}
         <div className="stack gap-4">
-          <h2 className="h3">Recent Postings</h2>
+          <h2 className="h3">My Applications</h2>
 
           <div className="card divide-y">
             {[
               {
                 title: "Machine Learning Research Assistant",
-                applicants: 12,
-                status: "Active",
+                researcher: "Dr. Jane Smith",
+                status: "Interview",
               },
               {
-                title: "Data Analysis Intern",
-                applicants: 7,
-                status: "Active",
+                title: "Bioinformatics Intern",
+                researcher: "Prof. Michael Chen",
+                status: "Under Review",
               },
               {
-                title: "Lab Technician",
-                applicants: 4,
-                status: "Active",
+                title: "Quantum Computing Research",
+                researcher: "Dr. Sarah Lee",
+                status: "Under Review",
               },
-            ].map((posting, index) => (
-              <div
-                key={index}
-                className="row justify-between px-5 py-4"
-              >
+              {
+                title: "Environmental Data Analyst",
+                researcher: "Prof. David Park",
+                status: "Applied",
+              },
+            ].map((application, index) => (
+              <div key={index} className="row justify-between px-5 py-4">
                 <div className="stack gap-1">
-                  <h3 className="font-medium">{posting.title}</h3>
-                  <p className="muted text-sm">
-                    {posting.applicants} applicants
-                  </p>
+                  <h3 className="font-medium">{application.title}</h3>
+                  <p className="muted text-sm">{application.researcher}</p>
                 </div>
 
                 <div className="row gap-4">
                   <span className="rounded-full bg-[hsl(var(--muted))] px-3 py-1 text-xs font-medium">
-                    {posting.status}
+                    {application.status}
                   </span>
-                  <button className="btn btn-ghost">
-                    View
-                  </button>
+                  <button className="btn btn-ghost">Details</button>
                 </div>
               </div>
             ))}
@@ -131,4 +122,4 @@ const ResearcherDashboard = () => {
   );
 };
 
-export default ResearcherDashboard;
+export default StudentDashboard;

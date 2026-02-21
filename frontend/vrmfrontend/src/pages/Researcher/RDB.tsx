@@ -1,21 +1,22 @@
 import { Link } from "react-router-dom";
 import {
   Briefcase,
-  Search,
-  FileCheck,
+  Plus,
+  FileText,
+  Users,
   Clock,
-  CheckCircle,
   LogOut,
 } from "lucide-react";
-import Header from "../components/Header";
-import UserHeader from "../components/UserHeader";
+import ThemeToggle from "../../components/ThemeToggle";
+import Header from "../../components/Header";
+import UserHeader from "../../components/UserHeader";
 import { useEffect } from "react";
 
-const StudentDashboard = () => {
-
+const ResearcherDashboard = () => {
   useEffect (() => {
-    document.title = "Student Dashboard - ResearchConnect";
+    document.title = "Researcher Dashboard - ResearchConnect";
   }, []);
+  
   return (
     <div className="page">
       {/* Header */}
@@ -23,95 +24,106 @@ const StudentDashboard = () => {
 
       {/* Main Content */}
       <main className="container-page py-8 stack gap-10">
+        {/* Top Row */}
         <div className="row justify-between">
           <div className="stack gap-1">
             <h1 className="h2">Dashboard</h1>
-            <p className="muted">Find opportunities and track your applications</p>
+            <p className="muted">
+              Manage your job postings and applications
+            </p>
           </div>
-
+          <Link to="/researcher/new-posting">
           <button className="btn btn-primary">
-            <Search className="h-4 w-4" />
-            Browse Jobs
+            <Plus className="h-4 w-4" />
+            New Posting
           </button>
+          </Link>
         </div>
 
         {/* Stats Grid */}
         <div className="grid gap-6 md:grid-cols-3">
+          {/* Active Postings */}
+          <Link to="/researcher/postings">
           <div className="card card-pad">
             <div className="row gap-4">
               <div className="rounded-xl bg-[hsl(var(--muted))] p-3">
-                <FileCheck className="h-5 w-5" />
+                <FileText className="h-5 w-5" />
               </div>
               <div className="stack gap-0">
-                <p className="text-2xl font-semibold">4</p>
-                <p className="muted">Applications Sent</p>
+                <p className="text-2xl font-semibold">5</p>
+                <p className="muted">Active Postings</p>
+              </div>
+            </div>
+          </div>
+          </Link>
+
+          {/* Total Applicants */}
+          <div className="card card-pad">
+            <div className="row gap-4">
+              <div className="rounded-xl bg-[hsl(var(--muted))] p-3">
+                <Users className="h-5 w-5" />
+              </div>
+              <div className="stack gap-0">
+                <p className="text-2xl font-semibold">23</p>
+                <p className="muted">Total Applicants</p>
               </div>
             </div>
           </div>
 
+          {/* Pending Review */}
           <div className="card card-pad">
             <div className="row gap-4">
               <div className="rounded-xl bg-[hsl(var(--muted))] p-3">
                 <Clock className="h-5 w-5" />
               </div>
               <div className="stack gap-0">
-                <p className="text-2xl font-semibold">2</p>
-                <p className="muted">Under Review</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="card card-pad">
-            <div className="row gap-4">
-              <div className="rounded-xl bg-[hsl(var(--muted))] p-3">
-                <CheckCircle className="h-5 w-5" />
-              </div>
-              <div className="stack gap-0">
-                <p className="text-2xl font-semibold">1</p>
-                <p className="muted">Interviews Scheduled</p>
+                <p className="text-2xl font-semibold">8</p>
+                <p className="muted">Pending Review</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Applications List */}
+        {/* Recent Postings */}
         <div className="stack gap-4">
-          <h2 className="h3">My Applications</h2>
+          <h2 className="h3">Recent Postings</h2>
 
           <div className="card divide-y">
             {[
               {
                 title: "Machine Learning Research Assistant",
-                researcher: "Dr. Jane Smith",
-                status: "Interview",
+                applicants: 12,
+                status: "Active",
               },
               {
-                title: "Bioinformatics Intern",
-                researcher: "Prof. Michael Chen",
-                status: "Under Review",
+                title: "Data Analysis Intern",
+                applicants: 7,
+                status: "Active",
               },
               {
-                title: "Quantum Computing Research",
-                researcher: "Dr. Sarah Lee",
-                status: "Under Review",
+                title: "Lab Technician",
+                applicants: 4,
+                status: "Active",
               },
-              {
-                title: "Environmental Data Analyst",
-                researcher: "Prof. David Park",
-                status: "Applied",
-              },
-            ].map((application, index) => (
-              <div key={index} className="row justify-between px-5 py-4">
+            ].map((posting, index) => (
+              <div
+                key={index}
+                className="row justify-between px-5 py-4"
+              >
                 <div className="stack gap-1">
-                  <h3 className="font-medium">{application.title}</h3>
-                  <p className="muted text-sm">{application.researcher}</p>
+                  <h3 className="font-medium">{posting.title}</h3>
+                  <p className="muted text-sm">
+                    {posting.applicants} applicants
+                  </p>
                 </div>
 
                 <div className="row gap-4">
                   <span className="rounded-full bg-[hsl(var(--muted))] px-3 py-1 text-xs font-medium">
-                    {application.status}
+                    {posting.status}
                   </span>
-                  <button className="btn btn-ghost">Details</button>
+                  <button className="btn btn-ghost">
+                    View
+                  </button>
                 </div>
               </div>
             ))}
@@ -122,4 +134,4 @@ const StudentDashboard = () => {
   );
 };
 
-export default StudentDashboard;
+export default ResearcherDashboard;

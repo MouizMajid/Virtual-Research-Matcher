@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { Briefcase, Users, GraduationCap, ArrowRight } from "lucide-react";
-import ThemeToggle from "../components/ThemeToggle";
-import Header from "../components/Header";
+import Header from "../../components/Header";
 import { useEffect } from "react";
 
 const Landing = () => {

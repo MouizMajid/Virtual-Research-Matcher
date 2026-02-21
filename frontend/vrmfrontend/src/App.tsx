@@ -1,11 +1,13 @@
 
 import { BrowserRouter, Routes, Route, createBrowserRouter, Router, RouterProvider } from "react-router-dom";
-import Landing from "./pages/Landing";
-import Login from "./pages/Login";
-import ResearcherDashboard from "./pages/RDB";
-import StudentDashboard from "./pages/SDB";
-import NotFound from "./pages/NotFound";
-import Register from "./pages/Register";
+import Landing from "./pages/Main/Landing";
+import Login from "./pages/Auth/Login";
+import ResearcherDashboard from "./pages/Researcher/RDB";
+import StudentDashboard from "./pages/Student/SDB";
+import NotFound from "./pages/Main/NotFound";
+import Register from "./pages/Auth/Register";
+import Verify from "./pages/Auth/Verify";
+import NewPosting from "./pages/Researcher/NewPosting";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +29,14 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />,
+  },{
+
+    path: "/verify",
+    element: <Verify />,
+  },
+  {
+    path: "/researcher/new-posting",
+    element: <NewPosting />,
   },
   {
     path: "*",

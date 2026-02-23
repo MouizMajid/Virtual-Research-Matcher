@@ -1,6 +1,7 @@
 package com.vrm.backend.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 
 import java.util.List;
 
@@ -35,7 +36,12 @@ public class SecurityConfiguration {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(
-                authorize -> authorize.requestMatchers("/auth/**").permitAll()
+                authorize -> authorize
+                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/postings").hasRole("RESEARCHER")
+                    .requestMatchers(HttpMethod.DELETE, "/postings/**").hasRole("RESEARCHER")
+                    .requestMatchers(HttpMethod.PUT, "/postings/**").hasRole("RESEARCHER")
+                    .requestMatchers(HttpMethod.GET, "/postings/**").hasAnyRole("RESEARCHER", "STUDENT")
                 .anyRequest().authenticated()
             )
             .sessionManagement(

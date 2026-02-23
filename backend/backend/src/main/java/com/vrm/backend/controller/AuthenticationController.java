@@ -12,6 +12,7 @@ import com.vrm.backend.dto.RegisterUserDto;
 import com.vrm.backend.dto.VerifyUserDto;
 import com.vrm.backend.model.User;
 import com.vrm.backend.responses.LoginResponse;
+import com.vrm.backend.responses.RegisterResponse;
 import com.vrm.backend.service.AuthenticationService;
 import com.vrm.backend.service.JWTService;
 
@@ -25,10 +26,12 @@ public class AuthenticationController {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
     }
+
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterUserDto registerUserDto) {
         User registeredUser = authenticationService.signup(registerUserDto);
-        return ResponseEntity.ok(registeredUser);
+        RegisterResponse response = new RegisterResponse(registeredUser);
+        return ResponseEntity.ok(response);
     }
     
     @PostMapping("/login")

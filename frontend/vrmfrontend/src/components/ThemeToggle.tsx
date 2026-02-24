@@ -1,33 +1,19 @@
-import { useEffect, useState } from "react";
 
-function getInitialTheme() {
-  // 1) saved preference
-  const saved = localStorage.getItem("theme");
-  if (saved === "dark" || saved === "light") return saved;
 
-  // 2) OS preference
-  const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
-  return prefersDark ? "dark" : "light";
-}
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "../hooks/useTheme";
 
-export default function ThemeToggle() {
-  const [theme, setTheme] = useState(getInitialTheme);
-
-  useEffect(() => {
-    const root = document.documentElement; // <html>
-    if (theme === "dark") root.classList.add("dark");
-    else root.classList.remove("dark");
-
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+export function ThemeToggle() {
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <button
-      type="button"
-      className="inline-flex items-center gap-2 rounded-md border  px-3 py-2 shadow-sm  hover:ring-2 hover:ring-[hsl(var(--ring))] hover:ring-offset-2 " 
-      onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
+      onClick={toggleTheme}
+      className="relative inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-secondary text-foreground transition-colors hover:bg-muted"
+      aria-label="Toggle theme"
     >
-      {theme === "dark" ? "🌙 Dark" : "☀️ Light"}
+      {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
     </button>
   );
 }
+

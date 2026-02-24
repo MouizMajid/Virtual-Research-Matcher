@@ -1,0 +1,53 @@
+import { Link } from "react-router-dom";
+import { FlaskConical, Github, Linkedin, Twitter } from "lucide-react";
+
+export function Footer() {
+  return (
+    <footer className="border-t border-border bg-card">
+      <div className="mx-auto max-w-7xl px-6 py-12">
+        <div className="grid grid-cols-4 gap-8">
+          <div>
+            <Link to="/" className="flex items-center gap-2 text-lg font-bold">
+              <FlaskConical className="h-5 w-5 text-primary" />
+              <span className="gradient-text">VRMM</span>
+            </Link>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Connecting students and researchers for impactful academic collaboration.
+            </p>
+          </div>
+          <div>
+            <h4 className="text-sm font-semibold">Platform</h4>
+            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+              <li><Link to="/browse" className="hover:text-primary transition-colors">Browse Projects</Link></li>
+              <li><Link to="/register" className="hover:text-primary transition-colors">Get Started</Link></li>
+              <li><Link to="/about" className="hover:text-primary transition-colors">About</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-sm font-semibold">Resources</h4>
+            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+              <li><a href="#" className="hover:text-primary transition-colors">Documentation</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">FAQ</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Support</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-sm font-semibold">Legal</h4>
+            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+              <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-10 flex items-center justify-between border-t border-border pt-6">
+          <p className="text-xs text-muted-foreground">© 2026 Virtual Research Match Maker. All rights reserved.</p>
+          <div className="flex items-center gap-3">
+            <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Twitter className="h-4 w-4" /></a>
+            <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Github className="h-4 w-4" /></a>
+            <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Linkedin className="h-4 w-4" /></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}

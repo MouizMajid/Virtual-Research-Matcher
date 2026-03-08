@@ -1,15 +1,14 @@
 import { Outlet } from "react-router-dom";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { DashboardTopbar } from "./DashboardTopbar";
+import { useAuth } from "../../context/AuthContext";
 
-interface DashboardLayoutProps {
-  role?: "student" | "researcher";
-}
 
-export function DashboardLayout({ role = "student" }: DashboardLayoutProps) {
+export function DashboardLayout() {
+  const { role } = useAuth(); // 👈 get role from context directly
   return (
     <div className="flex h-screen overflow-hidden">
-      <DashboardSidebar role={role} />
+      <DashboardSidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
         <DashboardTopbar />
         <main className="flex-1 overflow-y-auto p-6">

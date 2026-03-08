@@ -1,5 +1,5 @@
 import { Github, Linkedin, MapPin, ExternalLink, Mail } from "lucide-react";
-
+import { Link } from "react-router-dom";
 const skills = ["Machine Learning", "Python", "TensorFlow", "Data Analysis", "NLP", "Computer Vision", "R", "Statistics"];
 
 export default function Profile() {
@@ -19,9 +19,9 @@ export default function Profile() {
                 <p className="text-sm text-muted-foreground">PhD Student · Computer Science</p>
               </div>
             </div>
-            <button className="rounded-xl border border-border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors">
+            <Link to="/dashboard/edit-profile" className="rounded-xl border border-border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors">
               Edit Profile
-            </button>
+            </Link>
           </div>
         </div>
       </div>

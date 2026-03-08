@@ -5,7 +5,7 @@ import { FlaskConical } from "lucide-react";
 export function PublicNavbar() {
   const location = useLocation();
   const links = [
-    { to: "/browse", label: "Browse Projects" },
+    { to: "/public-browse", label: "Browse Projects" },
     { to: "/about", label: "About" },
   ];
 

@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Search, FileText, FolderOpen, User, Settings, LogOut, FlaskConical,
 } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 const studentLinks = [
   { to: "/dashboard/student", label: "Dashboard", icon: LayoutDashboard },
@@ -23,7 +24,8 @@ interface DashboardSidebarProps {
   role?: "student" | "researcher";
 }
 
-export function DashboardSidebar({ role = "student" }: DashboardSidebarProps) {
+export function DashboardSidebar() {
+  const { user, role } = useAuth(); // 👈 get role from context directly
   const location = useLocation();
   const links = role === "researcher" ? researcherLinks : studentLinks;
 
@@ -33,7 +35,6 @@ export function DashboardSidebar({ role = "student" }: DashboardSidebarProps) {
         <FlaskConical className="h-5 w-5 text-primary" />
         <span className="text-lg font-bold gradient-text">VRMM</span>
       </div>
-
       <nav className="flex-1 space-y-1 px-3 py-4">
         {links.map((link) => {
           const isActive = location.pathname === link.to;

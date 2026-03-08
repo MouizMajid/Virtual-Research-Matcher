@@ -30,7 +30,7 @@ export default function BrowseProjects() {
         <h1 className="text-3xl font-bold">Browse Research Projects</h1>
         <p className="mt-1 text-muted-foreground">Discover opportunities that match your skills and interests.</p>
       </div>
-
+      
       <div className="flex gap-8">
         {/* Filter Sidebar */}
         <aside className="w-64 shrink-0">

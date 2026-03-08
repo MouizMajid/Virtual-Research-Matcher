@@ -13,7 +13,7 @@ export default function ResearcherDashboard() {
           <p className="text-sm text-muted-foreground">Manage your postings and review applicants.</p>
         </div>
         <Link
-          to="/dashboard/my-postings"
+          to="/dashboard/create-posting"
           className="gradient-bg inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
         >
           <Plus className="h-4 w-4" /> Create New Posting

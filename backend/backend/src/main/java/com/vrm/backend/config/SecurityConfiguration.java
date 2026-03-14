@@ -42,6 +42,10 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.DELETE, "/postings/**").hasRole("RESEARCHER")
                     .requestMatchers(HttpMethod.PUT, "/postings/**").hasRole("RESEARCHER")
                     .requestMatchers(HttpMethod.GET, "/postings/**").hasAnyRole("RESEARCHER", "STUDENT")
+                    .requestMatchers(HttpMethod.POST, "/applications").hasRole("STUDENT")
+                    .requestMatchers(HttpMethod.PUT, "/applications/**").hasRole("STUDENT")
+                    .requestMatchers(HttpMethod.GET, "/applications/**").hasAnyRole("STUDENT", "RESEARCHER")
+ 
                 .anyRequest().authenticated()
             )
             .sessionManagement(

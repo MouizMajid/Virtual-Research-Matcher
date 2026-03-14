@@ -34,11 +34,17 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
-    private String coverLetterLink;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String coverLetter;
 
     @Column(nullable = false)
     private String resumeLink;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String why;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String experience;
 
     @ManyToOne
     @JoinColumn(name = "posting_id", nullable = false)
@@ -51,5 +57,6 @@ public class Application {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
+
     
 }

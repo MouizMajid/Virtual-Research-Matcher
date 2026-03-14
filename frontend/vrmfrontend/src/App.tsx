@@ -70,6 +70,7 @@ const App = () => (
             <Route element={<DashboardLayout />}>
               <Route path="/dashboard/student" element={<StudentDashboard />} />
               <Route path="/dashboard/my-applications" element={<MyApplications />} />
+              <Route path="/application/:id" element={<ApplicationPage />} />
             </Route>
           </Route>
 

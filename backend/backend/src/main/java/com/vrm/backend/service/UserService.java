@@ -17,6 +17,10 @@ public class UserService {
         this.emailService = emailService;
     }
 
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow();
+    }
+
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
          userRepository.findAll().forEach(users::add);

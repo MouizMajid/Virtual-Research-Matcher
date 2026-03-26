@@ -1,12 +1,21 @@
 import { useEffect, useState } from "react";
 
 export function useTheme() {
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    if (typeof window !== "undefined") {
-      return (localStorage.getItem("vrmm-theme") as "light" | "dark") || "light";
-    }
-    return "light";
-  });
+  // Initialize with a neutral state to avoid SSR mismatch
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    // 1. Check Local Storage
+    const savedTheme = localStorage.getItem("vrmm-theme") as "light" | "dark" | null;
+    
+    // 2. Check System Preference
+    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    
+    // Determine initial theme: Saved > System > Default (Light)
+    const initialTheme = savedTheme || (systemPrefersDark ? "dark" : "light");
+    
+    setTheme(initialTheme);
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;

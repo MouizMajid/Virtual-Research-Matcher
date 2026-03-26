@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vrm.backend.dto.CreatePostingDto;
 import com.vrm.backend.model.Posting;
 import com.vrm.backend.model.User;
+import com.vrm.backend.responses.ApplicationResponse;
 import com.vrm.backend.responses.PostingResponse;
 import com.vrm.backend.service.PostingService;
 import com.vrm.backend.service.UserService;
@@ -32,12 +33,16 @@ public class PostingController {
     }
 
     @PostMapping
-    public ResponseEntity<PostingResponse> createPosting(
+    public ResponseEntity<?> createPosting(
         @RequestBody CreatePostingDto createPostingDto) 
         {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Posting createdPosting = postingService.createPosting(createPostingDto, user);
-        return ResponseEntity.ok(new PostingResponse(createdPosting));
+        try{
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Posting createdPosting = postingService.createPosting(createPostingDto, user);
+            return ResponseEntity.ok(new PostingResponse(createdPosting));
+        }catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping
@@ -58,7 +63,7 @@ public class PostingController {
     }
 
     @GetMapping("/researcherpostings/{id}")
-    public ResponseEntity<List<PostingResponse>> getPostingById(@PathVariable Long id) {
+    public ResponseEntity<List<PostingResponse>> getPostingByResearcher(@PathVariable Long id) {
         User user = userService.getUserById(id);
         List<PostingResponse> postings = postingService.getPostingsByUser(user).stream()
             .map(PostingResponse::new)

@@ -5,6 +5,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import api from "../../lib/api";
 
 
 type FormFields = {
@@ -19,14 +20,10 @@ export default function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+  const onSubmit: SubmitHandler<FormFields> = async (formdata) => {
     try {
-      login({
-        id: "123",
-        name: "Test Student",
-        email: data.email,
-        role: "student"
-      });
+      const { data } = await api.post("/auth/login", {email: formdata.email, password: formdata.password});
+      login(data.token);
       navigate("/dashboard/profile");
     } catch (error) {
       setError("root", { message: "Invalid email or password" });

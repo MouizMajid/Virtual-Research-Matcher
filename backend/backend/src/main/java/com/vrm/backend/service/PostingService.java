@@ -46,7 +46,7 @@ public class PostingService {
     public List<Posting> getAllPostings() {
         return postingRepository.findAll();
     }
-
+        
     public List<Posting> getPostingsByUser(User user) {
         return postingRepository.findByCreatedById(user.getId());
     }
@@ -85,6 +85,6 @@ public class PostingService {
         }
         postingRepository.deleteById(id);
     }
-    
 
+    
 }

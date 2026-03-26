@@ -29,10 +29,13 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import NotFound from "./pages/NotFound";
 import CreatePosting from "./pages/CreatePosting";
 import { ProtectedRoute } from "./routes/ProtectedRoutes";
+import { useTheme } from "./hooks/useTheme";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = () => {
+  useTheme();
+  return (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
     <TooltipProvider>
@@ -90,6 +93,7 @@ const App = () => (
     </TooltipProvider>
   </AuthProvider>
   </QueryClientProvider>
-);
+  )
+};
 
 export default App;

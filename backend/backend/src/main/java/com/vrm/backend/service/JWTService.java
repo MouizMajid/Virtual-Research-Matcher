@@ -3,11 +3,14 @@ package com.vrm.backend.service;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import com.vrm.backend.model.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -35,16 +38,23 @@ public class JWTService {
     
     public String generateToken(UserDetails userDetails) {
         // Implement logic to generate JWT token for a given username
-        return generateToken(new HashMap<>(), userDetails); // Placeholder
+        User user = (User) userDetails;
+        HashMap<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("id", user.getId());
+        extraClaims.put("role", user.getRole());
+        extraClaims.put("email", user.getEmail());
+        return generateToken(extraClaims, userDetails);
     }
 
     public String generateToken(
         HashMap<String, Object> extraClaims,
         UserDetails userDetails
     ) {
+        
         // Implement logic to generate JWT token with extra claims for a given username
         return buildToken(extraClaims, userDetails, expirationTime); // Placeholder
     }
+    
 
     public long getExpirationTime() {
         return expirationTime;

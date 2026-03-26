@@ -13,17 +13,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vrm.backend.dto.ApplicationDto;
 import com.vrm.backend.model.Application;
+import com.vrm.backend.model.Posting;
 import com.vrm.backend.model.User;
 import com.vrm.backend.responses.ApplicationResponse;
+import com.vrm.backend.responses.PostingResponse;
 import com.vrm.backend.service.ApplicationService;
+import com.vrm.backend.service.PostingService;
 
 @RequestMapping("/applications")
 @RestController
 public class ApplicationController {
     private final ApplicationService applicationService;
+    private final PostingService postingService;
 
-    public ApplicationController(ApplicationService applicationService) {
-        this.applicationService = applicationService;
+    public ApplicationController(ApplicationService applicationService, PostingService postingService) {
+        this.applicationService = applicationService;  
+        this.postingService = postingService;;
     }
 
     @PostMapping
@@ -34,12 +39,26 @@ public class ApplicationController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<ApplicationResponse>> getMyApplications() {
+    public ResponseEntity<List<PostingResponse>> getMyPostingsAppliedTo() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<ApplicationResponse> apps = applicationService.getApplicationsForApplicant(user).stream()
-            .map(ApplicationResponse::new)
-            .toList();;
+        List<PostingResponse> apps = applicationService.getPostingsAppliedTo(user).stream()
+            .map(PostingResponse::new)
+            .toList();
         return ResponseEntity.ok(apps);
+    }
+
+    @GetMapping("/{id}/applications")
+    public ResponseEntity<List<ApplicationResponse>> getApplicationsForPosting(
+        @PathVariable Long id
+    ) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Posting posting = postingService.getPostingById(id);
+        List<ApplicationResponse> applications = applicationService
+            .getApplicationsForPosting(posting, user)
+            .stream()
+            .map(ApplicationResponse::new)
+            .toList();
+        return ResponseEntity.ok(applications);
     }
 
     @GetMapping("/{id}")

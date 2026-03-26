@@ -5,12 +5,13 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import api from "../../lib/api";
 
 type FormFields = {
   firstName: string;
   lastName: string;
   email: string;
-  role: "student" | "researcher";
+  role: "STUDENT" | "RESEARCHER";
   password: string;
   confirmPassword: string;
 };
@@ -21,7 +22,7 @@ export default function Register() {
   const { login } = useAuth();
   const { register, handleSubmit, watch, setError, formState: { errors, isSubmitting } } = useForm<FormFields>({
     defaultValues: {
-      role: "student"
+      role: "STUDENT"
     }
   });
   const navigate = useNavigate();
@@ -29,17 +30,22 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+  const onSubmit: SubmitHandler<FormFields> = async (formdata) => {
     try {
-      login({
-        id: Math.random().toString(),
-        name: `${data.firstName} ${data.lastName}`,
-        email: data.email,
-        role: data.role
+      const { data } = await api.post("/auth/register", {
+        firstName: formdata.firstName,
+        lastName: formdata.lastName,
+        email: formdata.email,
+        role: formdata.role,
+        password: formdata.password
       });
-      navigate("/email-verification");
+      navigate("/email-verification", { 
+        state: { email: formdata.email, fromRegister: true }, 
+        replace: true 
+      });
     } catch (error) {
       setError("root", { message: "Failed to create account" });
+      console.log(error);
     }
   };
 
@@ -107,8 +113,8 @@ export default function Register() {
             {...register("role")}
             className="h-10 w-full rounded-xl border border-input bg-card px-4 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           >
-            <option value="student">Student</option>
-            <option value="researcher">Researcher</option>
+            <option value="STUDENT">Student</option>
+            <option value="RESEARCHER">Researcher</option>
           </select>
         </div>
 

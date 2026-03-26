@@ -35,8 +35,11 @@ public class AuthenticationService {
     }
 
     public User signup(RegisterUserDto input){
+        Optional<User> optionalUser = userRepository.findByEmail(input.getEmail());
+        if(optionalUser.isPresent()){
+            throw new RuntimeException("User already exists");
+        }
         User user = new User(input.getEmail(), passwordEncoder.encode(input.getPassword()));
-
         user.setFirstName(input.getFirstName());
         user.setLastName(input.getLastName());
         user.setRole(input.getRole());

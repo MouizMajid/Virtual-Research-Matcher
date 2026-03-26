@@ -34,6 +34,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(
                 authorize -> authorize
@@ -41,8 +42,11 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.POST, "/postings").hasRole("RESEARCHER")
                     .requestMatchers(HttpMethod.DELETE, "/postings/**").hasRole("RESEARCHER")
                     .requestMatchers(HttpMethod.PUT, "/postings/**").hasRole("RESEARCHER")
+                    .requestMatchers(HttpMethod.GET, "/postings").hasAnyRole("RESEARCHER", "STUDENT")
                     .requestMatchers(HttpMethod.GET, "/postings/**").hasAnyRole("RESEARCHER", "STUDENT")
+
                     .requestMatchers(HttpMethod.POST, "/applications").hasRole("STUDENT")
+                    .requestMatchers(HttpMethod.GET, "/{id}/applications").hasRole("RESEARCHER")
                     .requestMatchers(HttpMethod.PUT, "/applications/**").hasRole("STUDENT")
                     .requestMatchers(HttpMethod.GET, "/applications/**").hasAnyRole("STUDENT", "RESEARCHER")
  
@@ -59,7 +63,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://vrm-frontend.vercel.app", "http://localhost:8080"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

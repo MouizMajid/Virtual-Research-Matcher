@@ -44,6 +44,22 @@ public class ApplicationService {
         return applicationRepository.findByApplicantId(applicant.getId());
     }
 
+    public List<Application> getApplicationsForPosting(Posting posting, User user) {
+        if (!posting.getCreatedBy().getId().equals(user.getId())) {
+            throw new RuntimeException("You can only view applications for your own postings");
+        }
+        return applicationRepository.findAll().stream()
+            .filter(app -> app.getPosting().getId().equals(posting.getId()))
+            .toList();
+    }
+    
+    public List<Posting> getPostingsAppliedTo(User applicant) {
+        return applicationRepository.findByApplicantId(applicant.getId()).stream()
+            .map(Application::getPosting)
+            .distinct()
+            .toList();
+    }
+
     public Application getApplicationById(Long id) {
         return applicationRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Application not found"));

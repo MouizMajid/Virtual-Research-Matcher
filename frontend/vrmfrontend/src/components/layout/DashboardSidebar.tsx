@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, Search, FileText, FolderOpen, User, Settings, LogOut, FlaskConical,
 } from "lucide-react";
@@ -25,9 +25,15 @@ interface DashboardSidebarProps {
 }
 
 export function DashboardSidebar() {
-  const { user, role } = useAuth(); // 👈 get role from context directly
+  const { user, role, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const links = role === "researcher" ? researcherLinks : studentLinks;
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <aside className="flex h-screen w-64 flex-col border-r border-border bg-card">
@@ -56,13 +62,13 @@ export function DashboardSidebar() {
       </nav>
 
       <div className="border-t border-border p-3">
-        <Link
-          to="/"
-          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        <button
+          onClick={handleLogout}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
           <LogOut className="h-4 w-4" />
           Logout
-        </Link>
+        </button>
       </div>
     </aside>
   );

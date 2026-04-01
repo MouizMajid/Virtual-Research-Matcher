@@ -20,6 +20,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+    // this class is responsible for configuring Spring Security for the application, 
+    // it defines the security filter chain and CORS configuration
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -42,12 +44,13 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.POST, "/postings").hasRole("RESEARCHER")
                     .requestMatchers(HttpMethod.DELETE, "/postings/**").hasRole("RESEARCHER")
                     .requestMatchers(HttpMethod.PUT, "/postings/**").hasRole("RESEARCHER")
-                    .requestMatchers(HttpMethod.GET, "/postings").hasAnyRole("RESEARCHER", "STUDENT")
-                    .requestMatchers(HttpMethod.GET, "/postings/**").hasAnyRole("RESEARCHER", "STUDENT")
+                    .requestMatchers(HttpMethod.GET, "/postings").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/postings/**").permitAll()
 
                     .requestMatchers(HttpMethod.POST, "/applications").hasRole("STUDENT")
                     .requestMatchers(HttpMethod.GET, "/{id}/applications").hasRole("RESEARCHER")
                     .requestMatchers(HttpMethod.PUT, "/applications/**").hasRole("STUDENT")
+                    .requestMatchers(HttpMethod.PATCH, "/applications/**").hasRole("RESEARCHER")
                     .requestMatchers(HttpMethod.GET, "/applications/**").hasAnyRole("STUDENT", "RESEARCHER")
  
                 .anyRequest().authenticated()
@@ -64,7 +67,7 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

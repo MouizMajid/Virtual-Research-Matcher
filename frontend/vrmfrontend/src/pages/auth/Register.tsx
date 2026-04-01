@@ -43,9 +43,13 @@ export default function Register() {
         state: { email: formdata.email, fromRegister: true }, 
         replace: true 
       });
-    } catch (error) {
-      setError("root", { message: "Failed to create account" });
-      console.log(error);
+    } catch (error: any) {
+      const message = error?.response?.data;
+      if (typeof message === "string" && message.toLowerCase().includes("email")) {
+        setError("email", { message });
+      } else {
+        setError("root", { message: "Failed to create account" });
+      }
     }
   };
 

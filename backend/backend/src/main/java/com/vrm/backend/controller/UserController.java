@@ -15,6 +15,8 @@ import com.vrm.backend.service.UserService;
 @RequestMapping("/users")
 @RestController
 public class UserController {
+    // the user controller provides endpoints related to user information, such as getting the authenticated user's info or listing all users (for admin purposes) 
+    // it is not used in the application
     private final UserService userService;
     public UserController(UserService userService) {
         this.userService = userService;

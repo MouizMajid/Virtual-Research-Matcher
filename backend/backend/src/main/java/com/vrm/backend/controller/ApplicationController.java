@@ -1,10 +1,12 @@
 package com.vrm.backend.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +18,6 @@ import com.vrm.backend.model.Application;
 import com.vrm.backend.model.Posting;
 import com.vrm.backend.model.User;
 import com.vrm.backend.responses.ApplicationResponse;
-import com.vrm.backend.responses.PostingResponse;
 import com.vrm.backend.service.ApplicationService;
 import com.vrm.backend.service.PostingService;
 
@@ -27,30 +28,28 @@ public class ApplicationController {
     private final PostingService postingService;
 
     public ApplicationController(ApplicationService applicationService, PostingService postingService) {
-        this.applicationService = applicationService;  
-        this.postingService = postingService;;
+        this.applicationService = applicationService;
+        this.postingService = postingService;
     }
 
     @PostMapping
     public ResponseEntity<ApplicationResponse> createApplication(@RequestBody ApplicationDto applicationDto) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Application app =  applicationService.createApplication(applicationDto, user);
+        Application app = applicationService.createApplication(applicationDto, user);
         return ResponseEntity.ok(new ApplicationResponse(app));
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<PostingResponse>> getMyPostingsAppliedTo() {
+    public ResponseEntity<List<ApplicationResponse>> getMyApplications() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<PostingResponse> apps = applicationService.getPostingsAppliedTo(user).stream()
-            .map(PostingResponse::new)
+        List<ApplicationResponse> apps = applicationService.getApplicationsForApplicant(user).stream()
+            .map(ApplicationResponse::new)
             .toList();
         return ResponseEntity.ok(apps);
     }
 
     @GetMapping("/{id}/applications")
-    public ResponseEntity<List<ApplicationResponse>> getApplicationsForPosting(
-        @PathVariable Long id
-    ) {
+    public ResponseEntity<List<ApplicationResponse>> getApplicationsForPosting(@PathVariable Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Posting posting = postingService.getPostingById(id);
         List<ApplicationResponse> applications = applicationService
@@ -65,5 +64,16 @@ public class ApplicationController {
     public ResponseEntity<ApplicationResponse> getApplication(@PathVariable Long id) {
         Application app = applicationService.getApplicationById(id);
         return ResponseEntity.ok(new ApplicationResponse(app));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ApplicationResponse> updateApplicationStatus(
+        @PathVariable Long id,
+        @RequestBody Map<String, String> body
+    ) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Application.Status status = Application.Status.valueOf(body.get("status"));
+        Application updated = applicationService.updateApplicationStatus(id, status, user);
+        return ResponseEntity.ok(new ApplicationResponse(updated));
     }
 }

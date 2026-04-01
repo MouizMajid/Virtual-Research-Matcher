@@ -12,23 +12,22 @@ type VerificationForm = {
 
 export default function EmailVerification() {
   const location = useLocation();
+  const navigate = useNavigate();
   const email = location.state?.email;
   const fromRegister = location.state?.fromRegister;
 
-  if (!fromRegister || !email) {
-    // Redirect them away if they didn't come from the Register logic
-    return <Navigate replace to="/register" />;
-  }
-  const navigate = useNavigate();
-  
   const [resendStatus, setResendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   const {
     register,
     handleSubmit,
     setError,
-    formState: { errors, isSubmitting,  },
+    formState: { errors, isSubmitting },
   } = useForm<VerificationForm>();
+
+  if (!fromRegister || !email) {
+    return <Navigate replace to="/register" />;
+  }
 
   const onSubmit: SubmitHandler<VerificationForm> = async (formdata) => {
     try {

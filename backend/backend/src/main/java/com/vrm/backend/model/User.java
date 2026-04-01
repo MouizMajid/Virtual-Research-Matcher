@@ -27,21 +27,27 @@ import lombok.Setter;
 @Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
+// User class implements UserDetails for Spring Security integration
 public class User implements UserDetails {
+    // there are 2 possible roles for users: STUDENT and RESEARCHER
     public enum Role {
         STUDENT,
         RESEARCHER
     }
+    // id means the unique identifier for each user, generated automatically by the database
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id; 
 
+    // each user has an email
     @Column(unique = true, nullable = false)
     private String email;
 
+    // password as well
     @Column(nullable = false)
     private String password;
     
+
     @Column(nullable = false)
     private String firstName;
 
@@ -65,11 +71,14 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
     }
+
+    // this is required by UserDetails and spring security, in this case, our username is the users email
     @Override
     public String getUsername() {
         return email; 
     }
 
+    // this is also required by UserDetails, we return the users role as a GrantedAuthority for spring security to use in authorization
     @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
             return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
@@ -86,6 +95,7 @@ public class User implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
+    // enabled means the user verified their email with the code 
     @Override
     public boolean isEnabled() {
         return enabled;

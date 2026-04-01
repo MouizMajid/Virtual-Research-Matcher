@@ -1,11 +1,44 @@
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { StatusBadge } from "../components/StatusBadge";
-import { mockApplicants, mockProjects } from "../data/mockData";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import api from "../lib/api";
+
+interface Posting {
+  id: number;
+  title: string;
+}
+
+interface ApplicationResponse {
+  id: number;
+  applicantFirstName: string;
+  applicantLastName: string;
+  applicantEmail: string;
+  createdAt: string;
+  status: string;
+}
 
 export default function ViewApplicants() {
   const { id } = useParams();
-  const project = mockProjects.find((p) => p.id === id) || mockProjects[0];
+  const queryClient = useQueryClient();
+
+  const { data: posting } = useQuery<Posting>({
+    queryKey: ["posting", id],
+    queryFn: () => api.get(`/postings/${id}`).then((r) => r.data),
+    enabled: !!id,
+  });
+
+  const { data: applicants = [], isLoading } = useQuery<ApplicationResponse[]>({
+    queryKey: ["posting-applications", id],
+    queryFn: () => api.get(`/applications/${id}/applications`).then((r) => r.data),
+    enabled: !!id,
+  });
+
+  const statusMutation = useMutation({
+    mutationFn: ({ appId, status }: { appId: number; status: string }) =>
+      api.patch(`/applications/${appId}/status`, { status }).then((r) => r.data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["posting-applications", id] }),
+  });
 
   return (
     <div className="space-y-6">
@@ -15,7 +48,9 @@ export default function ViewApplicants() {
 
       <div>
         <h1 className="text-2xl font-bold">Applicants</h1>
-        <p className="text-sm text-muted-foreground">Reviewing applicants for: {project.title}</p>
+        <p className="text-sm text-muted-foreground">
+          Reviewing applicants for: {posting?.title ?? "Loading..."}
+        </p>
       </div>
 
       <div className="glass-card">
@@ -31,19 +66,49 @@ export default function ViewApplicants() {
               </tr>
             </thead>
             <tbody>
-              {mockApplicants.map((a) => (
-                <tr key={a.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
-                  <td className="px-4 py-3 font-medium">{a.name}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{a.email}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{a.appliedDate}</td>
-                  <td className="px-4 py-3"><StatusBadge status={a.status} /></td>
-                  <td className="px-4 py-3">
-                    <button className="rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20 transition-colors">
-                      Review
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {isLoading ? (
+                <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">Loading...</td></tr>
+              ) : applicants.length === 0 ? (
+                <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">No applicants yet.</td></tr>
+              ) : (
+                applicants.map((a) => (
+                  <tr key={a.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
+                    <td className="px-4 py-3 font-medium">{a.applicantFirstName} {a.applicantLastName}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{a.applicantEmail}</td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {a.createdAt ? new Date(a.createdAt).toLocaleDateString() : "—"}
+                    </td>
+                    <td className="px-4 py-3">
+                      <StatusBadge status={a.status.toLowerCase() as "pending" | "accepted" | "rejected"} />
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        {a.status === "PENDING" && (
+                          <>
+                            <button
+                              onClick={() => statusMutation.mutate({ appId: a.id, status: "ACCEPTED" })}
+                              disabled={statusMutation.isPending}
+                              className="rounded-lg bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-600 hover:bg-emerald-500/20 transition-colors disabled:opacity-50"
+                            >
+                              Accept
+                            </button>
+                            <button
+                              onClick={() => statusMutation.mutate({ appId: a.id, status: "REJECTED" })}
+                              disabled={statusMutation.isPending}
+                              className="rounded-lg bg-red-500/10 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-500/20 transition-colors disabled:opacity-50"
+                            >
+                              Reject
+                            </button>
+                          </>
+                        )}
+                        {a.status !== "PENDING" && (
+                          <span className="text-xs text-muted-foreground">Reviewed</span>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

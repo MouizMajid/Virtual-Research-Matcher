@@ -1,8 +1,45 @@
 import { Github, Linkedin, MapPin, ExternalLink, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
-const skills = ["Machine Learning", "Python", "TensorFlow", "Data Analysis", "NLP", "Computer Vision", "R", "Statistics"];
+import { useQuery } from "@tanstack/react-query";
+import api from "../lib/api";
+
+interface EducationItem {
+  id: number;
+  degree: string;
+  institution: string;
+  year: string;
+}
+
+interface UserInfoResponse {
+  firstName: string;
+  lastName: string;
+  email: string;
+  headline: string;
+  bio: string;
+  location: string;
+  university: string;
+  department: string;
+  skills: string[];
+  education: EducationItem[];
+  githubUrl: string;
+  linkedinUrl: string;
+  websiteUrl: string;
+}
 
 export default function Profile() {
+  const { data: profile, isLoading } = useQuery<UserInfoResponse>({
+    queryKey: ["my-profile"],
+    queryFn: () => api.get("/users/me/profile").then((r) => r.data),
+  });
+
+  if (isLoading) {
+    return <div className="py-20 text-center text-muted-foreground">Loading profile...</div>;
+  }
+
+  const initials = profile
+    ? `${profile.firstName?.[0] ?? ""}${profile.lastName?.[0] ?? ""}`
+    : "?";
+
   return (
     <div className="space-y-6">
       {/* Banner */}
@@ -12,11 +49,13 @@ export default function Profile() {
           <div className="-mt-12 flex items-end justify-between">
             <div className="flex items-end gap-4">
               <div className="flex h-24 w-24 items-center justify-center rounded-2xl border-4 border-card bg-primary text-2xl font-bold text-primary-foreground">
-                AJ
+                {initials}
               </div>
               <div className="pb-1">
-                <h1 className="text-xl font-bold">Alex Johnson</h1>
-                <p className="text-sm text-muted-foreground">PhD Student · Computer Science</p>
+                <h1 className="text-xl font-bold">
+                  {profile?.firstName} {profile?.lastName}
+                </h1>
+                <p className="text-sm text-muted-foreground">{profile?.headline}</p>
               </div>
             </div>
             <Link to="/dashboard/edit-profile" className="rounded-xl border border-border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors">
@@ -29,41 +68,39 @@ export default function Profile() {
       <div className="grid grid-cols-3 gap-6">
         {/* Main */}
         <div className="col-span-2 space-y-6">
-          <div className="glass-card p-6">
-            <h2 className="text-lg font-semibold">About</h2>
-            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-              PhD student specializing in machine learning and natural language processing at MIT. 
-              Passionate about applying AI to solve real-world problems in healthcare and climate science. 
-              Looking for collaborative research opportunities with experienced faculty and industry partners.
-            </p>
-          </div>
-
-          <div className="glass-card p-6">
-            <h2 className="text-lg font-semibold">Skills</h2>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {skills.map((skill) => (
-                <span key={skill} className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-                  {skill}
-                </span>
-              ))}
+          {profile?.bio && (
+            <div className="glass-card p-6">
+              <h2 className="text-lg font-semibold">About</h2>
+              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{profile.bio}</p>
             </div>
-          </div>
+          )}
 
-          <div className="glass-card p-6">
-            <h2 className="text-lg font-semibold">Recent Activity</h2>
-            <div className="mt-4 space-y-4">
-              {[
-                "Applied to ML for Climate Prediction project",
-                "Updated profile skills",
-                "Accepted to NLP for Medical Records project",
-              ].map((activity, i) => (
-                <div key={i} className="flex items-center gap-3 text-sm">
-                  <div className="h-2 w-2 rounded-full bg-primary" />
-                  <span className="text-muted-foreground">{activity}</span>
-                </div>
-              ))}
+          {profile?.skills && profile.skills.length > 0 && (
+            <div className="glass-card p-6">
+              <h2 className="text-lg font-semibold">Skills</h2>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {profile.skills.map((skill) => (
+                  <span key={skill} className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+                    {skill}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
+
+          {profile?.education && profile.education.length > 0 && (
+            <div className="glass-card p-6">
+              <h2 className="text-lg font-semibold">Education</h2>
+              <div className="mt-3 space-y-3">
+                {profile.education.map((edu) => (
+                  <div key={edu.id}>
+                    <p className="text-sm font-medium">{edu.degree}</p>
+                    <p className="text-xs text-muted-foreground">{edu.institution} · {edu.year}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Sidebar */}
@@ -71,35 +108,49 @@ export default function Profile() {
           <div className="glass-card p-6">
             <h3 className="font-semibold">Details</h3>
             <dl className="mt-3 space-y-3 text-sm">
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <MapPin className="h-4 w-4" /> Cambridge, MA
-              </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Mail className="h-4 w-4" /> alex@mit.edu
-              </div>
+              {profile?.location && (
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <MapPin className="h-4 w-4" /> {profile.location}
+                </div>
+              )}
+              {profile?.email && (
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Mail className="h-4 w-4" /> {profile.email}
+                </div>
+              )}
             </dl>
           </div>
 
-          <div className="glass-card p-6">
-            <h3 className="font-semibold">University</h3>
-            <p className="mt-2 text-sm text-muted-foreground">Massachusetts Institute of Technology</p>
-            <p className="text-xs text-muted-foreground">Department of Computer Science</p>
-          </div>
-
-          <div className="glass-card p-6">
-            <h3 className="font-semibold">Links</h3>
-            <div className="mt-3 space-y-2">
-              <a href="#" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                <Github className="h-4 w-4" /> github.com/alexjohnson
-              </a>
-              <a href="#" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                <Linkedin className="h-4 w-4" /> linkedin.com/in/alexjohnson
-              </a>
-              <a href="#" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                <ExternalLink className="h-4 w-4" /> alexjohnson.dev
-              </a>
+          {(profile?.university || profile?.department) && (
+            <div className="glass-card p-6">
+              <h3 className="font-semibold">University</h3>
+              {profile.university && <p className="mt-2 text-sm text-muted-foreground">{profile.university}</p>}
+              {profile.department && <p className="text-xs text-muted-foreground">{profile.department}</p>}
             </div>
-          </div>
+          )}
+
+          {(profile?.githubUrl || profile?.linkedinUrl || profile?.websiteUrl) && (
+            <div className="glass-card p-6">
+              <h3 className="font-semibold">Links</h3>
+              <div className="mt-3 space-y-2">
+                {profile.githubUrl && (
+                  <a href={`https://${profile.githubUrl}`} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                    <Github className="h-4 w-4" /> {profile.githubUrl}
+                  </a>
+                )}
+                {profile.linkedinUrl && (
+                  <a href={`https://${profile.linkedinUrl}`} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                    <Linkedin className="h-4 w-4" /> {profile.linkedinUrl}
+                  </a>
+                )}
+                {profile.websiteUrl && (
+                  <a href={`https://${profile.websiteUrl}`} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                    <ExternalLink className="h-4 w-4" /> {profile.websiteUrl}
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

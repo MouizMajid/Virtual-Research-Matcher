@@ -53,7 +53,7 @@ export default function Landing() {
                 Get Started <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                to="/browse"
+                to="/public-browse"
                 className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-6 py-3 text-sm font-semibold transition-all hover:bg-muted hover-lift"
               >
                 Browse Projects

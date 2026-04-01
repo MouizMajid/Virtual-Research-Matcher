@@ -82,6 +82,15 @@ public class ApplicationService {
         return applicationRepository.save(application);
     }
 
+    public Application updateApplicationStatus(Long id, Application.Status status, User researcher) {
+        Application application = getApplicationById(id);
+        if (!application.getPosting().getCreatedBy().getId().equals(researcher.getId())) {
+            throw new RuntimeException("You can only update status for applications on your own postings");
+        }
+        application.setStatus(status);
+        return applicationRepository.save(application);
+    }
+
     public void deleteApplication(Long id, User applicant) {
         Application application = getApplicationById(id);
         if (!application.getApplicant().getId().equals(applicant.getId())) {

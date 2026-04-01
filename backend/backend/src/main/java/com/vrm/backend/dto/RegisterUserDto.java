@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RegisterUserDto {
+    // this is the data transfer object used to create a user
     private String email;
     private String password;
     private String firstName;

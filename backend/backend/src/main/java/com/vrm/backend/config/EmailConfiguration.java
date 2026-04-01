@@ -11,6 +11,9 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 @Configuration
 public class EmailConfiguration {
     
+    // this class is responsible for configuring the email sender, it defines a 
+    // bean for JavaMailSender that is used to send emails (such as verification emails)
+    // from the application
     @Value("${spring.mail.username}")
     private String emailUsername;
     @Value("${spring.mail.password}")

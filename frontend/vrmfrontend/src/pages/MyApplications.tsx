@@ -1,8 +1,22 @@
 import { StatusBadge } from "../components/StatusBadge";
-import { mockApplications } from "../data/mockData";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import api from "../lib/api";
+
+interface ApplicationResponse {
+  id: number;
+  postingTitle: string;
+  applicantEmail: string;
+  createdAt: string;
+  status: string;
+  postingId: number;
+}
 
 export default function MyApplications() {
+  const { data: applications = [], isLoading } = useQuery<ApplicationResponse[]>({
+    queryKey: ["my-applications"],
+    queryFn: () => api.get("/applications/my").then((r) => r.data),
+  });
+
   return (
     <div className="space-y-6">
       <div>
@@ -16,39 +30,36 @@ export default function MyApplications() {
             <thead>
               <tr className="border-b border-border text-left text-muted-foreground">
                 <th className="px-4 py-3 font-medium">Project</th>
-                <th className="px-4 py-3 font-medium">Researcher</th>
                 <th className="px-4 py-3 font-medium">Applied Date</th>
                 <th className="px-4 py-3 font-medium">Status</th>
-                <th className="px-4 py-3 font-medium">Action</th>
               </tr>
             </thead>
             <tbody>
-              {mockApplications.map((app) => (
-                <tr key={app.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
-                  <td className="px-4 py-3 font-medium">{app.project}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{app.researcher}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{app.appliedDate}</td>
-                  <td className="px-4 py-3"><StatusBadge status={app.status} /></td>
-                  <td className="px-4 py-3">
-                    <button className="text-sm font-medium text-primary hover:underline">View Details</button>
-                  </td>
-                </tr>
-              ))}
+              {isLoading ? (
+                <tr><td colSpan={3} className="px-4 py-8 text-center text-muted-foreground">Loading...</td></tr>
+              ) : applications.length === 0 ? (
+                <tr><td colSpan={3} className="px-4 py-8 text-center text-muted-foreground">No applications yet.</td></tr>
+              ) : (
+                applications.map((app) => (
+                  <tr key={app.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
+                    <td className="px-4 py-3 font-medium">{app.postingTitle}</td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : "—"}
+                    </td>
+                    <td className="px-4 py-3">
+                      <StatusBadge status={app.status.toLowerCase() as "pending" | "accepted" | "rejected"} />
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
-        <div className="flex items-center justify-between border-t border-border px-4 py-3">
-          <p className="text-xs text-muted-foreground">Showing 1-5 of 5 results</p>
-          <div className="flex items-center gap-1">
-            <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors">
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            <button className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground text-xs font-medium">1</button>
-            <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors">
-              <ChevronRight className="h-4 w-4" />
-            </button>
+        {applications.length > 0 && (
+          <div className="border-t border-border px-4 py-3">
+            <p className="text-xs text-muted-foreground">Showing {applications.length} application{applications.length !== 1 ? "s" : ""}</p>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

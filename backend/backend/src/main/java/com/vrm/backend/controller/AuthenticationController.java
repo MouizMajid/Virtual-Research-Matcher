@@ -28,10 +28,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterUserDto registerUserDto) {
-        User registeredUser = authenticationService.signup(registerUserDto);
-        RegisterResponse response = new RegisterResponse(registeredUser);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> register(@RequestBody RegisterUserDto registerUserDto) {
+        try {
+            User registeredUser = authenticationService.signup(registerUserDto);
+            return ResponseEntity.ok(new RegisterResponse(registeredUser));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
     
     @PostMapping("/login")

@@ -1,37 +1,76 @@
-import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Upload } from "lucide-react";
-import { mockProjects } from "../data/mockData";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import api from "../lib/api";
+
+interface Posting {
+  id: number;
+  title: string;
+}
 
 export default function ApplicationPage() {
   const { id } = useParams();
-  const project = mockProjects.find((p) => p.id === id) || mockProjects[0];
+  const navigate = useNavigate();
+
+  const [coverLetter, setCoverLetter] = useState("");
+  const [resume, setResume] = useState("");
+  const [why, setWhy] = useState("");
+  const [experience, setExperience] = useState("");
+
+  const { data: posting } = useQuery<Posting>({
+    queryKey: ["posting", id],
+    queryFn: () => api.get(`/postings/${id}`).then((r) => r.data),
+    enabled: !!id,
+  });
+
+  const mutation = useMutation({
+    mutationFn: (data: object) => api.post("/applications", data).then((r) => r.data),
+    onSuccess: () => navigate("/dashboard/my-applications"),
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    mutation.mutate({
+      postingId: Number(id),
+      coverLetter,
+      resume,
+      why,
+      experience,
+    });
+  };
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-8">
-      <Link to={`/posting/${project.id}`} className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors">
+      <Link to={`/posting/${id}`} className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors">
         <ArrowLeft className="h-4 w-4" /> Back to Project
       </Link>
 
       <div className="glass-card p-8">
         <h1 className="text-2xl font-bold">Apply to Project</h1>
-        <p className="mt-1 text-muted-foreground">{project.title}</p>
+        <p className="mt-1 text-muted-foreground">{posting?.title ?? "Loading..."}</p>
 
-        <form className="mt-8 space-y-6" onSubmit={(e) => e.preventDefault()}>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-medium mb-1.5">Resume / CV</label>
-            <div className="flex items-center justify-center rounded-xl border-2 border-dashed border-border bg-muted/50 px-6 py-10 cursor-pointer hover:bg-muted transition-colors">
-              <div className="text-center">
-                <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
-                <p className="mt-2 text-sm text-muted-foreground">Click to upload or drag and drop</p>
-                <p className="text-xs text-muted-foreground">PDF, DOC up to 10MB</p>
-              </div>
-            </div>
+            <label className="block text-sm font-medium mb-1.5">Resume / CV Link</label>
+            <input
+              type="url"
+              required
+              value={resume}
+              onChange={(e) => setResume(e.target.value)}
+              placeholder="https://drive.google.com/your-resume"
+              className="h-10 w-full rounded-xl border border-input bg-card px-4 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+            <p className="mt-1 text-xs text-muted-foreground">Paste a link to your resume (Google Drive, Dropbox, etc.)</p>
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-1.5">Cover Letter</label>
             <textarea
+              required
               rows={6}
+              value={coverLetter}
+              onChange={(e) => setCoverLetter(e.target.value)}
               placeholder="Tell the researcher why you're a great fit for this project..."
               className="w-full rounded-xl border border-input bg-card px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
             />
@@ -40,7 +79,10 @@ export default function ApplicationPage() {
           <div>
             <label className="block text-sm font-medium mb-1.5">Why are you interested in this research?</label>
             <textarea
+              required
               rows={3}
+              value={why}
+              onChange={(e) => setWhy(e.target.value)}
               placeholder="Briefly describe your motivation..."
               className="w-full rounded-xl border border-input bg-card px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
             />
@@ -49,17 +91,25 @@ export default function ApplicationPage() {
           <div>
             <label className="block text-sm font-medium mb-1.5">Relevant Experience</label>
             <textarea
+              required
               rows={3}
+              value={experience}
+              onChange={(e) => setExperience(e.target.value)}
               placeholder="Describe any relevant coursework, projects, or research..."
               className="w-full rounded-xl border border-input bg-card px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
             />
           </div>
 
+          {mutation.isError && (
+            <p className="text-sm text-destructive">Failed to submit application. Please try again.</p>
+          )}
+
           <button
             type="submit"
-            className="gradient-bg w-full rounded-xl px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
+            disabled={mutation.isPending}
+            className="gradient-bg w-full rounded-xl px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 disabled:opacity-50"
           >
-            Submit Application
+            {mutation.isPending ? "Submitting..." : "Submit Application"}
           </button>
         </form>
       </div>

@@ -37,7 +37,7 @@ public class AuthenticationService {
     public User signup(RegisterUserDto input){
         Optional<User> optionalUser = userRepository.findByEmail(input.getEmail());
         if(optionalUser.isPresent()){
-            throw new RuntimeException("User already exists");
+            throw new RuntimeException("Email already registered");
         }
         User user = new User(input.getEmail(), passwordEncoder.encode(input.getPassword()));
         user.setFirstName(input.getFirstName());
@@ -46,9 +46,9 @@ public class AuthenticationService {
         user.setVerificationCode(generateVerificationCode());
         user.setVerificationExpired(LocalDateTime.now().plusMinutes(15));
         user.setEnabled(false);
-        sendVerificationEmail(user);
-        
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        sendVerificationEmail(savedUser);
+        return savedUser;
     }
 
     public User authenticate (LoginUserDto input){
@@ -101,20 +101,46 @@ public class AuthenticationService {
         }
     }
     public void sendVerificationEmail(User user) {
-        String subject = "Account Verification";
-        String verificationCode =  user.getVerificationCode();
-        String htmlMessage = "<html>"
-            + "<body style=\"font-family: Arial, sans-serif; \">"
-            + "<div style=\"background-color: #f5f5f5; padding: 20px;\">"
-            + "<h2 style=\"color: #333;\">Welcome to our app !</h2>"
-            + "<p style=\"font-size: 16px;\">Please enter the verification code below to continue :</p>"
-            + "<div style=\"background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);\">"
-            + "<h3 style=\"color: #333;\">Verification Code :</h3>"
-            + "<p style=\"font-size: 18px; font-weight: bold; color: #007bff;\">" + verificationCode + "</p>"
+        String subject = "Verify your VRMM account";
+        String verificationCode = user.getVerificationCode();
+        String htmlMessage = "<!DOCTYPE html><html><head><meta charset='UTF-8'></head>"
+            + "<body style='margin:0;padding:0;background-color:#f3f4f8;font-family:Arial,sans-serif;'>"
+            + "<table width='100%' cellpadding='0' cellspacing='0' border='0' style='background-color:#f3f4f8;padding:40px 0;'>"
+            + "<tr><td align='center'>"
+            + "<table width='560' cellpadding='0' cellspacing='0' border='0' style='max-width:560px;width:100%;'>"
+
+            // Header
+            + "<tr><td style='background:#6366f1;background:linear-gradient(135deg,#6366f1,#a855f7);"
+            + "border-radius:16px 16px 0 0;padding:32px 40px;text-align:center;'>"
+            + "<p style='margin:0;font-size:26px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;'>&#9879; VRMM</p>"
+            + "<p style='margin:8px 0 0;color:rgba(255,255,255,0.8);font-size:14px;'>Virtual Research Match Maker</p>"
+            + "</td></tr>"
+
+            // Body
+            + "<tr><td style='background:#ffffff;padding:40px;border-left:1px solid #e5e7eb;border-right:1px solid #e5e7eb;'>"
+            + "<h1 style='margin:0 0 8px;font-size:22px;font-weight:700;color:#1a1f36;'>Verify your email address</h1>"
+            + "<p style='margin:0 0 32px;font-size:15px;color:#6b7280;line-height:1.6;'>"
+            + "Thanks for signing up! Enter the code below in the app to activate your account.</p>"
+
+            // Code box
+            + "<div style='background:#f3f4f8;border:1px solid #e5e7eb;border-radius:12px;padding:24px;text-align:center;margin-bottom:32px;'>"
+            + "<p style='margin:0 0 10px;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.1em;'>Verification Code</p>"
+            + "<p style='margin:0;font-size:42px;font-weight:800;letter-spacing:0.35em;color:#6366f1;'>" + verificationCode + "</p>"
             + "</div>"
-            + "</div>"
-            + "</body>"
-            + "</html>";
+
+            + "<p style='margin:0;font-size:13px;color:#9ca3af;line-height:1.6;'>"
+            + "This code expires in <strong style='color:#1a1f36;'>15 minutes</strong>. "
+            + "If you didn't create an account, you can safely ignore this email.</p>"
+            + "</td></tr>"
+
+            // Footer
+            + "<tr><td style='background:#f9fafb;border:1px solid #e5e7eb;border-radius:0 0 16px 16px;"
+            + "padding:20px 40px;text-align:center;'>"
+            + "<p style='margin:0;font-size:12px;color:#9ca3af;'>&#169; 2025 VRMM &middot; Virtual Research Match Maker</p>"
+            + "</td></tr>"
+
+            + "</table></td></tr></table>"
+            + "</body></html>";
         try{
             emailService.sendVerificationEmail(user.getUsername(), subject, htmlMessage);
         }

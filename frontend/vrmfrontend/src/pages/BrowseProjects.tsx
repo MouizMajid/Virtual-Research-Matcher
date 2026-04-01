@@ -1,7 +1,18 @@
 import { useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { ProjectCard } from "../components/ProjectCard";
-import { mockProjects } from "../data/mockData";
+import { useQuery } from "@tanstack/react-query";
+import api from "../lib/api";
+
+interface Posting {
+  id: number;
+  title: string;
+  shortDescription: string;
+  location: string;
+  tags: string[];
+  applicationDeadline: string;
+  createdByUser: string;
+}
 
 const techFilters = ["Python", "TensorFlow", "NLP", "Blockchain", "Computer Vision", "R", "C++"];
 const locationFilters = ["Remote", "On-site", "Hybrid"];
@@ -11,11 +22,19 @@ export default function BrowseProjects() {
   const [selectedTech, setSelectedTech] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<string[]>([]);
 
-  const filteredProjects = mockProjects.filter((p) => {
-    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesTech = selectedTech.length === 0 || p.tags.some((t) => selectedTech.includes(t));
-    const matchesLocation = selectedLocation.length === 0 ||
+  const { data: postings = [], isLoading } = useQuery<Posting[]>({
+    queryKey: ["postings"],
+    queryFn: () => api.get("/postings").then((r) => r.data),
+  });
+
+  const filteredProjects = postings.filter((p) => {
+    const matchesSearch =
+      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.shortDescription.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesTech =
+      selectedTech.length === 0 || (p.tags || []).some((t) => selectedTech.includes(t));
+    const matchesLocation =
+      selectedLocation.length === 0 ||
       selectedLocation.some((loc) => p.location.toLowerCase().includes(loc.toLowerCase()));
     return matchesSearch && matchesTech && matchesLocation;
   });
@@ -30,7 +49,7 @@ export default function BrowseProjects() {
         <h1 className="text-3xl font-bold">Browse Research Projects</h1>
         <p className="mt-1 text-muted-foreground">Discover opportunities that match your skills and interests.</p>
       </div>
-      
+
       <div className="flex gap-8">
         {/* Filter Sidebar */}
         <aside className="w-64 shrink-0">
@@ -97,19 +116,32 @@ export default function BrowseProjects() {
             />
           </div>
 
-          <p className="mb-4 text-sm text-muted-foreground">{filteredProjects.length} projects found</p>
-
-          <div className="grid grid-cols-2 gap-4">
-            {filteredProjects.map((project) => (
-              <ProjectCard key={project.id} {...project} />
-            ))}
-          </div>
-
-          {filteredProjects.length === 0 && (
-            <div className="py-20 text-center text-muted-foreground">
-              <p className="text-lg font-medium">No projects found</p>
-              <p className="text-sm">Try adjusting your filters or search query.</p>
-            </div>
+          {isLoading ? (
+            <p className="text-sm text-muted-foreground">Loading projects...</p>
+          ) : (
+            <>
+              <p className="mb-4 text-sm text-muted-foreground">{filteredProjects.length} projects found</p>
+              <div className="grid grid-cols-2 gap-4">
+                {filteredProjects.map((p) => (
+                  <ProjectCard
+                    key={p.id}
+                    id={p.id}
+                    title={p.title}
+                    description={p.shortDescription}
+                    researcher={p.createdByUser}
+                    tags={p.tags || []}
+                    deadline={p.applicationDeadline}
+                    location={p.location}
+                  />
+                ))}
+              </div>
+              {filteredProjects.length === 0 && (
+                <div className="py-20 text-center text-muted-foreground">
+                  <p className="text-lg font-medium">No projects found</p>
+                  <p className="text-sm">Try adjusting your filters or search query.</p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

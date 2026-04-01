@@ -1,11 +1,51 @@
 import { useParams, Link } from "react-router-dom";
 import { Calendar, MapPin, Users, ArrowLeft, ExternalLink } from "lucide-react";
-import { mockProjects } from "../data/mockData";
 import { StatusBadge } from "../components/StatusBadge";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "../context/AuthContext";
+import api from "../lib/api";
+
+interface Posting {
+  id: number;
+  title: string;
+  shortDescription: string;
+  longDescription: string;
+  location: string;
+  remote: boolean;
+  positionsAvailable: number;
+  stipend: number;
+  length: string;
+  applicationDeadline: string;
+  requirements: string;
+  tags: string[];
+  createdByUser: string;
+  createdById: number;
+}
+
+function isOpen(deadline: string) {
+  return new Date(deadline) >= new Date();
+}
 
 export default function ViewPosting() {
   const { id } = useParams();
-  const project = mockProjects.find((p) => p.id === id) || mockProjects[0];
+  const { role } = useAuth();
+
+  const { data: posting, isLoading } = useQuery<Posting>({
+    queryKey: ["posting", id],
+    queryFn: () => api.get(`/postings/${id}`).then((r) => r.data),
+    enabled: !!id,
+  });
+
+  if (isLoading) {
+    return <div className="py-20 text-center text-muted-foreground">Loading...</div>;
+  }
+
+  if (!posting) {
+    return <div className="py-20 text-center text-muted-foreground">Posting not found.</div>;
+  }
+
+  const status = isOpen(posting.applicationDeadline) ? "open" : "closed";
+  const initials = posting.createdByUser.slice(0, 2).toUpperCase();
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">
@@ -19,67 +59,67 @@ export default function ViewPosting() {
           <div className="glass-card p-8">
             <div className="flex items-start justify-between">
               <div>
-                <StatusBadge status={project.status} />
-                <h1 className="mt-3 text-2xl font-bold">{project.title}</h1>
-                <p className="mt-1 text-muted-foreground">
-                  <Link to={`/dashboard/profile`} className="text-primary hover:underline">{project.researcher}</Link>
-                  {" · "}{project.university}
-                </p>
+                <StatusBadge status={status} />
+                <h1 className="mt-3 text-2xl font-bold">{posting.title}</h1>
+                <p className="mt-1 text-muted-foreground">{posting.createdByUser}</p>
               </div>
             </div>
 
             <div className="mt-6 flex items-center gap-6 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" /> Deadline: {project.deadline}</span>
-              <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4" /> {project.location}</span>
-              <span className="flex items-center gap-1.5"><Users className="h-4 w-4" /> {project.applicants} applicants</span>
+              <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" /> Deadline: {posting.applicationDeadline}</span>
+              <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4" /> {posting.location}</span>
+              <span className="flex items-center gap-1.5"><Users className="h-4 w-4" /> {posting.positionsAvailable} positions</span>
             </div>
 
             <div className="mt-6">
-              <h2 className="text-lg font-semibold">Project Description</h2>
-              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                {project.description}
-              </p>
-              <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-                This project offers an exciting opportunity to work at the intersection of cutting-edge technology and academic research. 
-                The selected candidate will have the chance to contribute to publications and present at conferences. 
-                We are looking for motivated individuals with strong analytical skills and a passion for innovation.
-              </p>
+              <h2 className="text-lg font-semibold">Description</h2>
+              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{posting.shortDescription}</p>
+              {posting.longDescription && (
+                <p className="mt-4 text-sm text-muted-foreground leading-relaxed">{posting.longDescription}</p>
+              )}
             </div>
 
-            <div className="mt-6">
-              <h2 className="text-lg font-semibold">Tech Stack</h2>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {project.tags.map((tag) => (
-                  <span key={tag} className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">{tag}</span>
-                ))}
+            {posting.requirements && (
+              <div className="mt-6">
+                <h2 className="text-lg font-semibold">Requirements</h2>
+                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{posting.requirements}</p>
               </div>
-            </div>
+            )}
+
+            {posting.tags && posting.tags.length > 0 && (
+              <div className="mt-6">
+                <h2 className="text-lg font-semibold">Tags</h2>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {posting.tags.map((tag) => (
+                    <span key={tag} className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">{tag}</span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Side Panel */}
         <div className="space-y-4 sticky top-24 self-start">
-          <div className="glass-card p-6">
-            <Link
-              to={`/application/${project.id}`}
-              className="gradient-bg flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
-            >
-              Apply Now <ExternalLink className="h-4 w-4" />
-            </Link>
-            <p className="mt-3 text-center text-xs text-muted-foreground">
-              {project.applicants} people have already applied
-            </p>
-          </div>
+          {role === "student" && status === "open" && (
+            <div className="glass-card p-6">
+              <Link
+                to={`/application/${posting.id}`}
+                className="gradient-bg flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
+              >
+                Apply Now <ExternalLink className="h-4 w-4" />
+              </Link>
+            </div>
+          )}
 
           <div className="glass-card p-6">
             <h3 className="font-semibold">About the Researcher</h3>
             <div className="mt-3 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
-                {project.researcher.split(" ").map(n => n[0]).join("")}
+                {initials}
               </div>
               <div>
-                <p className="text-sm font-medium">{project.researcher}</p>
-                <p className="text-xs text-muted-foreground">{project.university}</p>
+                <p className="text-sm font-medium">{posting.createdByUser}</p>
               </div>
             </div>
           </div>
@@ -88,20 +128,30 @@ export default function ViewPosting() {
             <h3 className="font-semibold">Key Details</h3>
             <dl className="mt-3 space-y-2 text-sm">
               <div className="flex justify-between">
-                <dt className="text-muted-foreground">Posted</dt>
-                <dd>{project.posted}</dd>
-              </div>
-              <div className="flex justify-between">
                 <dt className="text-muted-foreground">Deadline</dt>
-                <dd>{project.deadline}</dd>
+                <dd>{posting.applicationDeadline}</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Location</dt>
-                <dd>{project.location}</dd>
+                <dd>{posting.location}</dd>
               </div>
               <div className="flex justify-between">
+                <dt className="text-muted-foreground">Remote</dt>
+                <dd>{posting.remote ? "Yes" : "No"}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Length</dt>
+                <dd>{posting.length}</dd>
+              </div>
+              {posting.stipend > 0 && (
+                <div className="flex justify-between">
+                  <dt className="text-muted-foreground">Stipend</dt>
+                  <dd>${posting.stipend}</dd>
+                </div>
+              )}
+              <div className="flex justify-between">
                 <dt className="text-muted-foreground">Status</dt>
-                <dd><StatusBadge status={project.status} /></dd>
+                <dd><StatusBadge status={status} /></dd>
               </div>
             </dl>
           </div>

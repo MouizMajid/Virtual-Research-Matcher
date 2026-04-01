@@ -19,30 +19,33 @@ interface AuthContextType {
   logout: () => void;
 }
 
-// 2. Create the context (null is just the initial empty value)
 const AuthContext = createContext<AuthContextType | null>(null);
 
 // 3. The Provider — wraps your app and holds the actual state
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const decodeToken = (token: string): User => {
+    const decoded = jwtDecode<User & { role: string }>(token);
+    return { ...decoded, role: decoded.role?.toLowerCase() as Role };
+  };
+
   const [user, setUser] = useState<User | null>(() => {
     const token = localStorage.getItem("token");
     if (!token) return null;
     try {
-      return jwtDecode<User>(token);  // rehydrate user from existing token
+      return decodeToken(token);
     } catch {
-      localStorage.removeItem("token");  // token was malformed, clean it up
+      localStorage.removeItem("token");
       return null;
     }
   });
-    
+
   const login = (token: string) => {
-    localStorage.setItem("token", token);       // 1. persist the raw token
-    const decoded = jwtDecode<User>(token);     // 2. decode to get user info
-    setUser(decoded);                           // 3. save into context state
+    localStorage.setItem("token", token);
+    setUser(decodeToken(token));
   };
 
   const logout = () => {
-    localStorage.removeItem("token");  // 👈 clear the token
+    localStorage.removeItem("token");  
     setUser(null);
   };
 

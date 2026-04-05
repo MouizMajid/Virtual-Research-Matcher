@@ -8,13 +8,11 @@ import api from "../lib/api";
 interface Posting {
   id: number;
   title: string;
-  shortDescription: string;
-  longDescription: string;
+  description: string;
   location: string;
-  remote: boolean;
-  positionsAvailable: number;
+  openPositions: number;
   stipend: number;
-  length: string;
+  duration: string;
   applicationDeadline: string;
   requirements: string;
   tags: string[];
@@ -68,15 +66,12 @@ export default function ViewPosting() {
             <div className="mt-6 flex items-center gap-6 text-sm text-muted-foreground">
               <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" /> Deadline: {posting.applicationDeadline}</span>
               <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4" /> {posting.location}</span>
-              <span className="flex items-center gap-1.5"><Users className="h-4 w-4" /> {posting.positionsAvailable} positions</span>
+              <span className="flex items-center gap-1.5"><Users className="h-4 w-4" /> {posting.openPositions} positions</span>
             </div>
 
             <div className="mt-6">
               <h2 className="text-lg font-semibold">Description</h2>
-              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{posting.shortDescription}</p>
-              {posting.longDescription && (
-                <p className="mt-4 text-sm text-muted-foreground leading-relaxed">{posting.longDescription}</p>
-              )}
+              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{posting.description}</p>
             </div>
 
             {posting.requirements && (
@@ -136,12 +131,8 @@ export default function ViewPosting() {
                 <dd>{posting.location}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-muted-foreground">Remote</dt>
-                <dd>{posting.remote ? "Yes" : "No"}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Length</dt>
-                <dd>{posting.length}</dd>
+                <dt className="text-muted-foreground">Duration</dt>
+                <dd>{posting.duration}</dd>
               </div>
               {posting.stipend > 0 && (
                 <div className="flex justify-between">

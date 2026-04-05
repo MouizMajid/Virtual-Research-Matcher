@@ -28,16 +28,14 @@ public class PostingService {
 
         posting.setType(input.getType());
         posting.setTitle(input.getTitle());
-        posting.setLongDescription(input.getLongDescription());
-        posting.setShortDescription(input.getShortDescription());
+        posting.setDescription(input.getDescription());
         posting.setApplicationDeadline(input.getApplicationDeadline());
-        posting.setRemote(input.isRemote());
         posting.setLocation(input.getLocation());
         posting.setTags(input.getTags());
         posting.setCreatedBy(user);
-        posting.setLength(input.getLength());
+        posting.setDuration(input.getDuration());
         posting.setRequirements(input.getRequirements());
-        posting.setPositionsAvailable(input.getPositionsAvailable());
+        posting.setOpenPositions(input.getOpenPositions());
         posting.setStipend(input.getStipend());
 
         return postingRepository.save(posting);
@@ -64,15 +62,14 @@ public class PostingService {
 
         posting.setType(input.getType());
         posting.setTitle(input.getTitle());
-        posting.setLongDescription(input.getLongDescription());
-        posting.setShortDescription(input.getShortDescription());
+        posting.setDescription(input.getDescription());
         posting.setApplicationDeadline(input.getApplicationDeadline());
-        posting.setRemote(input.isRemote());
         posting.setLocation(input.getLocation());
         posting.setTags(input.getTags());
-        posting.setLength(input.getLength());
+        posting.setCreatedBy(user);
+        posting.setDuration(input.getDuration());
         posting.setRequirements(input.getRequirements());
-        posting.setPositionsAvailable(input.getPositionsAvailable());
+        posting.setOpenPositions(input.getOpenPositions());
         posting.setStipend(input.getStipend());
 
         return postingRepository.save(posting);

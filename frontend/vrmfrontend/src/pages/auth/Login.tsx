@@ -25,8 +25,13 @@ export default function Login() {
       const { data } = await api.post("/auth/login", {email: formdata.email, password: formdata.password});
       login(data.token);
       navigate("/dashboard/profile");
-    } catch (error) {
-      setError("root", { message: "Invalid email or password" });
+    } catch (error: any) {
+      const message = error?.response?.data;
+      if (typeof message === "string" && message.toLowerCase().includes("email")) {
+        setError("email", { message });
+      } else {
+        setError("root", { message });
+      }
     }
   };
 

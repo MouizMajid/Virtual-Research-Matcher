@@ -34,6 +34,11 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    // this method configures the security filter chain, it defines which endpoints
+    //  are protected and what roles are required to access them, it also configures
+    //  CORS and disables CSRF since we are using JWT for authentication, it sets the 
+    // session management to stateless since we are not using sessions, and it adds 
+    // the JWT authentication filter to the filter chain 
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -63,7 +68,7 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-    @Bean
+   @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080"));

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vrm.backend.dto.CreatePostingDto;
 import com.vrm.backend.model.Posting;
 import com.vrm.backend.model.User;
-import com.vrm.backend.responses.ApplicationResponse;
 import com.vrm.backend.responses.PostingResponse;
 import com.vrm.backend.service.PostingService;
 import com.vrm.backend.service.UserService;

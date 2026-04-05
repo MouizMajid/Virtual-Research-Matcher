@@ -40,25 +40,19 @@ public class Posting {
     private String title;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String shortDescription;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String longDescription;
+    private String description;
 
     @Column(nullable = false)
     private String location;
 
     @Column(nullable = false)
-    private boolean remote;
-
-    @Column(nullable = false)
-    private int positionsAvailable;
+    private int openPositions;
 
     @Column 
     private float stipend;
 
     @Column(nullable = false)
-    private String length;
+    private String duration;
 
     @Column(nullable = false)
     private LocalDate applicationDeadline;

@@ -11,15 +11,17 @@ public class PostingResponse {
     private Long id;
     private Posting.Type type;
     private String title;
-    private String shortDescription;
-    private String longDescription;
+    private String description;
+
     private String location;
-    private boolean remote;
-    private int positionsAvailable;
-    private float stipend;
-    private String length;
-    private LocalDate applicationDeadline;
+
+    private String duration;
+    private String category;
+    private int openPositions;
+
     private String requirements;
+    private LocalDate applicationDeadline;
+    private float stipend;
     private String[] tags;
     private String createdByUser;
     private Long createdById;
@@ -28,13 +30,11 @@ public class PostingResponse {
         this.id = posting.getId();
         this.type = posting.getType();
         this.title = posting.getTitle();
-        this.shortDescription = posting.getShortDescription();
-        this.longDescription = posting.getLongDescription();
+        this.description = posting.getDescription();
         this.location = posting.getLocation();
-        this.remote = posting.isRemote();
-        this.positionsAvailable = posting.getPositionsAvailable();
+        this.openPositions = posting.getOpenPositions();
         this.stipend = posting.getStipend();
-        this.length = posting.getLength();
+        this.duration = posting.getDuration();
         this.applicationDeadline = posting.getApplicationDeadline();
         this.requirements = posting.getRequirements();
         this.tags = posting.getTags();

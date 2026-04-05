@@ -1,7 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../lib/api";
 
 interface Posting {
@@ -10,6 +10,7 @@ interface Posting {
 }
 
 export default function ApplicationPage() {
+  const queryClient = useQueryClient();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -26,7 +27,10 @@ export default function ApplicationPage() {
 
   const mutation = useMutation({
     mutationFn: (data: object) => api.post("/applications", data).then((r) => r.data),
-    onSuccess: () => navigate("/dashboard/my-applications"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-applications"] });
+      navigate("/dashboard/my-applications")
+    },
   });
 
   const handleSubmit = (e: React.FormEvent) => {

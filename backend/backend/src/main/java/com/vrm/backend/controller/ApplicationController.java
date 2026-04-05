@@ -32,6 +32,7 @@ public class ApplicationController {
         this.postingService = postingService;
     }
 
+    
     @PostMapping
     public ResponseEntity<ApplicationResponse> createApplication(@RequestBody ApplicationDto applicationDto) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

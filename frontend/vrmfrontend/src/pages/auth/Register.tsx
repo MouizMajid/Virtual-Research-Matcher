@@ -32,7 +32,7 @@ export default function Register() {
 
   const onSubmit: SubmitHandler<FormFields> = async (formdata) => {
     try {
-      const { data } = await api.post("/auth/register", {
+      await api.post("/auth/register", {
         firstName: formdata.firstName,
         lastName: formdata.lastName,
         email: formdata.email,

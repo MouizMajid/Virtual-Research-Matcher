@@ -5,12 +5,31 @@ import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label.tsx";
 import { Button } from "../components/ui/button";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import api from "../lib/api.ts";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
+
+type FormFields = {
+  projectTitle: string;
+  type: "PROJECT" | "POSITION";
+  description: string;
+  category: string;
+  openPositions: number;
+  date: string;
+  location: string;
+  duration: string;
+  compensation: number;
+  requirements: string;
+};
 
 export default function CreatePosting() {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+
+  const { register, handleSubmit } = useForm<FormFields>();
 
   const addTag = () => {
     const trimmed = tagInput.trim();
@@ -22,25 +41,33 @@ export default function CreatePosting() {
 
   const removeTag = (tag: string) => setTags(tags.filter((t) => t !== tag));
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => navigate("/dashboard/my-postings"), 1500);
-  };
 
-  if (submitted) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="glass-card p-10 text-center space-y-3 animate-fade-in">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-            <Plus className="h-7 w-7 text-primary" />
-          </div>
-          <h2 className="text-xl font-bold">Posting Published!</h2>
-          <p className="text-sm text-muted-foreground">Your research posting is now live and visible to students.</p>
-        </div>
-      </div>
-    );
+  const createPostingMutation = useMutation({
+    mutationFn: (data: object) => api.post("/postings", data).then((r) => r.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-postings"] }); 
+      queryClient.invalidateQueries({ queryKey: ["postings"] }); 
+      navigate("/dashboard/my-postings")
+    },
+  })
+
+  const onSubmit: SubmitHandler<FormFields> = (formdata) => {
+    createPostingMutation.mutate({
+        type: formdata.type,
+        title: formdata.projectTitle,
+        description: formdata.description,
+        location: formdata.location,
+        duration: formdata.duration,
+        category: formdata.category,
+        openPositions: formdata.openPositions,
+        requirements: formdata.requirements,
+        stipend: formdata.compensation,
+        applicationDeadline: formdata.date,
+        tags: tags,
+    }
+    )     
   }
+ 
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -58,14 +85,29 @@ export default function CreatePosting() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Basic Info */}
         <div className="glass-card p-6 space-y-5">
           <h2 className="font-semibold text-lg">Basic Information</h2>
 
-          <div className="space-y-2">
-            <Label htmlFor="title">Project Title *</Label>
-            <Input id="title" placeholder="e.g. Machine Learning for Climate Prediction" required />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">Project Title *</Label>
+              <Input id="title" placeholder="e.g. Machine Learning for Climate Prediction" {...register("projectTitle", { required: true })} />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="type">Posting Type *</Label>
+              <select
+                id="type"
+                {...register("type", { required: true })}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <option value="">Select type</option>
+                <option value="PROJECT">Project</option>
+                <option value="POSITION">Position</option>
+              </select>
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -74,7 +116,7 @@ export default function CreatePosting() {
               id="description"
               placeholder="Describe the research project, goals, and what the student will work on..."
               className="min-h-[140px]"
-              required
+              {...register("description", { required: true })}
             />
           </div>
 
@@ -83,7 +125,7 @@ export default function CreatePosting() {
               <Label htmlFor="category">Category *</Label>
               <select
                 id="category"
-                required
+                {...register("category", { required: true })}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <option value="">Select category</option>
@@ -99,7 +141,7 @@ export default function CreatePosting() {
 
             <div className="space-y-2">
               <Label htmlFor="positions">Open Positions *</Label>
-              <Input id="positions" type="number" min={1} max={20} placeholder="e.g. 3" required />
+              <Input id="positions" type="number" min={1} max={20} placeholder="e.g. 3" {...register("openPositions", { required: true, valueAsNumber: true })} />
             </div>
           </div>
         </div>
@@ -113,7 +155,7 @@ export default function CreatePosting() {
               <Label htmlFor="deadline" className="flex items-center gap-1.5">
                 <Calendar className="h-3.5 w-3.5" /> Application Deadline *
               </Label>
-              <Input id="deadline" type="date" required />
+              <Input id="deadline" type="date" {...register("date", { required: true })} />
             </div>
 
             <div className="space-y-2">
@@ -122,25 +164,25 @@ export default function CreatePosting() {
               </Label>
               <select
                 id="location"
-                required
+                {...register("location", { required: true })}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <option value="">Select location type</option>
-                <option value="remote">Remote</option>
-                <option value="onsite">On-site</option>
-                <option value="hybrid">Hybrid</option>
+                <option value="Remote">Remote</option>
+                <option value="On-site">On-site</option>
+                <option value="Hybrid">Hybrid</option>
               </select>
             </div>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="duration">Duration</Label>
-            <Input id="duration" placeholder="e.g. 6 months, 1 semester" />
+            <Input id="duration" placeholder="e.g. 6 months, 1 semester" {...register("duration")} />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="compensation">Compensation (optional)</Label>
-            <Input id="compensation" placeholder="e.g. $2,000/month stipend, Unpaid, Course credit" />
+            <Input id="compensation" type="number" placeholder="e.g. 2000" {...register("compensation", { valueAsNumber: true })} />
           </div>
         </div>
 
@@ -184,6 +226,7 @@ export default function CreatePosting() {
               id="requirements"
               placeholder="List any required skills, coursework, or experience..."
               className="min-h-[100px]"
+              {...register("requirements")}
             />
           </div>
 
@@ -200,12 +243,17 @@ export default function CreatePosting() {
         </div>
 
         {/* Actions */}
+        {createPostingMutation.isError && (
+          <p className="text-sm text-destructive text-right">
+            {(createPostingMutation.error as AxiosError<{ message: string }>).response?.data?.message ?? "Something went wrong. Please try again."}
+          </p>
+        )}
         <div className="flex items-center justify-end gap-3">
           <Button type="button" variant="outline" onClick={() => navigate(-1)}>
             Cancel
           </Button>
-          <Button type="submit" className="gradient-bg text-primary-foreground">
-            Publish Posting
+          <Button type="submit" disabled={createPostingMutation.isPending} className="gradient-bg text-primary-foreground">
+            {createPostingMutation.isPending ? "Publishing..." : "Publish Posting"}
           </Button>
         </div>
       </form>

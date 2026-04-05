@@ -12,15 +12,19 @@ import lombok.Setter;
 public class CreatePostingDto {
     private Posting.Type type;
     private String title;
-    private String shortDescription;
-    private String longDescription;
+    private String description;
+
     private String location;
-    private boolean remote;
-    private String length;
+
+    private String duration;
+    private String category;
+    private int openPositions;
+
     private String requirements;
-    private int positionsAvailable;
     private LocalDate applicationDeadline;
     private float stipend;
     private String[] tags;
 
 }
+
+

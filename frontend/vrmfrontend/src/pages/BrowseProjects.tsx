@@ -7,7 +7,7 @@ import api from "../lib/api";
 interface Posting {
   id: number;
   title: string;
-  shortDescription: string;
+  description: string;
   location: string;
   tags: string[];
   applicationDeadline: string;
@@ -30,7 +30,7 @@ export default function BrowseProjects() {
   const filteredProjects = postings.filter((p) => {
     const matchesSearch =
       p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.shortDescription.toLowerCase().includes(searchQuery.toLowerCase());
+      p.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesTech =
       selectedTech.length === 0 || (p.tags || []).some((t) => selectedTech.includes(t));
     const matchesLocation =
@@ -127,7 +127,7 @@ export default function BrowseProjects() {
                     key={p.id}
                     id={p.id}
                     title={p.title}
-                    description={p.shortDescription}
+                    description={p.description}
                     researcher={p.createdByUser}
                     tags={p.tags || []}
                     deadline={p.applicationDeadline}

@@ -20,6 +20,10 @@ interface Posting {
   createdById: number;
 }
 
+interface Application {
+  postingId: number;
+}
+
 function isOpen(deadline: string) {
   return new Date(deadline) >= new Date();
 }
@@ -33,6 +37,14 @@ export default function ViewPosting() {
     queryFn: () => api.get(`/postings/${id}`).then((r) => r.data),
     enabled: !!id,
   });
+
+  const { data: myApplications = [] } = useQuery<Application[]>({
+    queryKey: ["my-applications"],
+    queryFn: () => api.get(`/applications/my`).then((r) => r.data),
+    enabled: !!id && role === "student",
+  });
+
+  const alreadyApplied = myApplications.some((a) => a.postingId === Number(id));
 
   if (isLoading) {
     return <div className="py-20 text-center text-muted-foreground">Loading...</div>;
@@ -96,14 +108,23 @@ export default function ViewPosting() {
 
         {/* Side Panel */}
         <div className="space-y-4 sticky top-24 self-start">
-          {role === "student" && status === "open" && (
+          {role === "student" && (
             <div className="glass-card p-6">
-              <Link
-                to={`/application/${posting.id}`}
-                className="gradient-bg flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
-              >
-                Apply Now <ExternalLink className="h-4 w-4" />
-              </Link>
+              {status === "open" && !alreadyApplied ? (
+                <Link
+                  to={`/application/${posting.id}`}
+                  className="gradient-bg flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
+                >
+                  Apply Now <ExternalLink className="h-4 w-4" />
+                </Link>
+              ) : (
+                <button
+                  disabled
+                  className="flex w-full items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold bg-muted text-muted-foreground cursor-not-allowed"
+                >
+                  {alreadyApplied ? "Already Applied" : "Applications Closed"}
+                </button>
+              )}
             </div>
           )}
 

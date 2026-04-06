@@ -7,7 +7,7 @@ const api = axios.create({
 
 // 2. interceptor — runs before EVERY request automatically
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token") ?? sessionStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`; 
   }

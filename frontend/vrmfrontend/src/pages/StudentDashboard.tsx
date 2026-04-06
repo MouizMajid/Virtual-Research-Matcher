@@ -18,12 +18,10 @@ export default function StudentDashboard() {
   });
 
   const total = applications.length;
-  // const accepted = applications.filter((a) => a.status === "ACCEPTED").length;
-  // const pending = applications.filter((a) => a.status === "PENDING").length;
-  // const recent = applications.slice(-5).reverse();
-  const accepted = 0;
-  const pending = 0;
-  const recent: ApplicationResponse[] = [];
+  const accepted = applications.filter((a) => a.status === "ACCEPTED").length;
+  const pending = applications.filter((a) => a.status === "PENDING").length;
+  const recent = applications.slice(-5).reverse();
+
 
   return (
     <div className="space-y-6">

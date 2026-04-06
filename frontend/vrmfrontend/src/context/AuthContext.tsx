@@ -34,7 +34,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const [user, setUser] = useState<User | null>(() => {
     const token = localStorage.getItem("token") ?? sessionStorage.getItem("token");
-    if (!token) return null;
+    if (!token) {
+      return null;
+    }
     try {
       return decodeToken(token);
     } catch {

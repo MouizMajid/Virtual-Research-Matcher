@@ -21,12 +21,18 @@ import com.vrm.backend.responses.ApplicationResponse;
 import com.vrm.backend.service.ApplicationService;
 import com.vrm.backend.service.PostingService;
 
+
 @RequestMapping("/applications")
 @RestController
+// this is a controller for Applications. It is the entry point into the backend for applications. It will handle all 
+// requests related to applications, such as creating an application, getting applications for a posting, etc. It calls the 
+// ApplicationService to perform the actual logic, and returns the appropriate responses.
+
 public class ApplicationController {
     private final ApplicationService applicationService;
     private final PostingService postingService;
 
+    // spring bean injection of the ApplicationService and PostingService
     public ApplicationController(ApplicationService applicationService, PostingService postingService) {
         this.applicationService = applicationService;
         this.postingService = postingService;

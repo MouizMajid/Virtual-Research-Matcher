@@ -19,7 +19,7 @@ type FormFields = {
 const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{6,})/;
 
 export default function Register() {
-  const { login } = useAuth();
+  const { isLoggedIn } = useAuth();
   const { register, handleSubmit, watch, setError, formState: { errors, isSubmitting } } = useForm<FormFields>({
     defaultValues: {
       role: "STUDENT"
@@ -30,6 +30,10 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  if( isLoggedIn ) {
+    navigate("/dashboard/profile", { replace: true });
+  }
+  
   const onSubmit: SubmitHandler<FormFields> = async (formdata) => {
     try {
       await api.post("/auth/register", {

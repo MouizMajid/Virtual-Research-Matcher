@@ -15,15 +15,18 @@ type FormFields = {
 };
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, isLoggedIn  } = useAuth();
   const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm<FormFields>();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
+  if( isLoggedIn ) {
+    navigate("/dashboard/profile", { replace: true });
+  }
   const onSubmit: SubmitHandler<FormFields> = async (formdata) => {
     try {
       const { data } = await api.post("/auth/login", {email: formdata.email, password: formdata.password});
-      login(data.token);
+      login(data.token, formdata.rememberMe);
       navigate("/dashboard/profile");
     } catch (error: any) {
       const message = error?.response?.data;

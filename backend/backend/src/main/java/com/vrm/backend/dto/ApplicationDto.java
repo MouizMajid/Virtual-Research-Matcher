@@ -3,7 +3,6 @@ package com.vrm.backend.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import com.vrm.backend.model.Application;
 
 
 @Getter

@@ -4,6 +4,7 @@ import {jwtDecode} from "jwt-decode";  // npm install jwt-decode
 // 1. Define the shape of your auth data
 type Role = "student" | "researcher" | null;
 
+// blueprint of what User must look like
 interface User {
   id: string;
   name: string;
@@ -15,7 +16,7 @@ interface AuthContextType {
   user: User | null;
   role: Role;
   isLoggedIn: boolean;
-  login: (token: string) => void;   // call this after successful login
+  login: (token: string, rememberMe: boolean) => void;
   logout: () => void;
 }
 
@@ -24,28 +25,37 @@ const AuthContext = createContext<AuthContextType | null>(null);
 // 3. The Provider — wraps your app and holds the actual state
 export function AuthProvider({ children }: { children: ReactNode }) {
   const decodeToken = (token: string): User => {
-    const decoded = jwtDecode<User & { role: string }>(token);
+    const decoded = jwtDecode<User & { role: string; exp?: number }>(token);
+    if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+      throw new Error("Token expired");
+    }
     return { ...decoded, role: decoded.role?.toLowerCase() as Role };
   };
 
   const [user, setUser] = useState<User | null>(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token") ?? sessionStorage.getItem("token");
     if (!token) return null;
     try {
       return decodeToken(token);
     } catch {
       localStorage.removeItem("token");
+      sessionStorage.removeItem("token");
       return null;
     }
   });
 
-  const login = (token: string) => {
-    localStorage.setItem("token", token);
+  const login = (token: string, rememberMe: boolean) => {
+    if (rememberMe) {
+      localStorage.setItem("token", token);
+    } else {
+      sessionStorage.setItem("token", token);
+    }
     setUser(decodeToken(token));
   };
 
   const logout = () => {
-    localStorage.removeItem("token");  
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     setUser(null);
   };
 

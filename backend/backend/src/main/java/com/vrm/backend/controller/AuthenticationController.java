@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vrm.backend.dto.ForgotPasswordDto;
 import com.vrm.backend.dto.LoginUserDto;
 import com.vrm.backend.dto.RegisterUserDto;
+import com.vrm.backend.dto.ResetPasswordDto;
 import com.vrm.backend.dto.VerifyUserDto;
 import com.vrm.backend.model.User;
 import com.vrm.backend.responses.LoginResponse;
@@ -54,6 +56,22 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordDto dto) {
+        authenticationService.forgotPassword(dto.getEmail());
+        return ResponseEntity.ok("If an account with that email exists, a reset link has been sent.");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDto dto) {
+        try {
+            authenticationService.resetPassword(dto.getToken(), dto.getNewPassword());
+            return ResponseEntity.ok("Password reset successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PostMapping("/resend")
     public ResponseEntity<?> resendVerificationCode(@RequestParam String email) {
         try {

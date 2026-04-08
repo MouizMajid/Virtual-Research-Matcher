@@ -5,7 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 
 
 export function DashboardLayout() {
-  const { role } = useAuth(); // 👈 get role from context directly
+  const { role } = useAuth(); 
   return (
     <div className="flex h-screen overflow-hidden">
       <DashboardSidebar />

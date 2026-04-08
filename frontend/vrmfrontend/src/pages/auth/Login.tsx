@@ -16,25 +16,47 @@ type FormFields = {
 
 export default function Login() {
   const { login, isLoggedIn  } = useAuth();
-  const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm<FormFields>();
+  const { register, handleSubmit, setError, getValues, formState: { errors, isSubmitting } } = useForm<FormFields>();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [showResend, setShowResend] = useState(false);
+  const [resendStatus, setResendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   if( isLoggedIn ) {
     navigate("/dashboard/profile", { replace: true });
   }
+
   const onSubmit: SubmitHandler<FormFields> = async (formdata) => {
+    setShowResend(false);
+    setResendStatus("idle");
     try {
       const { data } = await api.post("/auth/login", {email: formdata.email, password: formdata.password});
       login(data.token, formdata.rememberMe);
       navigate("/dashboard/profile");
     } catch (error: any) {
       const message = error?.response?.data;
-      if (typeof message === "string" && message.toLowerCase().includes("email")) {
+      if (typeof message === "string" && message.toLowerCase().includes("not verified")) {
+        setError("root", { message: "Your account hasn't been verified yet." });
+        setShowResend(true);
+      } else if (typeof message === "string" && message.toLowerCase().includes("email")) {
         setError("email", { message });
       } else {
         setError("root", { message });
       }
+    }
+  };
+
+  const handleResend = async () => {
+    setResendStatus("sending");
+    const email = getValues("email");
+    try {
+      await api.post(`/auth/resend?email=${encodeURIComponent(email)}`);
+      setResendStatus("sent");
+      setTimeout(() => {
+        navigate("/email-verification", { state: { email, fromAuth: true } });
+      }, 1000);
+    } catch {
+      setResendStatus("error");
     }
   };
 
@@ -102,6 +124,19 @@ export default function Login() {
         </div>
 
         {errors.root && <p className="ml-1 text-xs text-red-500 mt-1">{errors.root.message}</p>}
+        {showResend && (
+          <button
+            type="button"
+            disabled={resendStatus === "sending" || resendStatus === "sent"}
+            onClick={handleResend}
+            className="w-full text-sm font-medium text-primary hover:underline disabled:opacity-50"
+          >
+            {resendStatus === "sending" && "Sending..."}
+            {resendStatus === "sent" && "Email sent! Redirecting..."}
+            {resendStatus === "error" && "Failed to resend — try again"}
+            {resendStatus === "idle" && "Resend verification email"}
+          </button>
+        )}
 
         <button
           type="submit"

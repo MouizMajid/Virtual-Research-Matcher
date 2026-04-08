@@ -44,7 +44,7 @@ export default function Register() {
         password: formdata.password
       });
       navigate("/email-verification", { 
-        state: { email: formdata.email, fromRegister: true }, 
+        state: { email: formdata.email, fromAuth: true }, 
         replace: true 
       });
     } catch (error: any) {

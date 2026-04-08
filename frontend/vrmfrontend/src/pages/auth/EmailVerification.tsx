@@ -14,7 +14,7 @@ export default function EmailVerification() {
   const location = useLocation();
   const navigate = useNavigate();
   const email = location.state?.email;
-  const fromRegister = location.state?.fromRegister;
+  const fromAuth = location.state?.fromAuth;
 
   const [resendStatus, setResendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
@@ -25,7 +25,7 @@ export default function EmailVerification() {
     formState: { errors, isSubmitting },
   } = useForm<VerificationForm>();
 
-  if (!fromRegister || !email) {
+  if (!fromAuth || !email) {
     return <Navigate replace to="/register" />;
   }
 

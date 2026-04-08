@@ -1,21 +1,70 @@
 import { AuthCard } from "./AuthPages";
 import { Link } from "react-router-dom";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { useState } from "react";
+import api from "../../lib/api";
 
+type FormFields = {
+  email: string;
+};
 
 export default function ForgotPassword() {
+  const [submitted, setSubmitted] = useState(false);
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormFields>();
+
+  const onSubmit: SubmitHandler<FormFields> = async (formdata) => {
+    try {
+      await api.post("/auth/forgot-password", { email: formdata.email });
+    } catch {
+      // Always show success — don't reveal whether the email is registered
+    } finally {
+      setSubmitted(true);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <AuthCard
+        title="Check your email"
+        subtitle="If an account with that email exists, we've sent a reset link"
+        footer={<Link to="/login" className="font-medium text-primary hover:underline">Back to sign in</Link>}
+      >
+        <p className="text-center text-sm text-muted-foreground">
+          The link expires in 15 minutes. If you don't see it, check your spam folder.
+        </p>
+      </AuthCard>
+    );
+  }
+
   return (
     <AuthCard
       title="Forgot password?"
       subtitle="Enter your email and we'll send you a reset link"
       footer={<Link to="/login" className="font-medium text-primary hover:underline">Back to sign in</Link>}
     >
-      <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label className="block text-sm font-medium mb-1.5">Email</label>
-          <input type="email" placeholder="you@university.edu" className="h-10 w-full rounded-xl border border-input bg-card px-4 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
+          <input
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Please enter a valid email address"
+              }
+            })}
+            type="email"
+            placeholder="you@university.edu"
+            className="h-10 w-full rounded-xl border border-input bg-card px-4 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+          {errors.email && <p className="ml-1 text-xs text-red-500 mt-1">{errors.email.message}</p>}
         </div>
-        <button className="gradient-bg w-full rounded-xl px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90">
-          Send Reset Link
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="gradient-bg w-full rounded-xl px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 disabled:opacity-50"
+        >
+          {isSubmitting ? "Sending..." : "Send Reset Link"}
         </button>
       </form>
     </AuthCard>

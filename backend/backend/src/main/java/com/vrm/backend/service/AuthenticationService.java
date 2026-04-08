@@ -149,12 +149,23 @@ public class AuthenticationService {
             throw new RuntimeException("Failed to send verification email");
         }
     }
+    public void changePassword(User user, String currentPassword, String newPassword) {
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
     public void forgotPassword(String email) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
             return;
         }
         User user = optionalUser.get();
+        if (!user.isEnabled()) {
+            throw new RuntimeException("Account not verified");
+        }
         String token = UUID.randomUUID().toString();
         user.setVerificationCode(token);
         user.setVerificationExpired(LocalDateTime.now().plusMinutes(15));

@@ -58,7 +58,14 @@ public class AuthenticationController {
     }
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordDto dto) {
-        authenticationService.forgotPassword(dto.getEmail());
+        try {
+            authenticationService.forgotPassword(dto.getEmail());
+        } catch (RuntimeException e) {
+            if (e.getMessage().equals("Account not verified")) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+            // All other errors (email not found, etc.) are swallowed
+        }
         return ResponseEntity.ok("If an account with that email exists, a reset link has been sent.");
     }
 

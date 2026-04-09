@@ -38,7 +38,7 @@ public class PostingResponse {
         this.applicationDeadline = posting.getApplicationDeadline();
         this.requirements = posting.getRequirements();
         this.tags = posting.getTags();
-        this.createdByUser = posting.getCreatedBy().getUsername();
+        this.createdByUser = posting.getCreatedBy().getFirstName() + " " + posting.getCreatedBy().getLastName();
         this.createdById = posting.getCreatedBy().getId();
     }
 }

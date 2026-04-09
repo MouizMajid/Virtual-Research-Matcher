@@ -7,7 +7,8 @@ type Role = "student" | "researcher" | null;
 // blueprint of what User must look like
 interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   role: Role;
 }

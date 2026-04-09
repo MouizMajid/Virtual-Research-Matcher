@@ -26,6 +26,11 @@ interface UserInfoResponse {
   websiteUrl: string;
 }
 
+function normalizeUrl(url: string): string {
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  return "https://" + url;
+}
+
 export default function Profile() {
   const { data: profile, isLoading } = useQuery<UserInfoResponse>({
     queryKey: ["my-profile"],
@@ -134,18 +139,18 @@ export default function Profile() {
               <h3 className="font-semibold">Links</h3>
               <div className="mt-3 space-y-2">
                 {profile.githubUrl && (
-                  <a href={`https://${profile.githubUrl}`} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                    <Github className="h-4 w-4" /> {profile.githubUrl}
+                  <a href={normalizeUrl(profile.githubUrl)} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                    <Github className="h-4 w-4" /> GitHub
                   </a>
                 )}
                 {profile.linkedinUrl && (
-                  <a href={`https://${profile.linkedinUrl}`} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                    <Linkedin className="h-4 w-4" /> {profile.linkedinUrl}
+                  <a href={normalizeUrl(profile.linkedinUrl)} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                    <Linkedin className="h-4 w-4" /> LinkedIn
                   </a>
                 )}
                 {profile.websiteUrl && (
-                  <a href={`https://${profile.websiteUrl}`} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                    <ExternalLink className="h-4 w-4" /> {profile.websiteUrl}
+                  <a href={normalizeUrl(profile.websiteUrl)} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                    <ExternalLink className="h-4 w-4" /> Website
                   </a>
                 )}
               </div>

@@ -2,6 +2,7 @@ import { FileText, CheckCircle, Clock } from "lucide-react";
 import { MetricCard } from "../components/MetricCard";
 import { StatusBadge } from "../components/StatusBadge";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import api from "../lib/api";
 
 interface ApplicationResponse {
@@ -12,6 +13,7 @@ interface ApplicationResponse {
 }
 
 export default function StudentDashboard() {
+  const navigate = useNavigate();
   const { data: applications = [], isLoading } = useQuery<ApplicationResponse[]>({
     queryKey: ["my-applications"],
     queryFn: () => api.get("/applications/my").then((r) => r.data),
@@ -56,13 +58,17 @@ export default function StudentDashboard() {
                 <tr><td colSpan={3} className="px-4 py-8 text-center text-muted-foreground">No applications yet.</td></tr>
               ) : (
                 recent.map((app) => (
-                  <tr key={app.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
+                  <tr
+                    key={app.id}
+                    onClick={() => navigate(`/dashboard/applications/${app.id}`)}
+                    className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors cursor-pointer"
+                  >
                     <td className="px-4 py-3 font-medium">{app.postingTitle}</td>
                     <td className="px-4 py-3 text-muted-foreground">
                       {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : "—"}
                     </td>
                     <td className="px-4 py-3">
-                      <StatusBadge status={app.status.toLowerCase() as "pending" | "accepted" | "rejected"} />
+                      <StatusBadge status={app.status.toLowerCase() as "pending" | "accepted" | "rejected" | "withdrawn"} />
                     </td>
                   </tr>
                 ))

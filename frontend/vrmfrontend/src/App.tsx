@@ -13,6 +13,7 @@ import ApplicationPage from "./pages/ApplicationPage";
 import StudentDashboard from "./pages/StudentDashboard";
 import ResearcherDashboard from "./pages/ResearcherDashboard";
 import MyApplications from "./pages/MyApplications";
+import ViewApplication from "./pages/ViewApplication";
 import MyPostings from "./pages/MyPostings"; 
 import ViewApplicants from "./pages/ViewApplicants";
 import Profile from "./pages/Profile";
@@ -73,6 +74,7 @@ const App = () => {
             <Route element={<DashboardLayout />}>
               <Route path="/dashboard/student" element={<StudentDashboard />} />
               <Route path="/dashboard/my-applications" element={<MyApplications />} />
+              <Route path="/dashboard/applications/:id" element={<ViewApplication />} />
               <Route path="/application/:id" element={<ApplicationPage />} />
             </Route>
           </Route>

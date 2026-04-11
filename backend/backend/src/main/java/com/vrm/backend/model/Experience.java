@@ -15,12 +15,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "education")
+@Table(name = "experience")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Education {
+public class Experience {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,7 +31,11 @@ public class Education {
     @JsonIgnore
     private UserInfo userInfo;
 
-    private String degree;
-    private String institution;
-    private String year;
+    private String title;
+    private String company;
+    private String beginDate;
+    private String endDate;
+
+    @jakarta.persistence.Column(columnDefinition = "TEXT")
+    private String description;
 }

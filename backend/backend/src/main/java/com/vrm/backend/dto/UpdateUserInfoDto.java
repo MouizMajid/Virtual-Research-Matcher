@@ -17,13 +17,15 @@ public class UpdateUserInfoDto {
     private String linkedinUrl;
     private String websiteUrl;
     private List<String> skills;
-    private List<EducationDto> education;
+    private List<ExperienceDto> experiences;
 
     @Getter
     @Setter
-    public static class EducationDto {
-        private String degree;
-        private String institution;
-        private String year;
+    public static class ExperienceDto {
+        private String title;
+        private String company;
+        private String beginDate;
+        private String endDate;
+        private String description;
     }
 }

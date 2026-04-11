@@ -3,7 +3,7 @@ package com.vrm.backend.service;
 import org.springframework.stereotype.Service;
 
 import com.vrm.backend.dto.UpdateUserInfoDto;
-import com.vrm.backend.model.Education;
+import com.vrm.backend.model.Experience;
 import com.vrm.backend.model.User;
 import com.vrm.backend.model.UserInfo;
 import com.vrm.backend.repository.UserInfoRepository;
@@ -42,15 +42,17 @@ public class UserInfoService {
             userInfo.getSkills().addAll(dto.getSkills());
         }
 
-        if (dto.getEducation() != null) {
-            userInfo.getEducation().clear();
-            for (UpdateUserInfoDto.EducationDto eduDto : dto.getEducation()) {
-                Education edu = new Education();
-                edu.setUserInfo(userInfo);
-                edu.setDegree(eduDto.getDegree());
-                edu.setInstitution(eduDto.getInstitution());
-                edu.setYear(eduDto.getYear());
-                userInfo.getEducation().add(edu);
+        if (dto.getExperiences() != null) {
+            userInfo.getExperiences().clear();
+            for (UpdateUserInfoDto.ExperienceDto expDto : dto.getExperiences()) {
+                Experience exp = new Experience();
+                exp.setUserInfo(userInfo);
+                exp.setTitle(expDto.getTitle());
+                exp.setCompany(expDto.getCompany());
+                exp.setBeginDate(expDto.getBeginDate());
+                exp.setEndDate(expDto.getEndDate());
+                exp.setDescription(expDto.getDescription());
+                userInfo.getExperiences().add(exp);
             }
         }
 

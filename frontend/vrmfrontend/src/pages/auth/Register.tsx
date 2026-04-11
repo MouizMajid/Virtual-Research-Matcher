@@ -33,7 +33,7 @@ export default function Register() {
   if( isLoggedIn ) {
     navigate("/dashboard/profile", { replace: true });
   }
-  
+
   const onSubmit: SubmitHandler<FormFields> = async (formdata) => {
     try {
       await api.post("/auth/register", {
@@ -175,7 +175,7 @@ export default function Register() {
         </div>
 
         {/* Password Requirements */}
-        {password && (
+        
           <div className="mt-2 space-y-1.5 text-xs">
             <div className={`flex items-center gap-2 ${strength?.hasMinLength ? "text-green-600" : "text-muted-foreground"}`}>
               <span className={strength?.hasMinLength ? "✓" : "○"}>
@@ -193,7 +193,6 @@ export default function Register() {
               </span>
             </div>
           </div>
-        )}
 
         {errors.password && <p className="ml-1 text-xs text-red-500 mt-1">{errors.password.message}</p>}
 

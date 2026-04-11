@@ -3,7 +3,7 @@ package com.vrm.backend.responses;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.vrm.backend.model.Education;
+import com.vrm.backend.model.Experience;
 import com.vrm.backend.model.UserInfo;
 
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class UserInfoResponse {
     private String linkedinUrl;
     private String websiteUrl;
     private List<String> skills;
-    private List<EducationItem> education;
+    private List<ExperienceItem> experiences;
 
     public UserInfoResponse(UserInfo userInfo) {
         this.id = userInfo.getId();
@@ -43,23 +43,27 @@ public class UserInfoResponse {
         this.linkedinUrl = userInfo.getLinkedinUrl();
         this.websiteUrl = userInfo.getWebsiteUrl();
         this.skills = userInfo.getSkills();
-        this.education = userInfo.getEducation().stream()
-                .map(EducationItem::new)
+        this.experiences = userInfo.getExperiences().stream()
+                .map(ExperienceItem::new)
                 .collect(Collectors.toList());
     }
 
     @Getter
-    public static class EducationItem {
+    public static class ExperienceItem {
         private Long id;
-        private String degree;
-        private String institution;
-        private String year;
+        private String title;
+        private String company;
+        private String beginDate;
+        private String endDate;
+        private String description;
 
-        public EducationItem(Education education) {
-            this.id = education.getId();
-            this.degree = education.getDegree();
-            this.institution = education.getInstitution();
-            this.year = education.getYear();
+        public ExperienceItem(Experience experience) {
+            this.id = experience.getId();
+            this.title = experience.getTitle();
+            this.company = experience.getCompany();
+            this.beginDate = experience.getBeginDate();
+            this.endDate = experience.getEndDate();
+            this.description = experience.getDescription();
         }
     }
 }

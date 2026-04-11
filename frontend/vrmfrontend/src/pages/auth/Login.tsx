@@ -34,13 +34,17 @@ export default function Login() {
       login(data.token, formdata.rememberMe);
       navigate("/dashboard/profile");
     } catch (error: any) {
-      const message = error?.response?.data;
-      if (typeof message === "string" && message.toLowerCase().includes("not verified")) {
+      const data = error?.response?.data;
+      const message = typeof data === "string" ? data : (data?.message ?? "Invalid email or password.");
+      if (message.toLowerCase().includes("not verified")) {
         setError("root", { message: "Your account hasn't been verified yet." });
         setShowResend(true);
-      } else if (typeof message === "string" && message.toLowerCase().includes("email")) {
+      } else if (message.toLowerCase().includes("email")) {
         setError("email", { message });
-      } else {
+      } else if (message.toLowerCase().includes("bad credentials")) {
+        setError("password", { message: "Invalid email or password." });
+      } 
+      else {
         setError("root", { message });
       }
     }

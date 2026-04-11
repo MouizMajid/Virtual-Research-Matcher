@@ -1,5 +1,5 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Upload } from "lucide-react";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../lib/api";
@@ -15,7 +15,6 @@ export default function ApplicationPage() {
   const navigate = useNavigate();
 
   const [coverLetter, setCoverLetter] = useState("");
-  const [resume, setResume] = useState("");
   const [why, setWhy] = useState("");
   const [experience, setExperience] = useState("");
 
@@ -37,8 +36,8 @@ export default function ApplicationPage() {
     e.preventDefault();
     mutation.mutate({
       postingId: Number(id),
+      resume: "hi",
       coverLetter,
-      resume,
       why,
       experience,
     });
@@ -56,16 +55,14 @@ export default function ApplicationPage() {
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-medium mb-1.5">Resume / CV Link</label>
-            <input
-              type="url"
-              required
-              value={resume}
-              onChange={(e) => setResume(e.target.value)}
-              placeholder="https://drive.google.com/your-resume"
-              className="h-10 w-full rounded-xl border border-input bg-card px-4 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-            />
-            <p className="mt-1 text-xs text-muted-foreground">Paste a link to your resume (Google Drive, Dropbox, etc.)</p>
+            <label className="block text-sm font-medium mb-1.5">Resume / CV</label>
+            <div className="flex items-center justify-center rounded-xl border-2 border-dashed border-border p-8 text-center cursor-not-allowed opacity-60">
+              <div className="space-y-1">
+                <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground">Resume upload coming soon</p>
+                <p className="text-xs text-muted-foreground">PDF, DOCX up to 10 MB</p>
+              </div>
+            </div>
           </div>
 
           <div>

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Calendar, MapPin } from "lucide-react";
+import { Calendar, MapPin, BriefcaseBusiness, Presentation } from "lucide-react";
 
 interface ProjectCardProps {
   id: string | number;
@@ -10,9 +10,10 @@ interface ProjectCardProps {
   tags: string[];
   deadline: string;
   location: string;
+  type: string;
 }
 
-export function ProjectCard({ id, title, description, researcher, university, tags, deadline, location }: ProjectCardProps) {
+export function ProjectCard({ id, title, description, researcher, university, tags, deadline, location, type }: ProjectCardProps) {
   return (
     <Link to={`/posting/${id}`} className="block">
       <div className="glass-card p-6 hover-lift group cursor-pointer">
@@ -31,6 +32,8 @@ export function ProjectCard({ id, title, description, researcher, university, ta
         <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
           <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{deadline}</span>
           <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{location}</span>
+          {type=="POSITION" ? <span className="flex items-center gap-1"><BriefcaseBusiness className="h-3.5 w-3.5" /> Position</span> 
+          : <span className="flex items-center gap-1"><Presentation className="h-3.5 w-3.5" />Project</span> }
         </div>
       </div>
     </Link>

@@ -65,6 +65,26 @@ public class ApplicationService {
             .orElseThrow(() -> new RuntimeException("Application not found"));
     }
 
+    public Application getApplicationForApplicant(Long id, User applicant) {
+        Application application = getApplicationById(id);
+        if (!application.getApplicant().getId().equals(applicant.getId())) {
+            throw new RuntimeException("You can only view your own applications");
+        }
+        return application;
+    }
+
+    public Application withdrawApplication(Long id, User applicant) {
+        Application application = getApplicationById(id);
+        if (!application.getApplicant().getId().equals(applicant.getId())) {
+            throw new RuntimeException("You can only withdraw your own applications");
+        }
+        if (application.getStatus() == Application.Status.WITHDRAWN) {
+            throw new RuntimeException("Application is already withdrawn");
+        }
+        application.setStatus(Application.Status.WITHDRAWN);
+        return applicationRepository.save(application);
+    }
+
     public Application updateApplication(Long id, ApplicationDto dto, User applicant) {
         Application application = getApplicationById(id);
         if (!application.getApplicant().getId().equals(applicant.getId())) {

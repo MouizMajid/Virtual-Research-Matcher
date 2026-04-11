@@ -12,6 +12,7 @@ interface Posting {
   tags: string[];
   applicationDeadline: string;
   createdByUser: string;
+  type: string;
 }
 
 const techFilters = ["Python", "TensorFlow", "NLP", "Blockchain", "Computer Vision", "R", "C++"];
@@ -46,8 +47,8 @@ export default function BrowseProjects() {
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Browse Research Projects</h1>
-        <p className="mt-1 text-muted-foreground">Discover opportunities that match your skills and interests.</p>
+        <h1 className="text-3xl font-bold">Browse Research Opportunities</h1>
+        <p className="mt-1 text-muted-foreground">Discover projects or positions that match your skills and interests.</p>
       </div>
 
       <div className="flex gap-8">
@@ -132,6 +133,7 @@ export default function BrowseProjects() {
                     tags={p.tags || []}
                     deadline={p.applicationDeadline}
                     location={p.location}
+                    type={p.type}
                   />
                 ))}
               </div>

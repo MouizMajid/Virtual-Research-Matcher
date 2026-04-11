@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, X, Calendar, MapPin, Upload } from "lucide-react";
+import { ArrowLeft, Plus, X, Calendar, MapPin } from "lucide-react";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label.tsx";
@@ -230,16 +230,7 @@ export default function CreatePosting() {
             />
           </div>
 
-          <div className="space-y-2">
-            <Label>Attachment (optional)</Label>
-            <div className="flex items-center justify-center rounded-xl border-2 border-dashed border-border p-8 text-center hover:border-primary/50 transition-colors cursor-pointer">
-              <div className="space-y-1">
-                <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">Drag & drop a file or click to upload</p>
-                <p className="text-xs text-muted-foreground">PDF, DOCX up to 10 MB</p>
-              </div>
-            </div>
-          </div>
+
         </div>
 
         {/* Actions */}

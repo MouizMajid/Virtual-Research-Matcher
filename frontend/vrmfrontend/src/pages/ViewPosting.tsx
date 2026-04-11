@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { Calendar, MapPin, Users, ArrowLeft, ExternalLink } from "lucide-react";
+import { Calendar, MapPin, Users, ArrowLeft, ExternalLink, Presentation, BriefcaseBusiness } from "lucide-react";
 import { StatusBadge } from "../components/StatusBadge";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext";
@@ -18,6 +18,7 @@ interface Posting {
   tags: string[];
   createdByUser: string;
   createdById: number;
+  type: string;
 }
 
 interface Application {
@@ -79,6 +80,11 @@ export default function ViewPosting() {
               <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" /> Deadline: {posting.applicationDeadline}</span>
               <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4" /> {posting.location}</span>
               <span className="flex items-center gap-1.5"><Users className="h-4 w-4" /> {posting.openPositions} positions</span>
+              {posting.type === "POSITION" ? (
+                <span className="flex items-center gap-1.5"><BriefcaseBusiness className="h-4 w-4" />Position</span>
+              ) : (
+                <span className="flex items-center gap-1.5"><Presentation className="h-4 w-4" />Project</span>
+              )}
             </div>
 
             <div className="mt-6">

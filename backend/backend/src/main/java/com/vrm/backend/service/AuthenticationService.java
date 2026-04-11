@@ -54,7 +54,7 @@ public class AuthenticationService {
 
     public User authenticate (LoginUserDto input){
         User user = userRepository.findByEmail(input.getEmail())
-            .orElseThrow( () -> new RuntimeException("User not found"));
+            .orElseThrow( () -> new RuntimeException("User with this email not found"));
         if (!user.isEnabled()) {
             throw new RuntimeException("User not verified");
         }
@@ -82,7 +82,7 @@ public class AuthenticationService {
                 throw new RuntimeException("Invalid verification code");
             }
         } else {
-            throw new RuntimeException("User not found");
+            throw new RuntimeException("Cannot verify, user not found");
         }   
     }
     public void resendVerificationCode(String email) {
@@ -98,7 +98,7 @@ public class AuthenticationService {
 
             userRepository.save(user);
         } else {
-            throw new RuntimeException("User not found");
+            throw new RuntimeException("Can not resend verification code, user not found");
         }
     }
     public void sendVerificationEmail(User user) {

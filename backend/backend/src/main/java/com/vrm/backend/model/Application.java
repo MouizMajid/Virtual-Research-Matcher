@@ -30,7 +30,8 @@ public class Application {
     public enum Status {
         PENDING,
         ACCEPTED,
-        REJECTED
+        REJECTED,
+        WITHDRAWN
     }
 
     @Id

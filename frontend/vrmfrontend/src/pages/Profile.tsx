@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import api from "../lib/api";
 
-interface EducationItem {
+interface ExperienceItem {
   id: number;
-  degree: string;
-  institution: string;
-  year: string;
+  title: string;
+  company: string;
+  beginDate: string;
+  endDate: string;
+  description: string;
 }
 
 interface UserInfoResponse {
@@ -20,7 +22,7 @@ interface UserInfoResponse {
   university: string;
   department: string;
   skills: string[];
-  education: EducationItem[];
+  experiences: ExperienceItem[];
   githubUrl: string;
   linkedinUrl: string;
   websiteUrl: string;
@@ -93,14 +95,15 @@ export default function Profile() {
             </div>
           )}
 
-          {profile?.education && profile.education.length > 0 && (
+          {profile?.experiences && profile.experiences.length > 0 && (
             <div className="glass-card p-6">
-              <h2 className="text-lg font-semibold">Education</h2>
+              <h2 className="text-lg font-semibold">Experience</h2>
               <div className="mt-3 space-y-3">
-                {profile.education.map((edu) => (
-                  <div key={edu.id}>
-                    <p className="text-sm font-medium">{edu.degree}</p>
-                    <p className="text-xs text-muted-foreground">{edu.institution} · {edu.year}</p>
+                {profile.experiences.map((exp) => (
+                  <div key={exp.id} className="space-y-1">
+                    <p className="text-sm font-medium">{exp.title}</p>
+                    <p className="text-xs text-muted-foreground">{exp.company} · {exp.beginDate} - {exp.endDate}</p>
+                    {exp.description && <p className="text-xs text-muted-foreground leading-relaxed">{exp.description}</p>}
                   </div>
                 ))}
               </div>

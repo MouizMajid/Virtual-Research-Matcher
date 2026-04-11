@@ -56,5 +56,5 @@ public class UserInfo {
 
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id ASC")
-    private List<Education> education = new ArrayList<>();
+    private List<Experience> experiences = new ArrayList<>();
 }

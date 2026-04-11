@@ -8,11 +8,13 @@ import { Button } from "../components/ui/button";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../lib/api";
 
-interface EducationEntry {
+interface ExperienceEntry {
   id: string;
-  degree: string;
-  institution: string;
-  year: string;
+  title: string;
+  company: string;
+  beginDate: string;
+  endDate: string;
+  description: string;
 }
 
 export default function EditProfile() {
@@ -36,7 +38,7 @@ export default function EditProfile() {
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [skills, setSkills] = useState<string[]>([]);
   const [skillInput, setSkillInput] = useState("");
-  const [education, setEducation] = useState<EducationEntry[]>([]);
+  const [experiences, setExperiences] = useState<ExperienceEntry[]>([]);
 
   useEffect(() => {
     if (profile) {
@@ -51,12 +53,14 @@ export default function EditProfile() {
       setLinkedinUrl(profile.linkedinUrl ?? "");
       setWebsiteUrl(profile.websiteUrl ?? "");
       setSkills(profile.skills ?? []);
-      setEducation(
-        (profile.education ?? []).map((e: { id: number; degree: string; institution: string; year: string }) => ({
+      setExperiences(
+        (profile.experiences ?? []).map((e: { id: number; title: string; company: string; beginDate: string; endDate: string; description: string }) => ({
           id: String(e.id),
-          degree: e.degree,
-          institution: e.institution,
-          year: e.year,
+          title: e.title,
+          company: e.company,
+          beginDate: e.beginDate,
+          endDate: e.endDate,
+          description: e.description ?? "",
         }))
       );
     }
@@ -80,13 +84,13 @@ export default function EditProfile() {
 
   const removeSkill = (skill: string) => setSkills(skills.filter((s) => s !== skill));
 
-  const addEducation = () =>
-    setEducation([...education, { id: Date.now().toString(), degree: "", institution: "", year: "" }]);
+  const addExperience = () =>
+    setExperiences([...experiences, { id: Date.now().toString(), title: "", company: "", beginDate: "", endDate: "", description: "" }]);
 
-  const removeEducation = (id: string) => setEducation(education.filter((e) => e.id !== id));
+  const removeExperience = (id: string) => setExperiences(experiences.filter((e) => e.id !== id));
 
-  const updateEducation = (id: string, field: string, value: string) =>
-    setEducation(education.map((e) => (e.id === id ? { ...e, [field]: value } : e)));
+  const updateExperience = (id: string, field: string, value: string) =>
+    setExperiences(experiences.map((e) => (e.id === id ? { ...e, [field]: value } : e)));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,7 +104,7 @@ export default function EditProfile() {
       linkedinUrl,
       websiteUrl,
       skills,
-      education: education.map(({ degree, institution, year }) => ({ degree, institution, year })),
+      experiences: experiences.map(({ title, company, beginDate, endDate, description }) => ({ title, company, beginDate, endDate, description })),
     });
   };
 
@@ -199,33 +203,41 @@ export default function EditProfile() {
           )}
         </div>
 
-        {/* Education */}
+        {/* Experience */}
         <div className="glass-card p-6 space-y-5">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-lg">Education</h2>
-            <Button type="button" variant="outline" size="sm" onClick={addEducation}>
+            <h2 className="font-semibold text-lg">Experience</h2>
+            <Button type="button" variant="outline" size="sm" onClick={addExperience}>
               <Plus className="h-4 w-4 mr-1" /> Add
             </Button>
           </div>
 
-          {education.map((edu) => (
-            <div key={edu.id} className="rounded-xl border border-border p-4 space-y-3 relative">
-              <button type="button" onClick={() => removeEducation(edu.id)} className="absolute right-3 top-3 text-muted-foreground hover:text-destructive transition-colors">
+          {experiences.map((exp) => (
+            <div key={exp.id} className="rounded-xl border border-border p-4 space-y-3 relative">
+              <button type="button" onClick={() => removeExperience(exp.id)} className="absolute right-3 top-3 text-muted-foreground hover:text-destructive transition-colors">
                 <Trash2 className="h-4 w-4" />
               </button>
               <div className="space-y-2">
-                <Label>Degree / Program</Label>
-                <Input value={edu.degree} onChange={(e) => updateEducation(edu.id, "degree", e.target.value)} placeholder="e.g. PhD in Computer Science" />
+                <Label>Role / Title</Label>
+                <Input value={exp.title} onChange={(e) => updateExperience(exp.id, "title", e.target.value)} placeholder="e.g. Research Assistant" />
+              </div>
+              <div className="space-y-2">
+                <Label>Company / Organization</Label>
+                <Input value={exp.company} onChange={(e) => updateExperience(exp.id, "company", e.target.value)} placeholder="e.g. MIT CSAIL" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Institution</Label>
-                  <Input value={edu.institution} onChange={(e) => updateEducation(edu.id, "institution", e.target.value)} placeholder="e.g. MIT" />
+                  <Label>Start Date</Label>
+                  <Input value={exp.beginDate} onChange={(e) => updateExperience(exp.id, "beginDate", e.target.value)} placeholder="e.g. Sept 2023" />
                 </div>
                 <div className="space-y-2">
-                  <Label>Year</Label>
-                  <Input value={edu.year} onChange={(e) => updateEducation(edu.id, "year", e.target.value)} placeholder="e.g. 2022 – Present" />
+                  <Label>End Date</Label>
+                  <Input value={exp.endDate} onChange={(e) => updateExperience(exp.id, "endDate", e.target.value)} placeholder="e.g. Present" />
                 </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Description</Label>
+                <Textarea value={exp.description} onChange={(e) => updateExperience(exp.id, "description", e.target.value)} placeholder="Describe your role and responsibilities..." className="min-h-[80px]" />
               </div>
             </div>
           ))}

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { StatusBadge } from "../components/StatusBadge";
-import { Plus, Eye, Users } from "lucide-react";
+import { Plus, Eye, Users, Pencil } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import api from "../lib/api";
 
@@ -72,6 +72,13 @@ export default function MyPostings() {
                           title="View Applicants"
                         >
                           <Users className="h-3.5 w-3.5" />
+                        </Link>
+                        <Link
+                          to={`/dashboard/edit-posting/${p.id}`}
+                          className="flex h-8 w-8 items-center justify-center rounded-lg border border-border hover:bg-muted transition-colors"
+                          title="Edit Posting"
+                        >
+                          <Pencil className="h-3.5 w-3.5" />
                         </Link>
                       </div>
                     </td>

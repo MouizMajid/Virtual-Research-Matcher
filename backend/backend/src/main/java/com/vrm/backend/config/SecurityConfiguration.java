@@ -53,10 +53,11 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.GET, "/postings/**").permitAll()
 
                     .requestMatchers(HttpMethod.POST, "/applications").hasRole("STUDENT")
-                    .requestMatchers(HttpMethod.GET, "/{id}/applications").hasRole("RESEARCHER")
                     .requestMatchers(HttpMethod.PUT, "/applications/**").hasRole("STUDENT")
                     .requestMatchers(HttpMethod.PATCH, "/applications/**").hasAnyRole("STUDENT","RESEARCHER")
                     .requestMatchers(HttpMethod.GET, "/applications/**").hasAnyRole("STUDENT", "RESEARCHER")
+
+                    .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("STUDENT", "RESEARCHER")
  
                 .anyRequest().authenticated()
             )

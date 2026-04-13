@@ -60,6 +60,9 @@ public class Posting {
     @Column(columnDefinition = "TEXT")
     private String requirements;
 
+    @Column
+    private String category;
+
     @Column(nullable = false)
     private String[] tags;
    

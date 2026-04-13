@@ -136,14 +136,14 @@ export default function ViewPosting() {
 
           <div className="glass-card p-6">
             <h3 className="font-semibold">About the Researcher</h3>
-            <div className="mt-3 flex items-center gap-3">
+            <Link to={`/profile/${posting.createdById}`} className="mt-3 flex items-center gap-3 hover:opacity-80 transition-opacity">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
                 {initials}
               </div>
               <div>
-                <p className="text-sm font-medium">{posting.createdByUser}</p>
+                <p className="text-sm font-medium hover:text-primary hover:underline">{posting.createdByUser}</p>
               </div>
-            </div>
+            </Link>
           </div>
 
           <div className="glass-card p-6">

@@ -17,6 +17,8 @@ import ViewApplication from "./pages/ViewApplication";
 import MyPostings from "./pages/MyPostings";
 import ViewApplicants from "./pages/ViewApplicants";
 import ResearcherViewApplication from "./pages/ResearcherViewApplication";
+import EditPosting from "./pages/EditPosting";
+import PublicProfile from "./pages/PublicProfile";
 import Profile from "./pages/Profile";
 import SettingsPage from "./pages/SettingsPage";
 import EditProfile from "./pages/EditProfile";
@@ -67,6 +69,7 @@ const App = () => {
               <Route path="/dashboard/profile" element={<Profile />} />
               <Route path="/dashboard/edit-profile" element={<EditProfile />} />
               <Route path="/dashboard/settings" element={<SettingsPage />} />
+              <Route path="/profile/:id" element={<PublicProfile />} />
             </Route>
           </Route>
           
@@ -88,6 +91,7 @@ const App = () => {
               <Route path="/dashboard/create-posting" element={<CreatePosting />} />
               <Route path="/dashboard/applicants/:id" element={<ViewApplicants />} />
               <Route path="/dashboard/researcher/applications/:id" element={<ResearcherViewApplication />} />
+              <Route path="/dashboard/edit-posting/:id" element={<EditPosting />} />
             </Route>
           </Route>
 

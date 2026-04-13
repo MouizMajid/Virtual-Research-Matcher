@@ -13,6 +13,7 @@ interface ApplicationDetail {
   why: string;
   experience: string;
   createdAt: string;
+  applicantId: number;
   applicantFirstName: string;
   applicantLastName: string;
   applicantEmail: string;
@@ -61,9 +62,9 @@ export default function ResearcherViewApplication() {
 
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold">
+          <Link to={`/profile/${application.applicantId}`} className="text-2xl font-bold hover:text-primary hover:underline">
             {application.applicantFirstName} {application.applicantLastName}
-          </h1>
+          </Link>
           <p className="mt-0.5 text-sm text-muted-foreground">{application.applicantEmail}</p>
           <Link
             to={`/posting/${application.postingId}`}

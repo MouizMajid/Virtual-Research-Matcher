@@ -37,14 +37,10 @@ public class UserController {
     }
 
     @PatchMapping("/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDto dto) {
-        try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            authenticationService.changePassword(user, dto.getCurrentPassword(), dto.getNewPassword());
-            return ResponseEntity.ok("Password updated successfully");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDto dto) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        authenticationService.changePassword(user, dto.getCurrentPassword(), dto.getNewPassword());
+        return ResponseEntity.ok("Password updated successfully");
     }
 
     @GetMapping("/all")

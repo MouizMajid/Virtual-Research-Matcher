@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FolderOpen, Users, Archive, Clock, Plus } from "lucide-react";
 import { MetricCard } from "../components/MetricCard";
 import { StatusBadge } from "../components/StatusBadge";
@@ -25,6 +25,7 @@ function isOpen(deadline: string) {
 }
 
 export default function ResearcherDashboard() {
+  const navigate = useNavigate();
   const { data: postings = [], isLoading: postingsLoading } = useQuery<Posting[]>({
     queryKey: ["my-postings"],
     queryFn: () => api.get("/postings/my").then((r) => r.data),
@@ -63,7 +64,7 @@ export default function ResearcherDashboard() {
 
       <div className="grid grid-cols-4 gap-4">
         <MetricCard label="Active Postings" value={activePostings} icon={FolderOpen} />
-        <MetricCard label="Total Applicants" value={allApplications.length} icon={Users} />
+        <MetricCard label="Total Applications" value={allApplications.length} icon={Users} />
         <MetricCard label="Closed Postings" value={closedPostings} icon={Archive} />
         <MetricCard label="Pending Reviews" value={pendingReviews} icon={Clock} />
       </div>
@@ -89,8 +90,14 @@ export default function ResearcherDashboard() {
                 <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">No applicants yet.</td></tr>
               ) : (
                 recentApplicants.map((a) => (
-                  <tr key={a.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
-                    <td className="px-4 py-3 font-medium">{a.applicantFirstName} {a.applicantLastName}</td>
+                  <tr
+                    key={a.id}
+                    onClick={() => navigate(`/dashboard/researcher/applications/${a.id}`)}
+                    className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors cursor-pointer"
+                  >
+                    <td className="px-4 py-3 font-medium ">
+                      {a.applicantFirstName} {a.applicantLastName}
+                    </td>
                     <td className="px-4 py-3 text-muted-foreground">{a.postingTitle}</td>
                     <td className="px-4 py-3 text-muted-foreground">
                       {a.createdAt ? new Date(a.createdAt).toLocaleDateString() : "—"}

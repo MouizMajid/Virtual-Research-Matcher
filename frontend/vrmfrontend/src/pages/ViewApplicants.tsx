@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { StatusBadge } from "../components/StatusBadge";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -20,6 +20,7 @@ interface ApplicationResponse {
 
 export default function ViewApplicants() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data: posting } = useQuery<Posting>({
@@ -72,7 +73,11 @@ export default function ViewApplicants() {
                 <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">No applicants yet.</td></tr>
               ) : (
                 applicants.map((a) => (
-                  <tr key={a.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
+                  <tr
+                    key={a.id}
+                    onClick={() => navigate(`/dashboard/researcher/applications/${a.id}`)}
+                    className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors cursor-pointer"
+                  >
                     <td className="px-4 py-3 font-medium">{a.applicantFirstName} {a.applicantLastName}</td>
                     <td className="px-4 py-3 text-muted-foreground">{a.applicantEmail}</td>
                     <td className="px-4 py-3 text-muted-foreground">
@@ -81,7 +86,7 @@ export default function ViewApplicants() {
                     <td className="px-4 py-3">
                       <StatusBadge status={a.status.toLowerCase() as "pending" | "accepted" | "rejected"} />
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center gap-2">
                         {a.status === "PENDING" && (
                           <>

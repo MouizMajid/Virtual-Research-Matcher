@@ -195,7 +195,7 @@ public class AuthenticationService {
             + "<table width='560' cellpadding='0' cellspacing='0' border='0' style='max-width:560px;width:100%;'>"
             + "<tr><td style='background:#6366f1;background:linear-gradient(135deg,#6366f1,#a855f7);"
             + "border-radius:16px 16px 0 0;padding:32px 40px;text-align:center;'>"
-            + "<p style='margin:0;font-size:26px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;'>&#9879; VRMM</p>"
+            + "<p style='margin:0;font-size:26px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;'>VRMM</p>"
             + "<p style='margin:8px 0 0;color:rgba(255,255,255,0.8);font-size:14px;'>Virtual Research Match Maker</p>"
             + "</td></tr>"
             + "<tr><td style='background:#ffffff;padding:40px;border-left:1px solid #e5e7eb;border-right:1px solid #e5e7eb;'>"

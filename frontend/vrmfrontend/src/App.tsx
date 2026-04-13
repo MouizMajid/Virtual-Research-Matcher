@@ -14,8 +14,9 @@ import StudentDashboard from "./pages/StudentDashboard";
 import ResearcherDashboard from "./pages/ResearcherDashboard";
 import MyApplications from "./pages/MyApplications";
 import ViewApplication from "./pages/ViewApplication";
-import MyPostings from "./pages/MyPostings"; 
+import MyPostings from "./pages/MyPostings";
 import ViewApplicants from "./pages/ViewApplicants";
+import ResearcherViewApplication from "./pages/ResearcherViewApplication";
 import Profile from "./pages/Profile";
 import SettingsPage from "./pages/SettingsPage";
 import EditProfile from "./pages/EditProfile";
@@ -86,6 +87,7 @@ const App = () => {
               <Route path="/dashboard/my-postings" element={<MyPostings />} />
               <Route path="/dashboard/create-posting" element={<CreatePosting />} />
               <Route path="/dashboard/applicants/:id" element={<ViewApplicants />} />
+              <Route path="/dashboard/researcher/applications/:id" element={<ResearcherViewApplication />} />
             </Route>
           </Route>
 

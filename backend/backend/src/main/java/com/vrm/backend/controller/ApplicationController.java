@@ -74,6 +74,13 @@ public class ApplicationController {
         return ResponseEntity.ok(new ApplicationResponse(app));
     }
 
+    @GetMapping("/{id}/researcher-view")
+    public ResponseEntity<ApplicationResponse> getApplicationForResearcher(@PathVariable Long id) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Application app = applicationService.getApplicationForResearcher(id, user);
+        return ResponseEntity.ok(new ApplicationResponse(app));
+    }
+
     @PatchMapping("/{id}/withdraw")
     public ResponseEntity<ApplicationResponse> withdrawApplication(@PathVariable Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

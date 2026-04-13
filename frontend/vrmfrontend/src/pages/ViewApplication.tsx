@@ -110,7 +110,7 @@ export default function ViewApplication() {
       )}
 
       {withdrawMutation.isError && (
-        <p className="text-sm text-destructive text-right">Failed to withdraw. Please try again.</p>
+        <p className="text-sm text-destructive text-right">Failed to withdraw. Please try again. {withdrawMutation.error.message}</p>
       )}
     </div>
   );

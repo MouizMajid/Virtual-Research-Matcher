@@ -73,6 +73,14 @@ public class ApplicationService {
         return application;
     }
 
+    public Application getApplicationForResearcher(Long id, User researcher) {
+        Application application = getApplicationById(id);
+        if (!application.getPosting().getCreatedBy().getId().equals(researcher.getId())) {
+            throw new RuntimeException("You can only view applications for your own postings");
+        }
+        return application;
+    }
+
     public Application withdrawApplication(Long id, User applicant) {
         Application application = getApplicationById(id);
         if (!application.getApplicant().getId().equals(applicant.getId())) {

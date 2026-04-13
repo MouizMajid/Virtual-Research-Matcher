@@ -32,16 +32,10 @@ public class PostingController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createPosting(
-        @RequestBody CreatePostingDto createPostingDto) 
-        {
-        try{
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            Posting createdPosting = postingService.createPosting(createPostingDto, user);
-            return ResponseEntity.ok(new PostingResponse(createdPosting));
-        }catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<PostingResponse> createPosting(@RequestBody CreatePostingDto createPostingDto) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Posting createdPosting = postingService.createPosting(createPostingDto, user);
+        return ResponseEntity.ok(new PostingResponse(createdPosting));
     }
 
     @GetMapping

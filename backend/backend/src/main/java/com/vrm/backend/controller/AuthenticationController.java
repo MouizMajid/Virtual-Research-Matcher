@@ -30,35 +30,22 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterUserDto registerUserDto) {
-        try {
-            User registeredUser = authenticationService.signup(registerUserDto);
-            return ResponseEntity.ok(new RegisterResponse(registeredUser));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterUserDto registerUserDto) {
+        User registeredUser = authenticationService.signup(registerUserDto);
+        return ResponseEntity.ok(new RegisterResponse(registeredUser));
     }
-    
+
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody LoginUserDto loginUserDto) {
-        try{ 
-            User authenticatedUser = authenticationService.authenticate(loginUserDto);         
-            String jwtToken = jwtService.generateToken(authenticatedUser);
-            LoginResponse response = new LoginResponse(jwtToken, jwtService.getExpirationTime());
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
+        User authenticatedUser = authenticationService.authenticate(loginUserDto);
+        String jwtToken = jwtService.generateToken(authenticatedUser);
+        return ResponseEntity.ok(new LoginResponse(jwtToken, jwtService.getExpirationTime()));
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<?> verifyUser(@RequestBody VerifyUserDto verifyUserDto) {
-        try{
-            authenticationService.verifyUser(verifyUserDto);
-            return ResponseEntity.ok("User verified successfully");
-        }catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<String> verifyUser(@RequestBody VerifyUserDto verifyUserDto) {
+        authenticationService.verifyUser(verifyUserDto);
+        return ResponseEntity.ok("User verified successfully");
     }
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordDto dto) {
@@ -74,23 +61,15 @@ public class AuthenticationController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDto dto) {
-        try {
-            authenticationService.resetPassword(dto.getToken(), dto.getNewPassword());
-            return ResponseEntity.ok("Password reset successfully");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordDto dto) {
+        authenticationService.resetPassword(dto.getToken(), dto.getNewPassword());
+        return ResponseEntity.ok("Password reset successfully");
     }
 
     @PostMapping("/resend")
-    public ResponseEntity<?> resendVerificationCode(@RequestParam String email) {
-        try {
-            authenticationService.resendVerificationCode(email);
-            return ResponseEntity.ok("Verification code resent successfully");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<String> resendVerificationCode(@RequestParam String email) {
+        authenticationService.resendVerificationCode(email);
+        return ResponseEntity.ok("Verification code resent successfully");
     }
 
 }

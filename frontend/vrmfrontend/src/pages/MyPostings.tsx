@@ -52,7 +52,7 @@ export default function MyPostings() {
               ) : postings.length === 0 ? (
                 <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">No postings yet. Create your first one!</td></tr>
               ) : (
-                postings.map((p) => (
+                [...postings].sort((a, b) => new Date(a.applicationDeadline).getTime() - new Date(b.applicationDeadline).getTime()).map((p) => (
                   <tr key={p.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
                     <td className="px-4 py-3 font-medium">{p.title}</td>
                     <td className="px-4 py-3"><StatusBadge status={getStatus(p.applicationDeadline)} /></td>

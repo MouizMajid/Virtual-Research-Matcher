@@ -36,7 +36,6 @@ export default function ApplicationPage() {
     e.preventDefault();
     mutation.mutate({
       postingId: Number(id),
-      resume: "hi",
       coverLetter,
       why,
       experience,
@@ -54,16 +53,6 @@ export default function ApplicationPage() {
         <p className="mt-1 text-muted-foreground">{posting?.title ?? "Loading..."}</p>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label className="block text-sm font-medium mb-1.5">Resume / CV</label>
-            <div className="flex items-center justify-center rounded-xl border-2 border-dashed border-border p-8 text-center cursor-not-allowed opacity-60">
-              <div className="space-y-1">
-                <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">Resume upload coming soon</p>
-                <p className="text-xs text-muted-foreground">PDF, DOCX up to 10 MB</p>
-              </div>
-            </div>
-          </div>
 
           <div>
             <label className="block text-sm font-medium mb-1.5">Cover Letter</label>

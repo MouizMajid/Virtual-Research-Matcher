@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { ProjectCard } from "../components/ProjectCard";
 import { useQuery } from "@tanstack/react-query";
@@ -15,33 +15,79 @@ interface Posting {
   type: string;
 }
 
-const techFilters = ["Python", "TensorFlow", "NLP", "Blockchain", "Computer Vision", "R", "C++"];
 const locationFilters = ["Remote", "On-site", "Hybrid"];
+const typeFilters = [{ value: "PROJECT", label: "Project" }, { value: "POSITION", label: "Position" }];
+const statusFilters = [{ value: "open", label: "Open" }, { value: "closed", label: "Closed" }];
+
+function isOpen(deadline: string) {
+  return new Date(deadline) >= new Date();
+}
 
 export default function BrowseProjects() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTech, setSelectedTech] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<string[]>([]);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
 
   const { data: postings = [], isLoading } = useQuery<Posting[]>({
     queryKey: ["postings"],
     queryFn: () => api.get("/postings").then((r) => r.data),
   });
 
+  // Build unique tag list from actual postings, case-insensitively deduplicated
+  const allTags = useMemo(() => {
+    const seen = new Map<string, string>();
+    postings.forEach((p) => {
+      (p.tags || []).forEach((t) => {
+        const key = t.toLowerCase();
+        if (!seen.has(key)) seen.set(key, t);
+      });
+    });
+    return Array.from(seen.values()).sort((a, b) => a.localeCompare(b));
+  }, [postings]);
+
   const filteredProjects = postings.filter((p) => {
     const matchesSearch =
       p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesTech =
-      selectedTech.length === 0 || (p.tags || []).some((t) => selectedTech.includes(t));
+
+    const matchesTags =
+      selectedTags.length === 0 ||
+      (p.tags || []).some((t) => selectedTags.some((s) => s.toLowerCase() === t.toLowerCase()));
+
+    
+
     const matchesLocation =
       selectedLocation.length === 0 ||
-      selectedLocation.some((loc) => p.location.toLowerCase().includes(loc.toLowerCase()));
-    return matchesSearch && matchesTech && matchesLocation;
+      selectedLocation.some((loc) => p.location.toLowerCase() === loc.toLowerCase());
+
+    const matchesType =
+      selectedTypes.length === 0 || selectedTypes.includes(p.type);
+
+    const matchesStatus =
+      selectedStatus.length === 0 ||
+      (selectedStatus.includes("open") && isOpen(p.applicationDeadline)) ||
+      (selectedStatus.includes("closed") && !isOpen(p.applicationDeadline));
+
+    return matchesSearch && matchesTags && matchesLocation && matchesType && matchesStatus;
   });
 
   const toggleFilter = (arr: string[], setArr: (v: string[]) => void, val: string) => {
     setArr(arr.includes(val) ? arr.filter((v) => v !== val) : [...arr, val]);
+  };
+
+  const hasActiveFilters =
+    selectedTags.length > 0 ||
+    selectedLocation.length > 0 ||
+    selectedTypes.length > 0 ||
+    selectedStatus.length > 0;
+
+  const clearAll = () => {
+    setSelectedTags([]);
+    setSelectedLocation([]);
+    setSelectedTypes([]);
+    setSelectedStatus([]);
   };
 
   return (
@@ -55,27 +101,54 @@ export default function BrowseProjects() {
         {/* Filter Sidebar */}
         <aside className="w-64 shrink-0">
           <div className="glass-card p-5 space-y-6 sticky top-24">
-            <div className="flex items-center gap-2 text-sm font-semibold">
-              <SlidersHorizontal className="h-4 w-4" /> Filters
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm font-semibold">
+                <SlidersHorizontal className="h-4 w-4" /> Filters
+              </div>
+              {hasActiveFilters && (
+                <button onClick={clearAll} className="text-xs text-primary hover:underline">
+                  Clear all
+                </button>
+              )}
             </div>
 
+            {/* Status */}
             <div>
-              <h3 className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Tech Stack</h3>
+              <h3 className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</h3>
               <div className="space-y-1.5">
-                {techFilters.map((tech) => (
-                  <label key={tech} className="flex items-center gap-2 text-sm cursor-pointer">
+                {statusFilters.map((s) => (
+                  <label key={s.value} className="flex items-center gap-2 text-sm cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={selectedTech.includes(tech)}
-                      onChange={() => toggleFilter(selectedTech, setSelectedTech, tech)}
+                      checked={selectedStatus.includes(s.value)}
+                      onChange={() => toggleFilter(selectedStatus, setSelectedStatus, s.value)}
                       className="rounded border-border text-primary focus:ring-primary"
                     />
-                    {tech}
+                    {s.label}
                   </label>
                 ))}
               </div>
             </div>
 
+            {/* Type */}
+            <div>
+              <h3 className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Type</h3>
+              <div className="space-y-1.5">
+                {typeFilters.map((t) => (
+                  <label key={t.value} className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selectedTypes.includes(t.value)}
+                      onChange={() => toggleFilter(selectedTypes, setSelectedTypes, t.value)}
+                      className="rounded border-border text-primary focus:ring-primary"
+                    />
+                    {t.label}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Location */}
             <div>
               <h3 className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Location</h3>
               <div className="space-y-1.5">
@@ -93,13 +166,24 @@ export default function BrowseProjects() {
               </div>
             </div>
 
-            {(selectedTech.length > 0 || selectedLocation.length > 0) && (
-              <button
-                onClick={() => { setSelectedTech([]); setSelectedLocation([]); }}
-                className="text-xs text-primary hover:underline"
-              >
-                Clear all filters
-              </button>
+            {/* Tags */}
+            {allTags.length > 0 && (
+              <div>
+                <h3 className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Tags</h3>
+                <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                  {allTags.map((tag) => (
+                    <label key={tag} className="flex items-center gap-2 text-sm cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedTags.some((s) => s.toLowerCase() === tag.toLowerCase())}
+                        onChange={() => toggleFilter(selectedTags, setSelectedTags, tag)}
+                        className="rounded border-border text-primary focus:ring-primary"
+                      />
+                      {tag}
+                    </label>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
         </aside>

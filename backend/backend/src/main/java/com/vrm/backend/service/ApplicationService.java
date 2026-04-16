@@ -31,7 +31,6 @@ public class ApplicationService {
 
         Application application = new Application();
         application.setCoverLetter(dto.getCoverLetter());
-        application.setResumeLink(dto.getResume());
         application.setWhy(dto.getWhy());
         application.setExperience(dto.getExperience());
         application.setApplicant(applicant);
@@ -103,7 +102,6 @@ public class ApplicationService {
         }
 
         application.setCoverLetter(dto.getCoverLetter());
-        application.setResumeLink(dto.getResume());
         application.setWhy(dto.getWhy());
         application.setExperience(dto.getExperience());
 

@@ -16,7 +16,6 @@ public class PostingResponse {
     private String location;
 
     private String duration;
-    private String category;
     private int openPositions;
 
     private String requirements;
@@ -37,7 +36,6 @@ public class PostingResponse {
         this.duration = posting.getDuration();
         this.applicationDeadline = posting.getApplicationDeadline();
         this.requirements = posting.getRequirements();
-        this.category = posting.getCategory();
         this.tags = posting.getTags();
         this.createdByUser = posting.getCreatedBy().getFirstName() + " " + posting.getCreatedBy().getLastName();
         this.createdById = posting.getCreatedBy().getId();

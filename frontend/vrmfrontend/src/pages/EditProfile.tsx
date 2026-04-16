@@ -95,6 +95,8 @@ export default function EditProfile() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     mutation.mutate({
+      firstName,
+      lastName,
       headline,
       bio,
       location,

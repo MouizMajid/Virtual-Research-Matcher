@@ -14,7 +14,6 @@ type FormFields = {
   projectTitle: string;
   type: "PROJECT" | "POSITION";
   description: string;
-  category: string;
   openPositions: number;
   date: string;
   location: string;
@@ -28,7 +27,6 @@ interface PostingDetail {
   title: string;
   type: "PROJECT" | "POSITION";
   description: string;
-  category: string;
   openPositions: number;
   applicationDeadline: string;
   location: string;
@@ -59,7 +57,6 @@ export default function EditPosting() {
       projectTitle: posting.title,
       type: posting.type,
       description: posting.description,
-      category: posting.category ?? "",
       openPositions: posting.openPositions,
       date: posting.applicationDeadline,
       location: posting.location,
@@ -104,7 +101,6 @@ export default function EditPosting() {
       description: formdata.description,
       location: formdata.location,
       duration: formdata.duration,
-      category: formdata.category,
       openPositions: formdata.openPositions,
       requirements: formdata.requirements,
       stipend: formdata.compensation,
@@ -175,23 +171,7 @@ export default function EditPosting() {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="category">Category *</Label>
-              <select
-                id="category"
-                {...register("category", { required: true })}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                <option value="">Select category</option>
-                <option value="ml">Machine Learning</option>
-                <option value="nlp">Natural Language Processing</option>
-                <option value="cv">Computer Vision</option>
-                <option value="data">Data Science</option>
-                <option value="robotics">Robotics</option>
-                <option value="bio">Bioinformatics</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
+            
 
             <div className="space-y-2">
               <Label htmlFor="positions">Open Positions *</Label>

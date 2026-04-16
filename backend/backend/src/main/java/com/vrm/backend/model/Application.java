@@ -41,8 +41,6 @@ public class Application {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String coverLetter;
 
-    @Column(nullable = false)
-    private String resumeLink;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String why;

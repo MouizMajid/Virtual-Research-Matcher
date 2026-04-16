@@ -32,8 +32,9 @@ export function ProjectCard({ id, title, description, researcher, university, ta
         <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
           <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{deadline}</span>
           <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{location}</span>
-          {type=="POSITION" ? <span className="flex items-center gap-1"><BriefcaseBusiness className="h-3.5 w-3.5" /> Position</span> 
-          : <span className="flex items-center gap-1"><Presentation className="h-3.5 w-3.5" />Project</span> }
+          {type === "POSITION"
+            ? <span className="flex items-center gap-1"><BriefcaseBusiness className="h-3.5 w-3.5" /> Position</span>
+            : <span className="flex items-center gap-1"><Presentation className="h-3.5 w-3.5" /> Project</span>}
         </div>
       </div>
     </Link>

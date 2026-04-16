@@ -11,7 +11,6 @@ import lombok.Setter;
 public class ApplicationDto {
     private Long postingId;
     private String coverLetter;
-    private String resume;
     private String why;
     private String experience; 
 

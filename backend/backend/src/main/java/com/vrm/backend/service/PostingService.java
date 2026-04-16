@@ -1,6 +1,5 @@
 package com.vrm.backend.service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -37,7 +36,6 @@ public class PostingService {
         posting.setRequirements(input.getRequirements());
         posting.setOpenPositions(input.getOpenPositions());
         posting.setStipend(input.getStipend());
-        posting.setCategory(input.getCategory());
 
         return postingRepository.save(posting);
     }
@@ -72,7 +70,6 @@ public class PostingService {
         posting.setRequirements(input.getRequirements());
         posting.setOpenPositions(input.getOpenPositions());
         posting.setStipend(input.getStipend());
-        posting.setCategory(input.getCategory());
 
         return postingRepository.save(posting);
     }

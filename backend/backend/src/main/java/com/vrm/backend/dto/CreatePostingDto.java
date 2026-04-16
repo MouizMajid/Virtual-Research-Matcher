@@ -17,7 +17,6 @@ public class CreatePostingDto {
     private String location;
 
     private String duration;
-    private String category;
     private int openPositions;
 
     private String requirements;

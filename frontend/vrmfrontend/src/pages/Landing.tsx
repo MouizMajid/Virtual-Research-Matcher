@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { toast} from "sonner";
 import {
   ArrowRight, BookOpen, Users, Target, Sparkles, GraduationCap, Microscope,
   CheckCircle, Star, Zap, Shield,

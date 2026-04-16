@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import api from "../../lib/api";
+import { toast } from "sonner";
 
 
 type FormFields = {
@@ -32,6 +33,9 @@ export default function Login() {
     try {
       const { data } = await api.post("/auth/login", {email: formdata.email, password: formdata.password});
       login(data.token, formdata.rememberMe);
+      toast.success("Success", {
+        description: "You have been logged in successfully."
+      });
       navigate("/dashboard/profile");
     } catch (error: any) {
       const data = error?.response?.data;

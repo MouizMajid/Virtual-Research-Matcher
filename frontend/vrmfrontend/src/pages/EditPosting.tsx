@@ -9,6 +9,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import api from "../lib/api.ts";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
+import { toast } from "sonner";
 
 type FormFields = {
   projectTitle: string;
@@ -72,7 +73,15 @@ export default function EditPosting() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-postings"] });
       queryClient.invalidateQueries({ queryKey: ["posting", id] });
+      toast.success("Success", {
+        description: "Posting updated successfully.",
+      });
       navigate("/dashboard/my-postings");
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error("Failed to publish posting", {
+        description: error.response?.data?.message ?? "Something went wrong. Please try again.",
+      });
     },
   });
 
@@ -80,7 +89,15 @@ export default function EditPosting() {
     mutationFn: () => api.delete(`/postings/${id}`).then((r) => r.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-postings"] });
+      toast.success("Posting deleted", {
+        description: "Your posting has been permanently removed.",
+      });
       navigate("/dashboard/my-postings");
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error("Failed to delete posting", {
+        description: error.response?.data?.message ?? "Something went wrong. Please try again.",
+      });
     },
   });
 
@@ -264,13 +281,6 @@ export default function EditPosting() {
             />
           </div>
         </div>
-
-        {/* Actions */}
-        {updateMutation.isError && (
-          <p className="text-sm text-destructive text-right">
-            {(updateMutation.error as AxiosError<string>).response?.data ?? "Something went wrong. Please try again."}
-          </p>
-        )}
         <div className="flex items-center justify-between">
           <button
             type="button"

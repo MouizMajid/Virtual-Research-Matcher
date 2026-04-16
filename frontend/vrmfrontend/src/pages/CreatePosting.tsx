@@ -9,6 +9,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import api from "../lib/api.ts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
+import { toast } from "sonner";
 
 type FormFields = {
   projectTitle: string;
@@ -44,9 +45,17 @@ export default function CreatePosting() {
   const createPostingMutation = useMutation({
     mutationFn: (data: object) => api.post("/postings", data).then((r) => r.data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["my-postings"] }); 
-      queryClient.invalidateQueries({ queryKey: ["postings"] }); 
-      navigate("/dashboard/my-postings")
+      queryClient.invalidateQueries({ queryKey: ["my-postings"] });
+      queryClient.invalidateQueries({ queryKey: ["postings"] });
+      toast.success("Posting published", {
+        description: "Your research opportunity is now live.",
+      });
+      navigate("/dashboard/my-postings");
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error("Failed to publish posting", {
+        description: error.response?.data?.message ?? "Something went wrong. Please try again.",
+      });
     },
   })
 
@@ -215,11 +224,6 @@ export default function CreatePosting() {
         </div>
 
         {/* Actions */}
-        {createPostingMutation.isError && (
-          <p className="text-sm text-destructive text-right">
-            {(createPostingMutation.error as AxiosError<{ message: string }>).response?.data?.message ?? "Something went wrong. Please try again."}
-          </p>
-        )}
         <div className="flex items-center justify-end gap-3">
           <Button type="button" variant="outline" onClick={() => navigate(-1)}>
             Cancel

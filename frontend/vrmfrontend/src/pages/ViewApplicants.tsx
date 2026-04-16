@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { StatusBadge } from "../components/StatusBadge";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../lib/api";
+import { toast } from "sonner";
 
 interface Posting {
   id: number;
@@ -38,7 +39,15 @@ export default function ViewApplicants() {
   const statusMutation = useMutation({
     mutationFn: ({ appId, status }: { appId: number; status: string }) =>
       api.patch(`/applications/${appId}/status`, { status }).then((r) => r.data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["posting-applications", id] }),
+    onSuccess: (_data, { status }) => {
+      queryClient.invalidateQueries({ queryKey: ["posting-applications", id] });
+      toast.success(status === "ACCEPTED" ? "Application accepted" : "Application rejected");
+    },
+    onError: () => {
+      toast.error("Failed to update status", {
+        description: "Something went wrong. Please try again.",
+      });
+    },
   });
 
   return (

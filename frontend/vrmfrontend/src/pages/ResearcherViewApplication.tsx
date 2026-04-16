@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { StatusBadge } from "../components/StatusBadge";
 import api from "../lib/api";
+import { toast } from "sonner";
 
 interface ApplicationDetail {
   id: number;
@@ -33,9 +34,20 @@ export default function ResearcherViewApplication() {
   const statusMutation = useMutation({
     mutationFn: (status: string) =>
       api.patch(`/applications/${id}/status`, { status }).then((r) => r.data),
-    onSuccess: () => {
+    onSuccess: (_data, status) => {
       queryClient.invalidateQueries({ queryKey: ["researcher-application", id] });
       queryClient.invalidateQueries({ queryKey: ["posting-applications"] });
+      const messages: Record<string, string> = {
+        ACCEPTED: "Application accepted",
+        REJECTED: "Application rejected",
+        PENDING: "Application reset to pending",
+      };
+      toast.success(messages[status] ?? "Status updated");
+    },
+    onError: () => {
+      toast.error("Failed to update status", {
+        description: "Something went wrong. Please try again.",
+      });
     },
   });
 
@@ -133,9 +145,6 @@ export default function ResearcherViewApplication() {
         </div>
       )}
 
-      {statusMutation.isError && (
-        <p className="text-sm text-destructive text-right">Failed to update status. Please try again.</p>
-      )}
     </div>
   );
 }

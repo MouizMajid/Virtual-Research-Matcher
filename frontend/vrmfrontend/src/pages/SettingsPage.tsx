@@ -2,6 +2,7 @@ import { Bell, Eye, EyeOff, Moon, Shield, Trash2 } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useState } from "react";
 import api from "../lib/api";
+import { toast } from "sonner";
 
 type PasswordFormFields = {
   currentPassword: string;
@@ -15,8 +16,6 @@ export default function SettingsPage() {
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [passwordSuccess, setPasswordSuccess] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -29,20 +28,23 @@ export default function SettingsPage() {
   const newPassword = watch("newPassword");
 
   const onSubmit: SubmitHandler<PasswordFormFields> = async (formdata) => {
-    setPasswordSuccess(false);
     try {
       await api.patch("/users/change-password", {
         currentPassword: formdata.currentPassword,
         newPassword: formdata.newPassword,
       });
-      setPasswordSuccess(true);
+      toast.success("Password updated", {
+        description: "Your password has been changed successfully.",
+      });
       reset();
     } catch (error: any) {
       const message = error?.response?.data;
       if (typeof message === "string" && message.toLowerCase().includes("current password")) {
         setError("currentPassword", { message });
       } else {
-        setError("root", { message: message ?? "Failed to update password" });
+        toast.error("Failed to update password", {
+          description: typeof message === "string" ? message : "Something went wrong. Please try again.",
+        });
       }
     }
   };
@@ -111,9 +113,6 @@ export default function SettingsPage() {
             </div>
             {errors.confirmPassword && <p className="ml-1 text-xs text-red-500 mt-1">{errors.confirmPassword.message}</p>}
           </div>
-
-          {errors.root && <p className="ml-1 text-xs text-red-500 mt-1">{errors.root.message}</p>}
-          {passwordSuccess && <p className="ml-1 text-xs text-green-600 mt-1">Password updated successfully.</p>}
 
           <button
             type="submit"

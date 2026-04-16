@@ -7,6 +7,7 @@ import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../lib/api";
+import { toast } from "sonner";
 
 interface ExperienceEntry {
   id: string;
@@ -70,7 +71,15 @@ export default function EditProfile() {
     mutationFn: (data: object) => api.put("/users/me/profile", data).then((r) => r.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-profile"] });
+      toast.success("Profile updated", {
+        description: "Your changes have been saved.",
+      });
       navigate("/dashboard/profile");
+    },
+    onError: () => {
+      toast.error("Failed to save profile", {
+        description: "Something went wrong. Please try again.",
+      });
     },
   });
 
@@ -263,10 +272,6 @@ export default function EditProfile() {
             <Input id="website" value={websiteUrl} onChange={(e) => setWebsiteUrl(e.target.value)} placeholder="yoursite.com" />
           </div>
         </div>
-
-        {mutation.isError && (
-          <p className="text-sm text-destructive">Failed to save profile. Please try again.</p>
-        )}
 
         <div className="flex items-center justify-end gap-3">
           <Button type="button" variant="outline" onClick={() => navigate(-1)}>Cancel</Button>

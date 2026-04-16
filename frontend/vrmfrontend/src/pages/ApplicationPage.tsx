@@ -3,6 +3,7 @@ import { ArrowLeft, Upload } from "lucide-react";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../lib/api";
+import { toast } from "sonner";
 
 interface Posting {
   id: number;
@@ -28,7 +29,15 @@ export default function ApplicationPage() {
     mutationFn: (data: object) => api.post("/applications", data).then((r) => r.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-applications"] });
-      navigate("/dashboard/my-applications")
+      toast.success("Application submitted", {
+        description: "Your application has been sent to the researcher.",
+      });
+      navigate("/dashboard/my-applications");
+    },
+    onError: () => {
+      toast.error("Failed to submit application", {
+        description: "Something went wrong. Please try again.",
+      });
     },
   });
 
@@ -89,10 +98,6 @@ export default function ApplicationPage() {
               className="w-full rounded-xl border border-input bg-card px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
             />
           </div>
-
-          {mutation.isError && (
-            <p className="text-sm text-destructive">Failed to submit application. Please try again.</p>
-          )}
 
           <button
             type="submit"

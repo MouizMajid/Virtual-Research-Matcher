@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { StatusBadge } from "../components/StatusBadge";
 import api from "../lib/api";
+import { toast } from "sonner";
 
 interface ApplicationDetail {
   id: number;
@@ -30,7 +31,15 @@ export default function ViewApplication() {
     mutationFn: () => api.patch(`/applications/${id}/withdraw`).then((r) => r.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-applications"] });
+      toast.success("Application withdrawn", {
+        description: "You have withdrawn your application.",
+      });
       navigate("/dashboard/student");
+    },
+    onError: () => {
+      toast.error("Failed to withdraw application", {
+        description: "Something went wrong. Please try again.",
+      });
     },
   });
 
@@ -109,9 +118,6 @@ export default function ViewApplication() {
         </div>
       )}
 
-      {withdrawMutation.isError && (
-        <p className="text-sm text-destructive text-right">Failed to withdraw. Please try again. {withdrawMutation.error.message}</p>
-      )}
     </div>
   );
 }

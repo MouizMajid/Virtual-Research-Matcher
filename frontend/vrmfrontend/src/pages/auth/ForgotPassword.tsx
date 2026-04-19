@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useState } from "react";
 import api from "../../lib/api";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 
 type FormFields = {
   email: string;
@@ -67,8 +69,8 @@ export default function ForgotPassword() {
     >
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <label className="block text-sm font-medium mb-1.5">Email</label>
-          <input
+          <Label className="block mb-1.5">Email</Label>
+          <Input
             {...register("email", {
               required: "Email is required",
               pattern: {
@@ -78,14 +80,14 @@ export default function ForgotPassword() {
             })}
             type="email"
             placeholder="you@university.edu"
-            className="h-10 w-full rounded-xl border border-input bg-card px-4 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            className="rounded-xl bg-card px-4"
           />
-          {errors.email && <p className="ml-1 text-xs text-red-500 mt-1">{errors.email.message}</p>}
+          {errors.email && <p className="ml-1 text-xs text-destructive mt-1">{errors.email.message}</p>}
         </div>
 
         {notVerified && (
           <div className="space-y-2">
-            <p className="text-sm text-red-500">Your account hasn't been verified yet.</p>
+            <p className="text-sm text-destructive">Your account hasn't been verified yet.</p>
             <button
               type="button"
               disabled={resendStatus === "sending" || resendStatus === "sent"}

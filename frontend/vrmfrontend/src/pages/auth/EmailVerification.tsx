@@ -5,6 +5,7 @@ import {  Loader2 } from "lucide-react";
 import api from "../../lib/api";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
+import { Input } from "../../components/ui/input";
 
 type VerificationForm = {
   code: string;
@@ -53,7 +54,7 @@ export default function EmailVerification() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="text-center space-y-4">
         <div className="space-y-2">
-            <input
+            <Input
               {...register("code", {
                 required: "Verification code is required",
                 pattern: {
@@ -62,9 +63,7 @@ export default function EmailVerification() {
                 },
               })}
               placeholder="000000"
-              className={`w-full rounded-md border bg-background px-3 py-2 text-center text-2xl font-bold tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-primary ${
-                errors.code ? "border-destructive" : "border-input"
-              }`}
+              className={`text-center text-2xl font-bold tracking-[0.5em]${errors.code ? " border-destructive" : ""}`}
               maxLength={6}
             />
             {errors.code && (

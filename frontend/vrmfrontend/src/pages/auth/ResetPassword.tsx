@@ -4,6 +4,8 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import api from "../../lib/api";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 
 type FormFields = {
   newPassword: string;
@@ -44,16 +46,16 @@ export default function ResetPassword() {
     >
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <label className="block text-sm font-medium mb-1.5">New Password</label>
+          <Label className="block mb-1.5">New Password</Label>
           <div className="relative">
-            <input
+            <Input
               {...register("newPassword", {
                 required: "Password is required",
                 validate: (value) => PASSWORD_REGEX.test(value) || "Password must meet all requirements"
               })}
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
-              className="h-10 w-full rounded-xl border border-input bg-card px-4 pr-10 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="rounded-xl bg-card px-4 pr-10"
             />
             <button
               type="button"
@@ -63,20 +65,20 @@ export default function ResetPassword() {
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
-          {errors.newPassword && <p className="ml-1 text-xs text-red-500 mt-1">{errors.newPassword.message}</p>}
+          {errors.newPassword && <p className="ml-1 text-xs text-destructive mt-1">{errors.newPassword.message}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1.5">Confirm Password</label>
+          <Label className="block mb-1.5">Confirm Password</Label>
           <div className="relative">
-            <input
+            <Input
               {...register("confirmPassword", {
                 required: "Please confirm your password",
                 validate: (value) => value === newPassword || "Passwords do not match"
               })}
               type={showConfirm ? "text" : "password"}
               placeholder="••••••••"
-              className="h-10 w-full rounded-xl border border-input bg-card px-4 pr-10 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="rounded-xl bg-card px-4 pr-10"
             />
             <button
               type="button"
@@ -86,10 +88,10 @@ export default function ResetPassword() {
               {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
-          {errors.confirmPassword && <p className="ml-1 text-xs text-red-500 mt-1">{errors.confirmPassword.message}</p>}
+          {errors.confirmPassword && <p className="ml-1 text-xs text-destructive mt-1">{errors.confirmPassword.message}</p>}
         </div>
 
-        {errors.root && <p className="ml-1 text-xs text-red-500 mt-1">{errors.root.message}</p>}
+        {errors.root && <p className="ml-1 text-xs text-destructive mt-1">{errors.root.message}</p>}
 
         <button
           type="submit"

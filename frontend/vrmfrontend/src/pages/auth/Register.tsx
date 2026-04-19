@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import api from "../../lib/api";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 
 type FormFields = {
   firstName: string;
@@ -30,7 +32,7 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  if( isLoggedIn ) {
+  if (isLoggedIn) {
     navigate("/dashboard/profile", { replace: true });
   }
 
@@ -43,9 +45,9 @@ export default function Register() {
         role: formdata.role,
         password: formdata.password
       });
-      navigate("/email-verification", { 
-        state: { email: formdata.email, fromAuth: true }, 
-        replace: true 
+      navigate("/email-verification", {
+        state: { email: formdata.email, fromAuth: true },
+        replace: true
       });
     } catch (error: any) {
       const message = error?.response?.data;
@@ -72,35 +74,35 @@ export default function Register() {
       title="Create account"
       subtitle="Join VRMM to start your research journey"
       cardClassName="mt-10"
-      footer={<>Already have an account? <Link to="/login" className=" font-medium text-primary hover:underline">Sign in</Link></>}
+      footer={<>Already have an account? <Link to="/login" className="font-medium text-primary hover:underline">Sign in</Link></>}
     >
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1.5">First Name</label>
-            <input
+            <Label className="block mb-1.5">First Name</Label>
+            <Input
               {...register("firstName", { required: "First name is required" })}
               type="text"
               placeholder="Alex"
-              className="h-10 w-full rounded-xl border border-input bg-card px-4 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="rounded-xl bg-card px-4"
             />
-            {errors.firstName && <p className="ml-1 text-xs text-red-500 mt-1">{errors.firstName.message}</p>}
+            {errors.firstName && <p className="ml-1 text-xs text-destructive mt-1">{errors.firstName.message}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1.5">Last Name</label>
-            <input
+            <Label className="block mb-1.5">Last Name</Label>
+            <Input
               {...register("lastName", { required: "Last name is required" })}
               type="text"
               placeholder="Johnson"
-              className="h-10 w-full rounded-xl border border-input bg-card px-4 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="rounded-xl bg-card px-4"
             />
-            {errors.lastName && <p className="ml-1 text-xs text-red-500 mt-1">{errors.lastName.message}</p>}
+            {errors.lastName && <p className="ml-1 text-xs text-destructive mt-1">{errors.lastName.message}</p>}
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1.5">Email</label>
-          <input
+          <Label className="block mb-1.5">Email</Label>
+          <Input
             {...register("email", {
               required: "Email is required",
               pattern: {
@@ -110,13 +112,13 @@ export default function Register() {
             })}
             type="email"
             placeholder="you@university.edu"
-            className="h-10 w-full rounded-xl border border-input bg-card px-4 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            className="rounded-xl bg-card px-4"
           />
-          {errors.email && <p className="ml-1 text-xs text-red-500 mt-1">{errors.email.message}</p>}
+          {errors.email && <p className="ml-1 text-xs text-destructive mt-1">{errors.email.message}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1.5">Role</label>
+          <Label className="block mb-1.5">Role</Label>
           <select
             {...register("role")}
             className="h-10 w-full rounded-xl border border-input bg-card px-4 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
@@ -127,9 +129,9 @@ export default function Register() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1.5">Password</label>
+          <Label className="block mb-1.5">Password</Label>
           <div className="relative">
-            <input
+            <Input
               {...register("password", {
                 required: "Password is required",
                 validate: (value) =>
@@ -138,7 +140,7 @@ export default function Register() {
               })}
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
-              className="h-10 w-full rounded-xl border border-input bg-card px-4 pr-10 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="rounded-xl bg-card px-4 pr-10"
             />
             <button
               type="button"
@@ -151,9 +153,9 @@ export default function Register() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1.5">Confirm Password</label>
+          <Label className="block mb-1.5">Confirm Password</Label>
           <div className="relative">
-            <input
+            <Input
               {...register("confirmPassword", {
                 required: "Please confirm your password",
                 validate: (value) =>
@@ -161,7 +163,7 @@ export default function Register() {
               })}
               type={showConfirmPassword ? "text" : "password"}
               placeholder="••••••••"
-              className="h-10 w-full rounded-xl border border-input bg-card px-4 pr-10 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="rounded-xl bg-card px-4 pr-10"
             />
             <button
               type="button"
@@ -171,32 +173,23 @@ export default function Register() {
               {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
-          {errors.confirmPassword && <p className="ml-1 text-xs text-red-500 mt-1">{errors.confirmPassword.message}</p>}
+          {errors.confirmPassword && <p className="ml-1 text-xs text-destructive mt-1">{errors.confirmPassword.message}</p>}
         </div>
 
-        {/* Password Requirements */}
-        
-          <div className="mt-2 space-y-1.5 text-xs">
-            <div className={`flex items-center gap-2 ${strength?.hasMinLength ? "text-green-600" : "text-muted-foreground"}`}>
-              <span className={strength?.hasMinLength ? "✓" : "○"}>
-                At least 6 characters
-              </span>
-            </div>
-            <div className={`flex items-center gap-2 ${strength?.hasUpperCase ? "text-green-600" : "text-muted-foreground"}`}>
-              <span className={strength?.hasUpperCase ? "✓" : "○"}>
-                One uppercase letter (A-Z)
-              </span>
-            </div>
-            <div className={`flex items-center gap-2 ${strength?.hasSymbol ? "text-green-600" : "text-muted-foreground"}`}>
-              <span className={strength?.hasSymbol ? "✓" : "○"}>
-                One symbol (!@#$%^&*)
-              </span>
-            </div>
+        <div className="mt-2 space-y-1.5 text-xs">
+          <div className={`flex items-center gap-2 ${strength?.hasMinLength ? "text-green-600" : "text-muted-foreground"}`}>
+            <span>{strength?.hasMinLength ? "✓" : "○"} At least 6 characters</span>
           </div>
+          <div className={`flex items-center gap-2 ${strength?.hasUpperCase ? "text-green-600" : "text-muted-foreground"}`}>
+            <span>{strength?.hasUpperCase ? "✓" : "○"} One uppercase letter (A-Z)</span>
+          </div>
+          <div className={`flex items-center gap-2 ${strength?.hasSymbol ? "text-green-600" : "text-muted-foreground"}`}>
+            <span>{strength?.hasSymbol ? "✓" : "○"} One symbol (!@#$%^&*)</span>
+          </div>
+        </div>
 
-        {errors.password && <p className="ml-1 text-xs text-red-500 mt-1">{errors.password.message}</p>}
-
-        {errors.root && <p className="ml-1 text-xs text-red-500 mt-1">{errors.root.message}</p>}
+        {errors.password && <p className="ml-1 text-xs text-destructive mt-1">{errors.password.message}</p>}
+        {errors.root && <p className="ml-1 text-xs text-destructive mt-1">{errors.root.message}</p>}
 
         <button
           type="submit"

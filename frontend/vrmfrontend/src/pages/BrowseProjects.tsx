@@ -100,7 +100,7 @@ export default function BrowseProjects() {
       <div className="flex gap-8">
         {/* Filter Sidebar */}
         <aside className="w-64 shrink-0">
-          <div className="glass-card p-5 space-y-6 sticky top-24">
+          <div className="vrmm-card p-5 space-y-6 sticky top-24">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm font-semibold">
                 <SlidersHorizontal className="h-4 w-4" /> Filters
@@ -197,7 +197,7 @@ export default function BrowseProjects() {
               placeholder="Search projects by title or keyword..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-12 w-full rounded-xl border border-input bg-card pl-11 pr-4 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="h-12 w-full rounded border border-border bg-card pl-11 pr-4 text-sm placeholder:text-muted-foreground transition-colors focus:outline-none focus:border-primary focus:ring-1 focus:ring-ring"
             />
           </div>
 

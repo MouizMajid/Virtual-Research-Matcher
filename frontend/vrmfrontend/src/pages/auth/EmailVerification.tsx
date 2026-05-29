@@ -6,6 +6,7 @@ import api from "../../lib/api";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
 
 type VerificationForm = {
   code: string;
@@ -75,14 +76,10 @@ export default function EmailVerification() {
           Click the link in your email to verify your account. If you don't see it, check your spam folder.
         </p>
         <div className="space-y-3">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-          >
-            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button type="submit" disabled={isSubmitting} className="w-full">
+            {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
             Verify Account
-          </button>
+          </Button>
           
           <div className="text-center">
             <button

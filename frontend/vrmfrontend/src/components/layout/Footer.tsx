@@ -7,9 +7,9 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid grid-cols-4 gap-8">
           <div>
-            <Link to="/" className="flex items-center gap-2 text-lg font-bold">
+            <Link to="/" className="flex items-center gap-2 text-lg font-bold text-primary">
               <FlaskConical className="h-5 w-5 text-primary" />
-              <span className="gradient-text">VRMM</span>
+              VRMM
             </Link>
             <p className="mt-3 text-sm text-muted-foreground">
               Connecting students and researchers for impactful academic collaboration.

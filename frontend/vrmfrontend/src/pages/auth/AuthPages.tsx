@@ -11,16 +11,16 @@ interface AuthCardProps {
 
 export function AuthCard({ title, subtitle, children, footer, cardClassName }: AuthCardProps) {
   return (
-    <div className=" flex min-h-screen items-center justify-center gradient-hero-bg px-6">
-      <div className={`w-full max-w-md fade-in ${cardClassName}`}>
+    <div className="flex min-h-screen items-center justify-center bg-background px-6 py-12">
+      <div className={`w-full max-w-md fade-in ${cardClassName ?? ""}`}>
         <div className="mb-8 text-center">
-          <Link to="/" className="inline-flex items-center gap-2 text-xl font-bold">
-            <FlaskConical className="h-6 w-6 text-primary" />
-            <span className="gradient-text">VRMM</span>
+          <Link to="/" className="inline-flex items-center gap-2 text-xl font-bold text-primary">
+            <FlaskConical className="h-5 w-5 text-primary" />
+            VRMM
           </Link>
         </div>
-        <div className="glass-card p-8">
-          <h1 className="text-2xl font-bold">{title}</h1>
+        <div className="vrmm-card p-8">
+          <h1 className="text-2xl font-bold text-foreground">{title}</h1>
           {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
           <div className="mt-6">{children}</div>
         </div>

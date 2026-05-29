@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Post a Project - VRMM</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#00236f",
+                    "on-tertiary-container": "#f39461",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "primary-fixed": "#dce1ff",
+                    "on-error-container": "#93000a",
+                    "secondary": "#505f76",
+                    "tertiary": "#4b1c00",
+                    "surface-bright": "#f7f9fb",
+                    "surface-dim": "#d8dadc",
+                    "secondary-container": "#d0e1fb",
+                    "surface-variant": "#e0e3e5",
+                    "on-tertiary-fixed": "#341100",
+                    "secondary-fixed": "#d3e4fe",
+                    "on-primary-fixed": "#00164e",
+                    "outline": "#757682",
+                    "surface-tint": "#4059aa",
+                    "on-secondary-container": "#54647a",
+                    "on-tertiary-fixed-variant": "#773205",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#c5c5d3",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#e0e3e5",
+                    "tertiary-fixed": "#ffdbcb",
+                    "surface-container": "#eceef0",
+                    "tertiary-container": "#6e2c00",
+                    "surface-container-high": "#e6e8ea",
+                    "background": "#f7f9fb",
+                    "primary-container": "#1e3a8a",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-container": "#90a8ff",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed-variant": "#264191",
+                    "surface": "#f7f9fb",
+                    "on-surface-variant": "#444651",
+                    "surface-container-low": "#f2f4f6",
+                    "on-error": "#ffffff",
+                    "inverse-surface": "#2d3133",
+                    "on-background": "#191c1e",
+                    "primary-fixed-dim": "#b6c4ff",
+                    "on-surface": "#191c1e",
+                    "on-secondary-fixed": "#0b1c30",
+                    "inverse-primary": "#b6c4ff",
+                    "on-primary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "tertiary-fixed-dim": "#ffb691"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "card_padding": "24px",
+                    "container_max_width": "1440px",
+                    "sidebar_width": "64px",
+                    "gutter": "24px",
+                    "topbar_height": "64px",
+                    "base_unit": "8px"
+            },
+            "fontFamily": {
+                    "h1": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "h3": ["Inter"],
+                    "h2": ["Inter"],
+                    "metadata": ["Inter"]
+            },
+            "fontSize": {
+                    "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.015em", "fontWeight": "600"}],
+                    "metadata": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex antialiased">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full w-64 border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex flex-col h-screen overflow-y-auto py-6 px-4 z-50 md:flex hidden">
+<div class="mb-8 px-4 flex items-center space-x-3">
+<img alt="Academic Institution Logo" class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A minimalist, professional academic crest or logo suitable for a university portal, rendered in deep blues on a light gray background, ensuring high trust and institutional credibility." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE4NVSloNLtyZskiKGpsdYxiING8fz4IBeSfcFI3aiSNQ58JV1QluqbVa4_5tJa7k14g8VOhWsvFChoTM-RnJgxtlzA2XrZuhkvt7K8RqAyJNSBSJtoicw-6xNoVE__rvt1LisG2WGhRkWug3zKbw5nZ-e9HLjiuf1YYGXzj80uOMEPi__80cvO1DgreHDj0tzyv6ArLVG3jYO_QcXspibGuA_rtWS1Gw2ym49mdMqQPLkBTi1Oza0MbKxNGqrRC2ELt_eoP5JrYw"/>
+<div>
+<h1 class="text-lg font-bold text-blue-900 dark:text-blue-50 font-inter text-sm leading-6 tracking-tight">VRMM Portal</h1>
+<p class="font-metadata text-metadata text-slate-500">Researcher Dashboard</p>
+</div>
+</div>
+<button class="w-full mb-6 bg-primary text-on-primary py-2.5 px-4 rounded font-body-sm font-medium hover:bg-primary-container hover:text-on-primary-container transition-colors duration-200 shadow-sm flex items-center justify-center space-x-2">
+<span class="material-symbols-outlined text-lg">add</span>
+<span>Post a Project</span>
+</button>
+<ul class="flex-1 space-y-1">
+<li>
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-blue-900 dark:hover:text-blue-300 transition-all duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:text-blue-900 dark:group-hover:text-blue-400 text-xl">dashboard</span>
+<span class="font-inter text-sm leading-6">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded bg-white dark:bg-slate-800 text-blue-900 dark:text-blue-400 font-semibold border-r-4 border-blue-900 dark:border-blue-400 transition-all duration-150 group focus:ring-2 focus:ring-blue-900/20" href="#">
+<span class="material-symbols-outlined filled text-xl">work</span>
+<span class="font-inter text-sm leading-6">My Projects</span>
+</a>
+</li>
+<li>
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-blue-900 dark:hover:text-blue-300 transition-all duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:text-blue-900 dark:group-hover:text-blue-400 text-xl">assignment_turned_in</span>
+<span class="font-inter text-sm leading-6">Applications</span>
+</a>
+</li>
+<li>
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-blue-900 dark:hover:text-blue-300 transition-all duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:text-blue-900 dark:group-hover:text-blue-400 text-xl">bookmark</span>
+<span class="font-inter text-sm leading-6">Saved Research</span>
+</a>
+</li>
+<li>
+<a class="flex items-center space-x-3 px-4 py-2.5 rounded text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-blue-900 dark:hover:text-blue-300 transition-all duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:text-blue-900 dark:group-hover:text-blue-400 text-xl">mail</span>
+<span class="font-inter text-sm leading-6">Messages</span>
+</a>
+</li>
+</ul>
+<div class="mt-auto pt-6 border-t border-slate-200 dark:border-slate-800">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center space-x-3 px-4 py-2 rounded text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-blue-900 dark:hover:text-blue-300 transition-all duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:text-blue-900 dark:group-hover:text-blue-400 text-xl">settings</span>
+<span class="font-inter text-sm leading-6">Settings</span>
+</a>
+</li>
+<li>
+<a class="flex items-center space-x-3 px-4 py-2 rounded text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-blue-900 dark:hover:text-blue-300 transition-all duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:text-blue-900 dark:group-hover:text-blue-400 text-xl">logout</span>
+<span class="font-inter text-sm leading-6">Logout</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Container -->
+<div class="flex-1 md:ml-[256px] flex flex-col min-h-screen relative w-full">
+<!-- TopAppBar Small -->
+<header class="sticky top-0 z-40 border-b border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md flex justify-between items-center w-full px-6 h-16">
+<div class="flex items-center">
+<div class="text-lg font-semibold text-slate-900 dark:text-slate-100 font-inter text-sm tracking-tight hidden md:block">Dashboard</div>
+</div>
+<div class="flex items-center space-x-4">
+<button class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors scale-95 duration-75">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors scale-95 duration-75">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<button class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors scale-95 duration-75">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-slate-200 border border-outline-variant overflow-hidden ml-2 cursor-pointer">
+<img alt="Researcher Profile" class="w-full h-full object-cover" data-alt="A professional headshot of an academic researcher, looking confident and approachable, in a bright, modern laboratory or office setting with soft, high-key lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmBIT9Zmyb3aLMXXWCjOoxw-zq-E3SOPxNoHo22YTml39tBtq4lVVfJAxc4B8Cf-8Lo5qUxKQ4w7jYGFuW0aXVzGDN2H9HUFHT03_qT4LTMBHKb_yGjaIjfvlySMg--7hvr5qW7MhS9Vw3kZReG-BGYOeDpw6g89Ab7gQSRNBvi79v80vmcRu2OGql1AHPdjaSQmUw2iwyniL5bwkl2J_LbQYCo7nahfhEHuyEmmqtcxd0mClzOpyCPwQjEOgdW2RtjFwH6EI_sWM"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<main class="flex-1 p-6 md:p-8 lg:px-12 xl:px-24 w-full max-w-[1440px] mx-auto">
+<!-- Breadcrumb / Back Action -->
+<div class="mb-6">
+<a class="inline-flex items-center text-primary font-body-sm hover:underline group" href="#">
+<span class="material-symbols-outlined text-sm mr-1 group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                    Back to Dashboard
+                </a>
+</div>
+<!-- Page Header -->
+<div class="mb-10">
+<h1 class="font-h1 text-h1 text-on-surface mb-2">Create New Project Posting</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">Define the parameters of your research study to attract the most suitable candidates from across institutions.</p>
+</div>
+<!-- Form Container -->
+<form class="space-y-12">
+<!-- Section 1: Basic Info -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 md:p-8">
+<div class="border-b border-outline-variant pb-4 mb-6">
+<h2 class="font-h3 text-h3 text-on-surface flex items-center">
+<span class="material-symbols-outlined mr-2 text-primary">info</span>
+                            Basic Information
+                        </h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="col-span-1 md:col-span-2">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2" for="project-title">Project Title *</label>
+<input class="w-full rounded border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest font-body-md text-on-surface p-3" id="project-title" placeholder="e.g. Longitudinal Study on Cognitive Development" type="text"/>
+</div>
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2" for="project-type">Position Type *</label>
+<div class="relative">
+<select class="w-full rounded border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest font-body-md text-on-surface p-3 appearance-none" id="project-type">
+<option disabled="" selected="" value="">Select type...</option>
+<option value="remote">Remote</option>
+<option value="in-person">In-Person</option>
+<option value="hybrid">Hybrid</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-on-surface-variant">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2" for="positions">Number of Positions *</label>
+<input class="w-full rounded border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest font-body-md text-on-surface p-3" id="positions" min="1" placeholder="1" type="number"/>
+</div>
+<div class="col-span-1 md:col-span-2">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2" for="description">Project Description *</label>
+<textarea class="w-full rounded border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest font-body-md text-on-surface p-3 resize-y" id="description" placeholder="Describe the research goals, methodology, and daily responsibilities..." rows="4"></textarea>
+</div>
+</div>
+</section>
+<!-- Section 2: Project Details -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 md:p-8">
+<div class="border-b border-outline-variant pb-4 mb-6">
+<h2 class="font-h3 text-h3 text-on-surface flex items-center">
+<span class="material-symbols-outlined mr-2 text-primary">analytics</span>
+                            Project Details
+                        </h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2" for="deadline">Application Deadline *</label>
+<div class="relative">
+<input class="w-full rounded border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest font-body-md text-on-surface p-3" id="deadline" type="date"/>
+</div>
+</div>
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2" for="location">Location / Institution *</label>
+<div class="relative">
+<select class="w-full rounded border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest font-body-md text-on-surface p-3 appearance-none" id="location">
+<option disabled="" selected="" value="">Select institution...</option>
+<option value="inst1">University of Science</option>
+<option value="inst2">National Research Institute</option>
+<option value="inst3">Global Health Org</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-on-surface-variant">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2" for="duration">Estimated Duration</label>
+<input class="w-full rounded border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest font-body-md text-on-surface p-3" id="duration" placeholder="e.g. 6 Months, 1 Year" type="text"/>
+</div>
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2" for="compensation">Compensation / Credit</label>
+<input class="w-full rounded border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest font-body-md text-on-surface p-3" id="compensation" placeholder="e.g. $25/hr, Academic Credit" type="text"/>
+</div>
+</div>
+</section>
+<!-- Section 3: Tags & Requirements -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 md:p-8">
+<div class="border-b border-outline-variant pb-4 mb-6">
+<h2 class="font-h3 text-h3 text-on-surface flex items-center">
+<span class="material-symbols-outlined mr-2 text-primary">sell</span>
+                            Tags &amp; Requirements
+                        </h2>
+</div>
+<div class="grid grid-cols-1 gap-6">
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2" for="tag-input">Keywords / Skill Tags</label>
+<div class="flex space-x-2">
+<input class="flex-1 rounded border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest font-body-md text-on-surface p-3" id="tag-input" placeholder="e.g. Python, Data Analysis, Qualitative..." type="text"/>
+<button class="bg-surface-container border border-outline-variant text-on-surface px-6 py-3 rounded font-body-sm font-medium hover:bg-surface-variant transition-colors whitespace-nowrap" type="button">
+                                    Add Tag
+                                </button>
+</div>
+<!-- Tag Chips Container -->
+<div class="flex flex-wrap gap-2 mt-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full border border-outline-variant bg-surface-container-low text-on-surface text-sm font-body-sm">
+                                    Machine Learning
+                                    <button class="ml-2 text-on-surface-variant hover:text-error transition-colors focus:outline-none" type="button">
+<span class="material-symbols-outlined text-sm" style="font-size: 16px;">close</span>
+</button>
+</span>
+<span class="inline-flex items-center px-3 py-1 rounded-full border border-outline-variant bg-surface-container-low text-on-surface text-sm font-body-sm">
+                                    Neuroscience
+                                    <button class="ml-2 text-on-surface-variant hover:text-error transition-colors focus:outline-none" type="button">
+<span class="material-symbols-outlined text-sm" style="font-size: 16px;">close</span>
+</button>
+</span>
+</div>
+</div>
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2" for="requirements">Applicant Requirements *</label>
+<textarea class="w-full rounded border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary bg-surface-container-lowest font-body-md text-on-surface p-3 resize-y" id="requirements" placeholder="List required qualifications, degree levels, or specific prior experience..." rows="4"></textarea>
+</div>
+</div>
+</section>
+<!-- Form Actions -->
+<div class="pt-6 flex justify-end items-center space-x-4 border-t border-outline-variant">
+<button class="px-6 py-3 font-body-md font-medium text-primary hover:bg-surface-container rounded transition-colors duration-200" type="button">
+                        Cancel
+                    </button>
+<button class="bg-primary text-on-primary px-8 py-3 rounded font-body-md font-medium hover:bg-primary-container hover:text-on-primary-container transition-colors duration-200 shadow-sm flex items-center" type="submit">
+                        Publish Posting
+                        <span class="material-symbols-outlined ml-2 text-sm">send</span>
+</button>
+</div>
+</form>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t mt-auto border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 py-12 px-8 flex flex-col md:flex-row justify-between items-center max-w-screen-2xl mx-auto">
+<div class="mb-4 md:mb-0">
+<span class="font-bold text-slate-900 dark:text-slate-100 font-inter text-xs text-slate-500 dark:text-slate-400">© 2024 Virtual Research Match Maker. Institutional Trust &amp; Academic Integrity.</span>
+</div>
+<ul class="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 font-inter text-xs text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-blue-900 dark:hover:text-blue-400 transition-colors duration-200" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-blue-900 dark:hover:text-blue-400 transition-colors duration-200" href="#">Terms of Service</a></li>
+<li><a class="hover:text-blue-900 dark:hover:text-blue-400 transition-colors duration-200" href="#">Institutional Access</a></li>
+<li><a class="hover:text-blue-900 dark:hover:text-blue-400 transition-colors duration-200" href="#">Support</a></li>
+<li><a class="hover:text-blue-900 dark:hover:text-blue-400 transition-colors duration-200" href="#">API Documentation</a></li>
+</ul>
+</footer>
+</div>
+</body></html>

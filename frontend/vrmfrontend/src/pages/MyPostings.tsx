@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { StatusBadge } from "../components/StatusBadge";
+import { Button } from "../components/ui/button";
 import { Plus, Eye, Users, Pencil } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import api from "../lib/api";
@@ -27,23 +28,22 @@ export default function MyPostings() {
           <h1 className="text-2xl font-bold">My Postings</h1>
           <p className="text-sm text-muted-foreground">Manage your research project postings.</p>
         </div>
-        <Link
-          to="/dashboard/create-posting"
-          className="gradient-bg inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
-        >
-          <Plus className="h-4 w-4" /> Create New Posting
-        </Link>
+        <Button asChild>
+          <Link to="/dashboard/create-posting">
+            <Plus className="h-4 w-4" /> Create New Posting
+          </Link>
+        </Button>
       </div>
 
-      <div className="glass-card">
+      <div className="vrmm-card">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border text-left text-muted-foreground">
-                <th className="px-4 py-3 font-medium">Project Title</th>
-                <th className="px-4 py-3 font-medium">Status</th>
-                <th className="px-4 py-3 font-medium">Deadline</th>
-                <th className="px-4 py-3 font-medium">Actions</th>
+              <tr className="border-b border-border text-left">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Project Title</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Deadline</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Actions</th>
               </tr>
             </thead>
             <tbody>

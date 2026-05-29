@@ -6,6 +6,7 @@ import { Eye, EyeOff } from "lucide-react";
 import api from "../../lib/api";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
+import { Button } from "../../components/ui/button";
 
 type FormFields = {
   newPassword: string;
@@ -55,7 +56,7 @@ export default function ResetPassword() {
               })}
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
-              className="rounded-xl bg-card px-4 pr-10"
+              className="pr-10"
             />
             <button
               type="button"
@@ -78,7 +79,7 @@ export default function ResetPassword() {
               })}
               type={showConfirm ? "text" : "password"}
               placeholder="••••••••"
-              className="rounded-xl bg-card px-4 pr-10"
+              className="pr-10"
             />
             <button
               type="button"
@@ -93,13 +94,9 @@ export default function ResetPassword() {
 
         {errors.root && <p className="ml-1 text-xs text-destructive mt-1">{errors.root.message}</p>}
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="gradient-bg flex w-full items-center justify-center rounded-xl px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 disabled:opacity-50"
-        >
+        <Button type="submit" disabled={isSubmitting} className="w-full">
           {isSubmitting ? "Resetting..." : "Reset Password"}
-        </button>
+        </Button>
       </form>
     </AuthCard>
   );

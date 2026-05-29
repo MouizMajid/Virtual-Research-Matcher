@@ -5,6 +5,7 @@ import { useState } from "react";
 import api from "../../lib/api";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
+import { Button } from "../../components/ui/button";
 
 type FormFields = {
   email: string;
@@ -80,7 +81,7 @@ export default function ForgotPassword() {
             })}
             type="email"
             placeholder="you@university.edu"
-            className="rounded-xl bg-card px-4"
+            className=""
           />
           {errors.email && <p className="ml-1 text-xs text-destructive mt-1">{errors.email.message}</p>}
         </div>
@@ -102,13 +103,9 @@ export default function ForgotPassword() {
           </div>
         )}
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="gradient-bg w-full rounded-xl px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 disabled:opacity-50"
-        >
+        <Button type="submit" disabled={isSubmitting} className="w-full">
           {isSubmitting ? "Sending..." : "Send Reset Link"}
-        </button>
+        </Button>
       </form>
     </AuthCard>
   );

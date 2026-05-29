@@ -88,7 +88,7 @@ export default function ResearcherViewApplication() {
         <StatusBadge status={application.status.toLowerCase() as "pending" | "accepted" | "rejected"} />
       </div>
 
-      <div className="glass-card p-6 space-y-6">
+      <div className="vrmm-card p-6 space-y-6">
         <div>
           <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Cover Letter</h2>
           <p className="text-sm leading-relaxed whitespace-pre-wrap">{application.coverLetter}</p>
@@ -119,7 +119,7 @@ export default function ResearcherViewApplication() {
             <button
               onClick={() => statusMutation.mutate("ACCEPTED")}
               disabled={statusMutation.isPending}
-              className="rounded-xl bg-emerald-500/10 px-5 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-500/20 transition-colors disabled:opacity-50"
+              className="rounded bg-emerald-500/10 px-5 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-500/20 transition-colors disabled:opacity-50 dark:text-emerald-400"
             >
               {statusMutation.isPending ? "Saving..." : "Accept"}
             </button>
@@ -128,7 +128,7 @@ export default function ResearcherViewApplication() {
             <button
               onClick={() => statusMutation.mutate("REJECTED")}
               disabled={statusMutation.isPending}
-              className="rounded-xl bg-red-500/10 px-5 py-2 text-sm font-medium text-red-600 hover:bg-red-500/20 transition-colors disabled:opacity-50"
+              className="rounded bg-red-500/10 px-5 py-2 text-sm font-medium text-red-700 hover:bg-red-500/20 transition-colors disabled:opacity-50 dark:text-red-400"
             >
               {statusMutation.isPending ? "Saving..." : "Reject"}
             </button>
@@ -137,7 +137,7 @@ export default function ResearcherViewApplication() {
             <button
               onClick={() => statusMutation.mutate("PENDING")}
               disabled={statusMutation.isPending}
-              className="rounded-xl border border-border px-5 py-2 text-sm font-medium text-muted-foreground hover:bg-muted/50 transition-colors disabled:opacity-50"
+              className="rounded border border-border px-5 py-2 text-sm font-medium text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
             >
               {statusMutation.isPending ? "Saving..." : "Reset to Pending"}
             </button>

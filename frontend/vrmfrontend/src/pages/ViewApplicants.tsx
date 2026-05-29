@@ -63,16 +63,16 @@ export default function ViewApplicants() {
         </p>
       </div>
 
-      <div className="glass-card">
+      <div className="vrmm-card">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border text-left text-muted-foreground">
-                <th className="px-4 py-3 font-medium">Name</th>
-                <th className="px-4 py-3 font-medium">Email</th>
-                <th className="px-4 py-3 font-medium">Submitted</th>
-                <th className="px-4 py-3 font-medium">Status</th>
-                <th className="px-4 py-3 font-medium">Action</th>
+              <tr className="border-b border-border text-left">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Name</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Email</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Submitted</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -102,14 +102,14 @@ export default function ViewApplicants() {
                             <button
                               onClick={() => statusMutation.mutate({ appId: a.id, status: "ACCEPTED" })}
                               disabled={statusMutation.isPending}
-                              className="rounded-lg bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-600 hover:bg-emerald-500/20 transition-colors disabled:opacity-50"
+                              className="rounded bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-500/20 transition-colors disabled:opacity-50 dark:text-emerald-400"
                             >
                               Accept
                             </button>
                             <button
                               onClick={() => statusMutation.mutate({ appId: a.id, status: "REJECTED" })}
                               disabled={statusMutation.isPending}
-                              className="rounded-lg bg-red-500/10 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-500/20 transition-colors disabled:opacity-50"
+                              className="rounded bg-red-500/10 px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-500/20 transition-colors disabled:opacity-50 dark:text-red-400"
                             >
                               Reject
                             </button>

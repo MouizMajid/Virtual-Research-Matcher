@@ -1,9 +1,12 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Upload } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../lib/api";
 import { toast } from "sonner";
+import { Textarea } from "../components/ui/textarea";
+import { Button } from "../components/ui/button";
+import { Label } from "../components/ui/label";
 
 interface Posting {
   id: number;
@@ -43,12 +46,7 @@ export default function ApplicationPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutation.mutate({
-      postingId: Number(id),
-      coverLetter,
-      why,
-      experience,
-    });
+    mutation.mutate({ postingId: Number(id), coverLetter, why, experience });
   };
 
   return (
@@ -57,55 +55,47 @@ export default function ApplicationPage() {
         <ArrowLeft className="h-4 w-4" /> Back to Project
       </Link>
 
-      <div className="glass-card p-8">
+      <div className="vrmm-card p-8">
         <h1 className="text-2xl font-bold">Apply to Project</h1>
         <p className="mt-1 text-muted-foreground">{posting?.title ?? "Loading..."}</p>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-
-          <div>
-            <label className="block text-sm font-medium mb-1.5">Cover Letter</label>
-            <textarea
+          <div className="space-y-1.5">
+            <Label>Cover Letter</Label>
+            <Textarea
               required
               rows={6}
               value={coverLetter}
               onChange={(e) => setCoverLetter(e.target.value)}
               placeholder="Tell the researcher why you're a great fit for this project..."
-              className="w-full rounded-xl border border-input bg-card px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1.5">Why are you interested in this research?</label>
-            <textarea
+          <div className="space-y-1.5">
+            <Label>Why are you interested in this research?</Label>
+            <Textarea
               required
               rows={3}
               value={why}
               onChange={(e) => setWhy(e.target.value)}
               placeholder="Briefly describe your motivation..."
-              className="w-full rounded-xl border border-input bg-card px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1.5">Relevant Experience</label>
-            <textarea
+          <div className="space-y-1.5">
+            <Label>Relevant Experience</Label>
+            <Textarea
               required
               rows={3}
               value={experience}
               onChange={(e) => setExperience(e.target.value)}
               placeholder="Describe any relevant coursework, projects, or research..."
-              className="w-full rounded-xl border border-input bg-card px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={mutation.isPending}
-            className="gradient-bg w-full rounded-xl px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 disabled:opacity-50"
-          >
+          <Button type="submit" disabled={mutation.isPending} className="w-full">
             {mutation.isPending ? "Submitting..." : "Submit Application"}
-          </button>
+          </Button>
         </form>
       </div>
     </div>

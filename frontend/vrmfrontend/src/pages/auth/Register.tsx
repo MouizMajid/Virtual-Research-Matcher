@@ -8,6 +8,7 @@ import { useState } from "react";
 import api from "../../lib/api";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
+import { Button } from "../../components/ui/button";
 
 type FormFields = {
   firstName: string;
@@ -84,7 +85,7 @@ export default function Register() {
               {...register("firstName", { required: "First name is required" })}
               type="text"
               placeholder="Alex"
-              className="rounded-xl bg-card px-4"
+              className=""
             />
             {errors.firstName && <p className="ml-1 text-xs text-destructive mt-1">{errors.firstName.message}</p>}
           </div>
@@ -94,7 +95,7 @@ export default function Register() {
               {...register("lastName", { required: "Last name is required" })}
               type="text"
               placeholder="Johnson"
-              className="rounded-xl bg-card px-4"
+              className=""
             />
             {errors.lastName && <p className="ml-1 text-xs text-destructive mt-1">{errors.lastName.message}</p>}
           </div>
@@ -112,7 +113,7 @@ export default function Register() {
             })}
             type="email"
             placeholder="you@university.edu"
-            className="rounded-xl bg-card px-4"
+            className=""
           />
           {errors.email && <p className="ml-1 text-xs text-destructive mt-1">{errors.email.message}</p>}
         </div>
@@ -121,7 +122,7 @@ export default function Register() {
           <Label className="block mb-1.5">Role</Label>
           <select
             {...register("role")}
-            className="h-10 w-full rounded-xl border border-input bg-card px-4 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            className="h-10 w-full rounded border border-border bg-card px-3 text-sm text-foreground transition-colors focus:outline-none focus:border-primary focus:ring-1 focus:ring-ring"
           >
             <option value="STUDENT">Student</option>
             <option value="RESEARCHER">Researcher</option>
@@ -140,7 +141,7 @@ export default function Register() {
               })}
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
-              className="rounded-xl bg-card px-4 pr-10"
+              className="pr-10"
             />
             <button
               type="button"
@@ -163,7 +164,7 @@ export default function Register() {
               })}
               type={showConfirmPassword ? "text" : "password"}
               placeholder="••••••••"
-              className="rounded-xl bg-card px-4 pr-10"
+              className="pr-10"
             />
             <button
               type="button"
@@ -191,13 +192,9 @@ export default function Register() {
         {errors.password && <p className="ml-1 text-xs text-destructive mt-1">{errors.password.message}</p>}
         {errors.root && <p className="ml-1 text-xs text-destructive mt-1">{errors.root.message}</p>}
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="gradient-bg flex w-full items-center justify-center rounded-xl px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 disabled:opacity-50"
-        >
+        <Button type="submit" disabled={isSubmitting} className="w-full">
           {isSubmitting ? "Creating Account..." : "Create Account"}
-        </button>
+        </Button>
       </form>
     </AuthCard>
   );

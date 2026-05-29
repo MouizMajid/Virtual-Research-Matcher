@@ -9,6 +9,7 @@ import api from "../../lib/api";
 import { toast } from "sonner";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
+import { Button } from "../../components/ui/button";
 
 type FormFields = {
   email: string;
@@ -87,7 +88,7 @@ export default function Login() {
             })}
             type="email"
             placeholder="you@university.edu"
-            className="rounded-xl bg-card px-4"
+            className=""
           />
           {errors.email && <p className="ml-1 text-xs text-destructive mt-1">{errors.email.message}</p>}
         </div>
@@ -105,7 +106,7 @@ export default function Login() {
               })}
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
-              className="rounded-xl bg-card px-4 pr-10"
+              className="pr-10"
             />
             <button
               type="button"
@@ -145,13 +146,9 @@ export default function Login() {
           </button>
         )}
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="gradient-bg flex w-full items-center justify-center rounded-xl px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 disabled:opacity-50"
-        >
+        <Button type="submit" disabled={isSubmitting} className="w-full">
           {isSubmitting ? "Signing in..." : "Sign In"}
-        </button>
+        </Button>
       </form>
     </AuthCard>
   );

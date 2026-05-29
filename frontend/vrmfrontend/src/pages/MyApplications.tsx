@@ -26,14 +26,14 @@ export default function MyApplications() {
         <p className="text-sm text-muted-foreground">Track and manage your research applications.</p>
       </div>
 
-      <div className="glass-card">
+      <div className="vrmm-card">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border text-left text-muted-foreground">
-                <th className="px-4 py-3 font-medium">Project</th>
-                <th className="px-4 py-3 font-medium">Applied Date</th>
-                <th className="px-4 py-3 font-medium">Status</th>
+              <tr className="border-b border-border text-left">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Project</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Applied Date</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
               </tr>
             </thead>
             <tbody>

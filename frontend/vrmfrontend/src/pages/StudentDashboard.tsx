@@ -38,17 +38,17 @@ export default function StudentDashboard() {
         <MetricCard label="Pending" value={pending} icon={Clock} />
       </div>
 
-      <div className="glass-card">
-        <div className="border-b border-border p-4">
+      <div className="vrmm-card">
+        <div className="border-b border-border px-4 py-3">
           <h2 className="font-semibold">Recent Applications</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border text-left text-muted-foreground">
-                <th className="px-4 py-3 font-medium">Project</th>
-                <th className="px-4 py-3 font-medium">Date</th>
-                <th className="px-4 py-3 font-medium">Status</th>
+              <tr className="border-b border-border text-left">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Project</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Date</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
               </tr>
             </thead>
             <tbody>

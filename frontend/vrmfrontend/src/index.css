@@ -4,95 +4,155 @@
 
 @layer base {
   :root {
-    --background: 0 0% 99%;
-    --foreground: 230 25% 12%;
+    /* ── Shadcn/ui tokens (remapped to new deep-blue palette) ────────────── */
+    --background: 210 20% 98%;          /* #f7f9fb */
+    --foreground: 204 9% 11%;           /* #191c1e */
 
-    --card: 0 0% 100%;
-    --card-foreground: 230 25% 12%;
+    --card: 0 0% 100%;                  /* #ffffff */
+    --card-foreground: 204 9% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 230 25% 12%;
+    --popover-foreground: 204 9% 11%;
 
-    --primary: 239 84% 67%;
+    --primary: 221 100% 22%;            /* #00236f */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 230 25% 18%;
+    --secondary: 210 8% 94%;            /* #eceef0 — surface-container */
+    --secondary-foreground: 204 9% 11%;
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 210 11% 96%;              /* #f2f4f6 — surface-container-low */
+    --muted-foreground: 231 9% 29%;    /* #444651 */
 
-    --accent: 243 75% 59%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 210 7% 91%;              /* #e6e8ea — surface-container-high */
+    --accent-foreground: 204 9% 11%;
+
+    --destructive: 0 74% 42%;          /* #ba1a1a */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 14% 80%;             /* #c5c5d3 — outline-variant */
+    --input: 240 14% 80%;
+    --ring: 221 100% 22%;
+
+    --radius: 0.25rem;
+
+    /* ── MD3 surface tokens ──────────────────────────────────────────────── */
+    --surface: 210 20% 98%;
+    --surface-dim: 204 5% 85%;
+    --surface-bright: 210 20% 98%;
+    --surface-container-lowest: 0 0% 100%;
+    --surface-container-low: 210 11% 96%;
+    --surface-container: 210 8% 94%;
+    --surface-container-high: 210 7% 91%;
+    --surface-container-highest: 204 7% 88%;
+    --surface-variant: 204 7% 88%;
+    --surface-tint: 225 46% 45%;
+
+    /* ── MD3 content tokens ──────────────────────────────────────────────── */
+    --on-surface: 204 9% 11%;
+    --on-surface-variant: 231 9% 29%;
+    --inverse-surface: 204 6% 19%;
+    --inverse-on-surface: 210 9% 95%;
+    --on-background: 204 9% 11%;
+
+    /* ── MD3 outline tokens ──────────────────────────────────────────────── */
+    --outline: 235 5% 48%;
+    --outline-variant: 240 14% 80%;
+
+    /* ── MD3 primary tokens ──────────────────────────────────────────────── */
+    --on-primary: 0 0% 100%;
+    --primary-container: 224 64% 33%;   /* #1e3a8a */
+    --on-primary-container: 228 100% 78%; /* #90a8ff */
+    --inverse-primary: 228 100% 86%;    /* #b6c4ff */
+    --primary-fixed: 232 100% 93%;      /* #dce1ff */
+    --primary-fixed-dim: 228 100% 86%;
+    --on-primary-fixed: 222 100% 15%;
+    --on-primary-fixed-variant: 225 56% 35%;
+
+    /* ── MD3 secondary tokens ────────────────────────────────────────────── */
+    --on-secondary: 0 0% 100%;
+    --secondary-container: 214 86% 90%; /* #d0e1fb */
+    --on-secondary-container: 215 20% 40%; /* #54647a */
+
+    /* ── MD3 error tokens ────────────────────────────────────────────────── */
+    --error: 0 74% 42%;
+    --on-error: 0 0% 100%;
+    --error-container: 3 100% 92%;
+    --on-error-container: 356 100% 29%;
+  }
+
+  .dark {
+    /* ── Shadcn/ui tokens ────────────────────────────────────────────────── */
+    --background: 222 47% 11%;          /* #0f172a */
+    --foreground: 210 17% 93%;          /* #e8eaf0 */
+
+    --card: 222 47% 13%;               /* #111827 */
+    --card-foreground: 210 17% 93%;
+
+    --popover: 222 47% 13%;
+    --popover-foreground: 210 17% 93%;
+
+    --primary: 224 76% 60%;            /* #4a6cf7 — brighter for dark bg */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 222 35% 17%;
+    --secondary-foreground: 210 17% 93%;
+
+    --muted: 222 35% 16%;
+    --muted-foreground: 220 12% 58%;
+
+    --accent: 220 25% 21%;
+    --accent-foreground: 210 17% 93%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 239 84% 67%;
+    --border: 220 20% 26%;             /* #2d3748 */
+    --input: 220 20% 26%;
+    --ring: 224 76% 60%;
 
-    --radius: 0.75rem;
+    /* ── MD3 surface tokens ──────────────────────────────────────────────── */
+    --surface: 222 47% 11%;
+    --surface-dim: 222 47% 9%;
+    --surface-bright: 222 35% 16%;
+    --surface-container-lowest: 222 47% 8%;
+    --surface-container-low: 222 35% 14%;
+    --surface-container: 222 30% 17%;
+    --surface-container-high: 220 25% 21%;
+    --surface-container-highest: 220 22% 24%;
+    --surface-variant: 220 22% 24%;
+    --surface-tint: 224 76% 60%;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 230 25% 18%;
-    --sidebar-primary: 239 84% 67%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 239 84% 97%;
-    --sidebar-accent-foreground: 239 84% 50%;
-    --sidebar-border: 220 13% 93%;
-    --sidebar-ring: 239 84% 67%;
+    /* ── MD3 content tokens ──────────────────────────────────────────────── */
+    --on-surface: 210 17% 93%;
+    --on-surface-variant: 220 12% 63%;
+    --inverse-surface: 210 9% 95%;
+    --inverse-on-surface: 204 9% 11%;
+    --on-background: 210 17% 93%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(239, 84%, 67%), hsl(280, 80%, 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(239, 84%, 97%), hsl(280, 60%, 96%), hsl(0, 0%, 100%));
-    --shadow-soft: 0 1px 3px 0 hsl(230 25% 12% / 0.06), 0 1px 2px -1px hsl(230 25% 12% / 0.06);
-    --shadow-card: 0 4px 24px -4px hsl(230 25% 12% / 0.08);
-    --shadow-elevated: 0 12px 40px -8px hsl(239 84% 67% / 0.15);
-  }
+    /* ── MD3 outline tokens ──────────────────────────────────────────────── */
+    --outline: 220 15% 43%;
+    --outline-variant: 220 20% 26%;
 
-  .dark {
-    --background: 230 25% 6%;
-    --foreground: 210 40% 96%;
+    /* ── MD3 primary tokens ──────────────────────────────────────────────── */
+    --on-primary: 0 0% 100%;
+    --primary-container: 224 64% 33%;
+    --on-primary-container: 228 100% 78%;
+    --inverse-primary: 221 100% 22%;
+    --primary-fixed: 232 100% 93%;
+    --primary-fixed-dim: 228 100% 86%;
+    --on-primary-fixed: 222 100% 15%;
+    --on-primary-fixed-variant: 225 56% 35%;
 
-    --card: 230 25% 9%;
-    --card-foreground: 210 40% 96%;
+    /* ── MD3 secondary tokens ────────────────────────────────────────────── */
+    --on-secondary: 0 0% 100%;
+    --secondary-container: 222 35% 22%;
+    --on-secondary-container: 214 60% 80%;
 
-    --popover: 230 25% 9%;
-    --popover-foreground: 210 40% 96%;
-
-    --primary: 239 84% 67%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 230 20% 14%;
-    --secondary-foreground: 210 40% 96%;
-
-    --muted: 230 20% 14%;
-    --muted-foreground: 220 9% 55%;
-
-    --accent: 243 75% 59%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 230 20% 16%;
-    --input: 230 20% 16%;
-    --ring: 239 84% 67%;
-
-    --sidebar-background: 230 25% 7%;
-    --sidebar-foreground: 210 40% 90%;
-    --sidebar-primary: 239 84% 67%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 239 84% 15%;
-    --sidebar-accent-foreground: 239 84% 80%;
-    --sidebar-border: 230 20% 14%;
-    --sidebar-ring: 239 84% 67%;
-
-    --gradient-primary: linear-gradient(135deg, hsl(239, 84%, 67%), hsl(280, 80%, 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(230, 25%, 8%), hsl(260, 30%, 12%), hsl(230, 25%, 6%));
-    --shadow-soft: 0 1px 3px 0 hsl(0 0% 0% / 0.2), 0 1px 2px -1px hsl(0 0% 0% / 0.2);
-    --shadow-card: 0 4px 24px -4px hsl(0 0% 0% / 0.3);
-    --shadow-elevated: 0 12px 40px -8px hsl(239 84% 67% / 0.25);
+    /* ── MD3 error tokens ────────────────────────────────────────────────── */
+    --error: 0 84% 60%;
+    --on-error: 0 0% 100%;
+    --error-container: 0 60% 20%;
+    --on-error-container: 3 100% 88%;
   }
 }
 
@@ -102,99 +162,65 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply tracking-tight;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
   }
 }
 
 @layer components {
-  .font-accent {
-    font-family: 'Playfair Display', serif;
+  /* Card — clean bordered surface, no blur */
+  .vrmm-card {
+    @apply bg-card border border-border rounded-lg;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.03);
   }
 
-  .glass-card {
-    @apply bg-card/80 backdrop-blur-md border border-border/50 rounded-xl;
-    box-shadow: var(--shadow-card);
-  }
-
-  .glass-navbar {
-    @apply bg-background/80 backdrop-blur-xl border-b border-border/50;
-  }
-
-  .gradient-text {
-    @apply bg-clip-text text-transparent;
-    background-image: var(--gradient-primary);
-  }
-
-  .gradient-bg {
-    background-image: var(--gradient-primary);
-  }
-
-  .gradient-hero-bg {
-    background-image: var(--gradient-hero);
-  }
-
-  .hover-lift {
-    @apply transition-all duration-300 ease-out;
-  }
-
-  .hover-lift:hover {
-    @apply -translate-y-1;
-    box-shadow: var(--shadow-elevated);
-  }
-
-  .fade-in {
-    animation: fadeInUp 0.6s ease-out forwards;
-    opacity: 0;
-  }
-
-  .fade-in-delay-1 { animation-delay: 0.1s; }
-  .fade-in-delay-2 { animation-delay: 0.2s; }
-  .fade-in-delay-3 { animation-delay: 0.3s; }
-  .fade-in-delay-4 { animation-delay: 0.4s; }
-  .fade-in-delay-5 { animation-delay: 0.5s; }
-
-  .section-padding {
-    @apply py-20 px-6 lg:px-8;
-  }
-
-  .container-narrow {
-    @apply max-w-6xl mx-auto;
-  }
-
+  /* Status badges */
   .status-badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-  }
-
-  .status-accepted {
-    @apply bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400;
-  }
-
-  .status-pending {
-    @apply bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400;
-  }
-
-  .status-rejected {
-    @apply bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold tracking-wide uppercase;
   }
 
   .status-open {
-    @apply bg-primary/10 text-primary dark:bg-primary/20;
+    @apply bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300;
   }
 
   .status-closed {
-    @apply bg-muted text-muted-foreground;
+    @apply bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400;
   }
+
+  .status-pending {
+    @apply bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300;
+  }
+
+  .status-accepted {
+    @apply bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300;
+  }
+
+  .status-rejected {
+    @apply bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300;
+  }
+
+  /* Tag/chip — outlined pill for skills and categories */
+  .tag-chip {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs border border-border text-on-surface-variant;
+  }
+
+  /* Fade-in animation utility */
+  .fade-in {
+    animation: fadeInUp 0.4s ease-out forwards;
+    opacity: 0;
+  }
+
+  .fade-in-delay-1 { animation-delay: 0.05s; }
+  .fade-in-delay-2 { animation-delay: 0.1s; }
+  .fade-in-delay-3 { animation-delay: 0.15s; }
+  .fade-in-delay-4 { animation-delay: 0.2s; }
+  .fade-in-delay-5 { animation-delay: 0.25s; }
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;

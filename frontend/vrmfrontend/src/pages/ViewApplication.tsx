@@ -2,6 +2,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { StatusBadge } from "../components/StatusBadge";
+import { Button } from "../components/ui/button";
 import api from "../lib/api";
 import { toast } from "sonner";
 
@@ -81,7 +82,7 @@ export default function ViewApplication() {
         <StatusBadge status={application.status.toLowerCase() as "pending" | "accepted" | "rejected" | "withdrawn"} />
       </div>
 
-      <div className="glass-card p-6 space-y-6">
+      <div className="vrmm-card p-6 space-y-6">
         <div>
           <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Cover Letter</h2>
           <p className="text-sm leading-relaxed whitespace-pre-wrap">{application.coverLetter}</p>
@@ -108,13 +109,14 @@ export default function ViewApplication() {
 
       {!isWithdrawn && (
         <div className="flex justify-end">
-          <button
+          <Button
+            variant="outline"
             onClick={handleWithdraw}
             disabled={withdrawMutation.isPending}
-            className="rounded-xl border border-destructive px-4 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50"
+            className="border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
           >
             {withdrawMutation.isPending ? "Withdrawing..." : "Withdraw Application"}
-          </button>
+          </Button>
         </div>
       )}
 

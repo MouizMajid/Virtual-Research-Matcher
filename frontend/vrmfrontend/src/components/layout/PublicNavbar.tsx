@@ -10,11 +10,11 @@ export function PublicNavbar() {
   ];
 
   return (
-    <nav className="glass-navbar sticky top-0 z-50">
+    <nav className="sticky top-0 z-50 border-b border-border bg-card">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <Link to="/" className="flex items-center gap-2 text-lg font-bold">
-          <FlaskConical className="h-6 w-6 text-primary" />
-          <span className="gradient-text">VRMM</span>
+        <Link to="/" className="flex items-center gap-2 text-lg font-bold text-primary">
+          <FlaskConical className="h-5 w-5 text-primary" />
+          VRMM
         </Link>
 
         <div className="flex items-center gap-1">
@@ -22,7 +22,7 @@ export function PublicNavbar() {
             <Link
               key={link.to}
               to={link.to}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:bg-muted ${
+              className={`rounded px-4 py-2 text-sm font-medium transition-colors hover:bg-muted ${
                 location.pathname === link.to ? "text-primary" : "text-muted-foreground"
               }`}
             >
@@ -30,10 +30,10 @@ export function PublicNavbar() {
             </Link>
           ))}
           <div className="mx-2 h-5 w-px bg-border" />
-          <Link to="/login" className="rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted">
+          <Link to="/login" className="rounded px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted">
             Login
           </Link>
-          <Link to="/register" className="gradient-bg rounded-lg px-4 py-2 text-sm font-medium text-primary-foreground transition-all hover:opacity-90">
+          <Link to="/register" className="ml-1 rounded bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
             Register
           </Link>
           <div className="ml-2">

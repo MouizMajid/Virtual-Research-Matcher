@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { Calendar, MapPin, Users, ArrowLeft, ExternalLink, Presentation, BriefcaseBusiness } from "lucide-react";
 import { StatusBadge } from "../components/StatusBadge";
+import { Button } from "../components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext";
 import api from "../lib/api";
@@ -67,7 +68,7 @@ export default function ViewPosting() {
       <div className="grid grid-cols-3 gap-8">
         {/* Main Content */}
         <div className="col-span-2 space-y-6">
-          <div className="glass-card p-8">
+          <div className="vrmm-card p-8">
             <div className="flex items-start justify-between">
               <div>
                 <StatusBadge status={status} />
@@ -104,7 +105,7 @@ export default function ViewPosting() {
                 <h2 className="text-lg font-semibold">Tags</h2>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {posting.tags.map((tag) => (
-                    <span key={tag} className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">{tag}</span>
+                    <span key={tag} className="tag-chip">{tag}</span>
                   ))}
                 </div>
               </div>
@@ -115,26 +116,22 @@ export default function ViewPosting() {
         {/* Side Panel */}
         <div className="space-y-4 sticky top-24 self-start">
           {role === "student" && (
-            <div className="glass-card p-6">
+            <div className="vrmm-card p-6">
               {status === "open" && !alreadyApplied ? (
-                <Link
-                  to={`/application/${posting.id}`}
-                  className="gradient-bg flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
-                >
-                  Apply Now <ExternalLink className="h-4 w-4" />
-                </Link>
+                <Button asChild className="w-full">
+                  <Link to={`/application/${posting.id}`}>
+                    Apply Now <ExternalLink className="h-4 w-4" />
+                  </Link>
+                </Button>
               ) : (
-                <button
-                  disabled
-                  className="flex w-full items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold bg-muted text-muted-foreground cursor-not-allowed"
-                >
+                <Button disabled className="w-full">
                   {alreadyApplied ? "Already Applied" : "Applications Closed"}
-                </button>
+                </Button>
               )}
             </div>
           )}
 
-          <div className="glass-card p-6">
+          <div className="vrmm-card p-6">
             <h3 className="font-semibold">About the Researcher</h3>
             <Link to={`/profile/${posting.createdById}`} className="mt-3 flex items-center gap-3 hover:opacity-80 transition-opacity">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
@@ -146,7 +143,7 @@ export default function ViewPosting() {
             </Link>
           </div>
 
-          <div className="glass-card p-6">
+          <div className="vrmm-card p-6">
             <h3 className="font-semibold">Key Details</h3>
             <dl className="mt-3 space-y-2 text-sm">
               <div className="flex justify-between">

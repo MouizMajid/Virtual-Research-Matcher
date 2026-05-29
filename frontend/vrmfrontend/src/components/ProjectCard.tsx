@@ -16,15 +16,15 @@ interface ProjectCardProps {
 export function ProjectCard({ id, title, description, researcher, university, tags, deadline, location, type }: ProjectCardProps) {
   return (
     <Link to={`/posting/${id}`} className="block">
-      <div className="glass-card p-6 hover-lift group cursor-pointer">
-        <h3 className="text-lg font-semibold group-hover:text-primary transition-colors line-clamp-1">{title}</h3>
+      <div className="vrmm-card p-6 group cursor-pointer transition-colors hover:border-primary/40">
+        <h3 className="text-base font-semibold leading-snug group-hover:text-primary transition-colors line-clamp-1">{title}</h3>
         <p className="mt-1 text-sm text-muted-foreground">
           {researcher}{university ? ` · ${university}` : ""}
         </p>
         <p className="mt-3 text-sm text-muted-foreground line-clamp-2">{description}</p>
         <div className="mt-4 flex flex-wrap gap-1.5">
           {(tags || []).slice(0, 4).map((tag) => (
-            <span key={tag} className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+            <span key={tag} className="tag-chip">
               {tag}
             </span>
           ))}

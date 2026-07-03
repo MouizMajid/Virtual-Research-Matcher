@@ -44,7 +44,7 @@ export default function EditPosting() {
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
 
-  const { register, handleSubmit, reset } = useForm<FormFields>();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormFields>();
 
   const { data: posting, isLoading } = useQuery<PostingDetail>({
     queryKey: ["posting", id],
@@ -126,10 +126,14 @@ export default function EditPosting() {
     });
   };
 
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
   const handleDelete = () => {
-    if (window.confirm("Are you sure you want to delete this posting? This cannot be undone.")) {
-      deleteMutation.mutate();
+    if (!confirmDelete) {
+      setConfirmDelete(true);
+      return;
     }
+    deleteMutation.mutate();
   };
 
   if (isLoading) {
@@ -161,6 +165,7 @@ export default function EditPosting() {
             <div className="space-y-2">
               <Label htmlFor="title">Project Title *</Label>
               <Input id="title" placeholder="e.g. Machine Learning for Climate Prediction" {...register("projectTitle", { required: true })} />
+              {errors.projectTitle && <p className="text-xs text-destructive mt-1">Project title is required</p>}
             </div>
 
             <div className="space-y-2">
@@ -174,6 +179,7 @@ export default function EditPosting() {
                 <option value="PROJECT">Project</option>
                 <option value="POSITION">Position</option>
               </select>
+              {errors.type && <p className="text-xs text-destructive mt-1">Posting type is required</p>}
             </div>
           </div>
 
@@ -185,14 +191,15 @@ export default function EditPosting() {
               className="min-h-[140px]"
               {...register("description", { required: true })}
             />
+            {errors.description && <p className="text-xs text-destructive mt-1">Description is required</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            
 
             <div className="space-y-2">
               <Label htmlFor="positions">Open Positions *</Label>
               <Input id="positions" type="number" min={1} max={20} placeholder="e.g. 3" {...register("openPositions", { required: true, valueAsNumber: true })} />
+              {errors.openPositions && <p className="text-xs text-destructive mt-1">Number of positions is required</p>}
             </div>
           </div>
         </div>
@@ -207,6 +214,7 @@ export default function EditPosting() {
                 <Calendar className="h-3.5 w-3.5" /> Application Deadline *
               </Label>
               <Input id="deadline" type="date" {...register("date", { required: true })} />
+              {errors.date && <p className="text-xs text-destructive mt-1">Application deadline is required</p>}
             </div>
 
             <div className="space-y-2">
@@ -223,6 +231,7 @@ export default function EditPosting() {
                 <option value="On-site">On-site</option>
                 <option value="Hybrid">Hybrid</option>
               </select>
+              {errors.location && <p className="text-xs text-destructive mt-1">Location is required</p>}
             </div>
           </div>
 
@@ -282,15 +291,32 @@ export default function EditPosting() {
           </div>
         </div>
         <div className="flex items-center justify-between">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleDelete}
-            disabled={deleteMutation.isPending}
-            className="border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
-          >
-            {deleteMutation.isPending ? "Deleting..." : "Delete Posting"}
-          </Button>
+          {confirmDelete ? (
+            <div className="flex items-center gap-2">
+              <Button type="button" variant="outline" onClick={() => setConfirmDelete(false)} className="text-muted-foreground">
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => deleteMutation.mutate()}
+                disabled={deleteMutation.isPending}
+                className="border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
+              >
+                {deleteMutation.isPending ? "Deleting..." : "Confirm Delete"}
+              </Button>
+            </div>
+          ) : (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
+              className="border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
+            >
+              Delete Posting
+            </Button>
+          )}
 
           <div className="flex items-center gap-3">
             <Button type="button" variant="outline" onClick={() => navigate(-1)}>

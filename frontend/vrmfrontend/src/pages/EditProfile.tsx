@@ -27,8 +27,6 @@ export default function EditProfile() {
     queryFn: () => api.get("/users/me/profile").then((r) => r.data),
   });
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [headline, setHeadline] = useState("");
   const [location, setLocation] = useState("");
   const [bio, setBio] = useState("");
@@ -43,8 +41,6 @@ export default function EditProfile() {
 
   useEffect(() => {
     if (profile) {
-      setFirstName(profile.firstName ?? "");
-      setLastName(profile.lastName ?? "");
       setHeadline(profile.headline ?? "");
       setLocation(profile.location ?? "");
       setBio(profile.bio ?? "");
@@ -104,8 +100,6 @@ export default function EditProfile() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     mutation.mutate({
-      firstName,
-      lastName,
       headline,
       bio,
       location,
@@ -137,17 +131,6 @@ export default function EditProfile() {
         {/* Personal Info */}
         <div className="vrmm-card p-6 space-y-5">
           <h2 className="font-semibold text-lg">Personal Information</h2>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="firstName">First Name *</Label>
-              <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name *</Label>
-              <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
-            </div>
-          </div>
 
           <div className="space-y-2">
             <Label htmlFor="headline">Headline</Label>

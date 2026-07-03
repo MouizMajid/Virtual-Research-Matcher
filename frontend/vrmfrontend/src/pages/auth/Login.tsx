@@ -59,7 +59,7 @@ export default function Login() {
     setResendStatus("sending");
     const email = getValues("email");
     try {
-      await api.post(`/auth/resend?email=${encodeURIComponent(email)}`);
+      await api.post('/auth/resend', { email });
       setResendStatus("sent");
       setTimeout(() => {
         navigate("/email-verification", { state: { email, fromAuth: true } });

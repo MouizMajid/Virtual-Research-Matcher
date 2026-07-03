@@ -4,6 +4,7 @@ import { useState } from "react";
 import api from "../lib/api";
 import { toast } from "sonner";
 import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
 
 type PasswordFormFields = {
@@ -66,7 +67,7 @@ export default function SettingsPage() {
         </div>
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-1.5">
-            <label className="block text-sm font-medium">Current Password</label>
+            <Label>Current Password</Label>
             <div className="relative">
               <Input
                 {...register("currentPassword", { required: "Current password is required" })}
@@ -81,7 +82,7 @@ export default function SettingsPage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-sm font-medium">New Password</label>
+            <Label>New Password</Label>
             <div className="relative">
               <Input
                 {...register("newPassword", {
@@ -99,7 +100,7 @@ export default function SettingsPage() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-sm font-medium">Confirm New Password</label>
+            <Label>Confirm New Password</Label>
             <div className="relative">
               <Input
                 {...register("confirmPassword", {

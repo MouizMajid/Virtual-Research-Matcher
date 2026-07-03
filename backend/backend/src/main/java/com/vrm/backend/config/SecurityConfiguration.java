@@ -47,6 +47,8 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.DELETE, "/postings/**").hasRole("RESEARCHER")
                     .requestMatchers(HttpMethod.PUT, "/postings/**").hasRole("RESEARCHER")
                     .requestMatchers(HttpMethod.GET, "/postings").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/postings/my").hasRole("RESEARCHER")
+                    .requestMatchers(HttpMethod.GET, "/postings/researcherpostings/**").authenticated()
                     .requestMatchers(HttpMethod.GET, "/postings/**").permitAll()
 
                     .requestMatchers(HttpMethod.POST, "/applications").hasRole("STUDENT")

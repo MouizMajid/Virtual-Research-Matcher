@@ -47,9 +47,7 @@ public class ApplicationService {
         if (!posting.getCreatedBy().getId().equals(user.getId())) {
             throw new RuntimeException("You can only view applications for your own postings");
         }
-        return applicationRepository.findAll().stream()
-            .filter(app -> app.getPosting().getId().equals(posting.getId()))
-            .toList();
+        return applicationRepository.findByPostingId(posting.getId());
     }
     
     public List<Posting> getPostingsAppliedTo(User applicant) {
@@ -92,22 +90,6 @@ public class ApplicationService {
         return applicationRepository.save(application);
     }
 
-    public Application updateApplication(Long id, ApplicationDto dto, User applicant) {
-        Application application = getApplicationById(id);
-        if (!application.getApplicant().getId().equals(applicant.getId())) {
-            throw new RuntimeException("You can only update your own applications");
-        }
-        if (application.getStatus() != Application.Status.PENDING) {
-            throw new RuntimeException("Only pending applications can be updated");
-        }
-
-        application.setCoverLetter(dto.getCoverLetter());
-        application.setWhy(dto.getWhy());
-        application.setExperience(dto.getExperience());
-
-        return applicationRepository.save(application);
-    }
-
     public Application updateApplicationStatus(Long id, Application.Status status, User researcher) {
         Application application = getApplicationById(id);
         if (!application.getPosting().getCreatedBy().getId().equals(researcher.getId())) {
@@ -116,20 +98,5 @@ public class ApplicationService {
         application.setStatus(status);
         return applicationRepository.save(application);
     }
-
-    public void deleteApplication(Long id, User applicant) {
-        Application application = getApplicationById(id);
-        if (!application.getApplicant().getId().equals(applicant.getId())) {
-            throw new RuntimeException("You can only delete your own applications");
-        }
-        if (application.getStatus() != Application.Status.PENDING) {
-            throw new RuntimeException("Only pending applications can be deleted");
-        }
-        applicationRepository.delete(application);
-    }
-
-    
-
-    
 
 }

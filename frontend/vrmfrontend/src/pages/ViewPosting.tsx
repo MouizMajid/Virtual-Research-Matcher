@@ -55,7 +55,7 @@ export default function ViewPosting() {
   }
 
   const status = isOpen(posting.applicationDeadline) ? "open" : "closed";
-  const initials = `${posting.createdByUser.split(' ')[0].charAt(0)}${posting.createdByUser.split(' ')[1].charAt(0)}`.toUpperCase();
+  const initials = `${posting.createdByUser.split(' ')[0]?.charAt(0) ?? ''}${posting.createdByUser.split(' ')[1]?.charAt(0) ?? ''}`.toUpperCase();
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">

@@ -29,7 +29,7 @@ export default function CreatePosting() {
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
 
-  const { register, handleSubmit } = useForm<FormFields>();
+  const { register, handleSubmit, formState: { errors } } = useForm<FormFields>();
 
   const addTag = () => {
     const trimmed = tagInput.trim();
@@ -101,6 +101,7 @@ export default function CreatePosting() {
             <div className="space-y-2">
               <Label htmlFor="title">Project Title *</Label>
               <Input id="title" placeholder="e.g. Machine Learning for Climate Prediction" {...register("projectTitle", { required: true })} />
+              {errors.projectTitle && <p className="text-xs text-destructive mt-1">Project title is required</p>}
             </div>
 
             <div className="space-y-2">
@@ -114,6 +115,7 @@ export default function CreatePosting() {
                 <option value="PROJECT">Project</option>
                 <option value="POSITION">Position</option>
               </select>
+              {errors.type && <p className="text-xs text-destructive mt-1">Posting type is required</p>}
             </div>
           </div>
 
@@ -125,6 +127,7 @@ export default function CreatePosting() {
               className="min-h-[140px]"
               {...register("description", { required: true })}
             />
+            {errors.description && <p className="text-xs text-destructive mt-1">Description is required</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -132,6 +135,7 @@ export default function CreatePosting() {
             <div className="space-y-2">
               <Label htmlFor="positions">Open Positions *</Label>
               <Input id="positions" type="number" min={1} max={20} placeholder="e.g. 3" {...register("openPositions", { required: true, valueAsNumber: true })} />
+              {errors.openPositions && <p className="text-xs text-destructive mt-1">Number of positions is required</p>}
             </div>
           </div>
         </div>
@@ -146,6 +150,7 @@ export default function CreatePosting() {
                 <Calendar className="h-3.5 w-3.5" /> Application Deadline *
               </Label>
               <Input id="deadline" type="date" {...register("date", { required: true })} />
+              {errors.date && <p className="text-xs text-destructive mt-1">Application deadline is required</p>}
             </div>
 
             <div className="space-y-2">
@@ -162,6 +167,7 @@ export default function CreatePosting() {
                 <option value="On-site">On-site</option>
                 <option value="Hybrid">Hybrid</option>
               </select>
+              {errors.location && <p className="text-xs text-destructive mt-1">Location is required</p>}
             </div>
           </div>
 

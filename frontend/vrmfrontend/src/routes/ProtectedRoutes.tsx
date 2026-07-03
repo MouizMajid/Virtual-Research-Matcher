@@ -14,7 +14,7 @@ export function ProtectedRoute({ roles }: RoleGuardProps) {
   }
 
   // Role restriction
-  if (roles && role && !roles.includes(role)) {
+  if (roles && (!role || !roles.includes(role))) {
     return <Navigate to="/" replace />;
   }
 

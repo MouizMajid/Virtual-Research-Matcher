@@ -1,7 +1,6 @@
 package com.vrm.backend.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vrm.backend.dto.ApplicationDto;
+import com.vrm.backend.dto.StatusUpdateDto;
 import com.vrm.backend.model.Application;
 import com.vrm.backend.model.Posting;
 import com.vrm.backend.model.User;
@@ -93,10 +93,10 @@ public class ApplicationController {
     @PatchMapping("/{id}/status")
     public ResponseEntity<ApplicationResponse> updateApplicationStatus(
         @PathVariable Long id,
-        @RequestBody Map<String, String> body
+        @Valid @RequestBody StatusUpdateDto body
     ) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Application.Status status = Application.Status.valueOf(body.get("status"));
+        Application.Status status = Application.Status.valueOf(body.getStatus());
         Application updated = applicationService.updateApplicationStatus(id, status, user);
         return ResponseEntity.ok(new ApplicationResponse(updated));
     }

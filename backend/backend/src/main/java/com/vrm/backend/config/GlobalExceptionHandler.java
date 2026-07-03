@@ -25,7 +25,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException(RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        String message = e.getMessage();
+        return ResponseEntity.badRequest().body(message != null ? message : "An error occurred");
     }
 
     @ExceptionHandler(Exception.class)

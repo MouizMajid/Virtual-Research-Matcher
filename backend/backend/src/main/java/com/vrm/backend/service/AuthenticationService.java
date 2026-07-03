@@ -2,7 +2,7 @@ package com.vrm.backend.service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Random;
+import java.security.SecureRandom;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -240,8 +240,8 @@ public class AuthenticationService {
     }
 
     public String generateVerificationCode() {
-        Random random = new Random();
-        int code = random.nextInt(900000) + 100000; // Generate a random 6-digit code
+        SecureRandom random = new SecureRandom();
+        int code = random.nextInt(900000) + 100000;
         return String.valueOf(code);
     }
 }

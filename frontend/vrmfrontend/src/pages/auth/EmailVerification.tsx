@@ -35,15 +35,16 @@ export default function EmailVerification() {
     try {
       await api.post("/auth/verify", { email: email, verificationCode: formdata.code });
       navigate("/login", { replace: true });
-    }catch (error) {
-      setError("code", { message: "Failed to verify email" });
+    } catch (error: any) {
+      const message = error?.response?.data;
+      setError("code", { message: typeof message === "string" ? message : "Failed to verify email" });
     }
   };
 
   const handleResend = async () => {
     setResendStatus("sending");
     try {
-      await api.post(`/auth/resend?email=${encodeURIComponent(email)}`);
+      await api.post('/auth/resend', { email });
       setResendStatus("sent");
     } catch {
       setResendStatus("error");

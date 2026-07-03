@@ -1,6 +1,7 @@
 package com.vrm.backend.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.vrm.backend.dto.UpdateUserInfoDto;
 import com.vrm.backend.model.Experience;
@@ -25,6 +26,7 @@ public class UserInfoService {
         });
     }
 
+    @Transactional
     public UserInfo update(User user, UpdateUserInfoDto dto) {
         UserInfo userInfo = getOrCreate(user);
 

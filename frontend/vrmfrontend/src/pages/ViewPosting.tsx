@@ -5,6 +5,7 @@ import { Button } from "../components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext";
 import api from "../lib/api";
+import { isOpen } from "../lib/postingUtils";
 
 interface Posting {
   id: number;
@@ -26,9 +27,6 @@ interface Application {
   postingId: number;
 }
 
-function isOpen(deadline: string) {
-  return new Date(deadline) >= new Date();
-}
 
 export default function ViewPosting() {
   const { id } = useParams();

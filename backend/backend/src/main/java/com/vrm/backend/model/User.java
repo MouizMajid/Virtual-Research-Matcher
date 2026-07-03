@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Entity;
@@ -44,9 +45,10 @@ public class User implements UserDetails {
     private String email;
 
     // password as well
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
-    
+
 
     @Column(nullable = false)
     private String firstName;
@@ -61,9 +63,11 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private boolean enabled;
 
+    @JsonIgnore
     @Column(name= "verification_code", length = 64)
     private String verificationCode;
 
+    @JsonIgnore
     @Column(name = "verification_expired", length = 64)
     private LocalDateTime verificationExpired;
 

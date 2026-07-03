@@ -2,36 +2,7 @@ import { useParams } from "react-router-dom";
 import { Github, Linkedin, MapPin, ExternalLink, Mail } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import api from "../lib/api";
-
-interface ExperienceItem {
-  id: number;
-  title: string;
-  company: string;
-  beginDate: string;
-  endDate: string;
-  description: string;
-}
-
-interface UserInfoResponse {
-  firstName: string;
-  lastName: string;
-  email: string;
-  headline: string;
-  bio: string;
-  location: string;
-  university: string;
-  department: string;
-  skills: string[];
-  experiences: ExperienceItem[];
-  githubUrl: string;
-  linkedinUrl: string;
-  websiteUrl: string;
-}
-
-function normalizeUrl(url: string): string {
-  if (url.startsWith("http://") || url.startsWith("https://")) return url;
-  return "https://" + url;
-}
+import { normalizeUrl, type UserInfoResponse } from "../lib/profileUtils";
 
 export default function PublicProfile() {
   const { id } = useParams();

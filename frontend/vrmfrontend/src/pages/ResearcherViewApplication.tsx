@@ -2,6 +2,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { StatusBadge } from "../components/StatusBadge";
+import { Button } from "../components/ui/button";
 import api from "../lib/api";
 import { toast } from "sonner";
 
@@ -65,12 +66,9 @@ export default function ResearcherViewApplication() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-      >
+      <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="gap-1.5 text-muted-foreground px-0 hover:bg-transparent hover:text-foreground">
         <ArrowLeft className="h-4 w-4" /> Back
-      </button>
+      </Button>
 
       <div className="flex items-start justify-between">
         <div>
@@ -116,31 +114,36 @@ export default function ResearcherViewApplication() {
       {application.status !== "WITHDRAWN" && (
         <div className="flex items-center justify-end gap-3">
           {!isAccepted && (
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => statusMutation.mutate("ACCEPTED")}
               disabled={statusMutation.isPending}
-              className="rounded bg-emerald-500/10 px-5 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-500/20 transition-colors disabled:opacity-50 dark:text-emerald-400"
+              className="bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20 hover:text-emerald-700 dark:text-emerald-400"
             >
               {statusMutation.isPending ? "Saving..." : "Accept"}
-            </button>
+            </Button>
           )}
           {!isRejected && (
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => statusMutation.mutate("REJECTED")}
               disabled={statusMutation.isPending}
-              className="rounded bg-red-500/10 px-5 py-2 text-sm font-medium text-red-700 hover:bg-red-500/20 transition-colors disabled:opacity-50 dark:text-red-400"
+              className="bg-red-500/10 text-red-700 hover:bg-red-500/20 hover:text-red-700 dark:text-red-400"
             >
               {statusMutation.isPending ? "Saving..." : "Reject"}
-            </button>
+            </Button>
           )}
           {(isAccepted || isRejected) && (
-            <button
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => statusMutation.mutate("PENDING")}
               disabled={statusMutation.isPending}
-              className="rounded border border-border px-5 py-2 text-sm font-medium text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
             >
               {statusMutation.isPending ? "Saving..." : "Reset to Pending"}
-            </button>
+            </Button>
           )}
         </div>
       )}

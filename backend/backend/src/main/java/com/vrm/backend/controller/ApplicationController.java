@@ -21,6 +21,8 @@ import com.vrm.backend.responses.ApplicationResponse;
 import com.vrm.backend.service.ApplicationService;
 import com.vrm.backend.service.PostingService;
 
+import jakarta.validation.Valid;
+
 
 @RequestMapping("/applications")
 @RestController
@@ -40,7 +42,7 @@ public class ApplicationController {
 
     
     @PostMapping
-    public ResponseEntity<ApplicationResponse> createApplication(@RequestBody ApplicationDto applicationDto) {
+    public ResponseEntity<ApplicationResponse> createApplication(@Valid @RequestBody ApplicationDto applicationDto) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Application app = applicationService.createApplication(applicationDto, user);
         return ResponseEntity.ok(new ApplicationResponse(app));

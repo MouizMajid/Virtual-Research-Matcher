@@ -20,10 +20,6 @@ const researcherLinks = [
   { to: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
-interface DashboardSidebarProps {
-  role?: "student" | "researcher";
-}
-
 export function DashboardSidebar() {
   const { user, role, logout } = useAuth();
   const location = useLocation();

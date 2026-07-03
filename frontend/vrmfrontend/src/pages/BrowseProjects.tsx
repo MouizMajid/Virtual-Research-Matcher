@@ -3,6 +3,8 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import { ProjectCard } from "../components/ProjectCard";
 import { useQuery } from "@tanstack/react-query";
 import api from "../lib/api";
+import { Input } from "../components/ui/input";
+import { isOpen } from "../lib/postingUtils";
 
 interface Posting {
   id: number;
@@ -18,10 +20,6 @@ interface Posting {
 const locationFilters = ["Remote", "On-site", "Hybrid"];
 const typeFilters = [{ value: "PROJECT", label: "Project" }, { value: "POSITION", label: "Position" }];
 const statusFilters = [{ value: "open", label: "Open" }, { value: "closed", label: "Closed" }];
-
-function isOpen(deadline: string) {
-  return new Date(deadline) >= new Date();
-}
 
 export default function BrowseProjects() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -192,12 +190,12 @@ export default function BrowseProjects() {
         <div className="flex-1">
           <div className="relative mb-6">
             <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
+            <Input
               type="text"
               placeholder="Search projects by title or keyword..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-12 w-full rounded border border-border bg-card pl-11 pr-4 text-sm placeholder:text-muted-foreground transition-colors focus:outline-none focus:border-primary focus:ring-1 focus:ring-ring"
+              className="h-12 pl-11"
             />
           </div>
 

@@ -1,7 +1,5 @@
 package com.vrm.backend.controller;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,11 +14,11 @@ import com.vrm.backend.model.User;
 import com.vrm.backend.service.AuthenticationService;
 import com.vrm.backend.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RequestMapping("/users")
 @RestController
 public class UserController {
-    // the user controller provides endpoints related to user information, such as getting the authenticated user's info or listing all users (for admin purposes) 
-    // it is not used in the application
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
@@ -28,24 +26,18 @@ public class UserController {
         this.userService = userService;
         this.authenticationService = authenticationService;
     }
-    
-    @GetMapping ("/me")
-    public ResponseEntity<User> authenticatedUser(){
+
+    @GetMapping("/me")
+    public ResponseEntity<User> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
         return ResponseEntity.ok(currentUser);
     }
 
     @PatchMapping("/change-password")
-    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDto dto) {
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDto dto) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         authenticationService.changePassword(user, dto.getCurrentPassword(), dto.getNewPassword());
         return ResponseEntity.ok("Password updated successfully");
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<List<User>> allUsers(){
-        List <User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
     }
 }

@@ -5,6 +5,7 @@ import { StatusBadge } from "../components/StatusBadge";
 import { Button } from "../components/ui/button";
 import { useQuery, useQueries } from "@tanstack/react-query";
 import api from "../lib/api";
+import { isOpen } from "../lib/postingUtils";
 
 interface Posting {
   id: number;
@@ -19,10 +20,6 @@ interface ApplicationResponse {
   postingTitle: string;
   createdAt: string;
   status: string;
-}
-
-function isOpen(deadline: string) {
-  return new Date(deadline) >= new Date();
 }
 
 export default function ResearcherDashboard() {

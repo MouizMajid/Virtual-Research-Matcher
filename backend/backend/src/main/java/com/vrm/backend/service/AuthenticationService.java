@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,19 +21,31 @@ import jakarta.mail.MessagingException;
 
 @Service
 public class AuthenticationService {
+    private static final String PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[!@#$%^&*]).{6,}$";
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
     private final AuthenticationManager authenticationManager;
-
     private final EmailService emailService;
-    
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager, EmailService emailService) {
+    private final String frontendUrl;
+
+    public AuthenticationService(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            AuthenticationManager authenticationManager,
+            EmailService emailService,
+            @Value("${app.frontend-url}") String frontendUrl) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.emailService = emailService;
+        this.frontendUrl = frontendUrl;
+    }
+
+    private void validatePasswordStrength(String password) {
+        if (password == null || !password.matches(PASSWORD_PATTERN)) {
+            throw new RuntimeException("Password must be at least 6 characters and contain an uppercase letter and a special character (!@#$%^&*)");
+        }
     }
 
     public User signup(RegisterUserDto input){
@@ -153,6 +166,7 @@ public class AuthenticationService {
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             throw new RuntimeException("Current password is incorrect");
         }
+        validatePasswordStrength(newPassword);
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
@@ -179,6 +193,7 @@ public class AuthenticationService {
         if (user.getVerificationExpired().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("Reset link has expired");
         }
+        validatePasswordStrength(newPassword);
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setVerificationCode(null);
         user.setVerificationExpired(null);
@@ -187,7 +202,7 @@ public class AuthenticationService {
 
     public void sendPasswordResetEmail(User user, String token) {
         String subject = "Reset your VRMM password";
-        String resetLink = "http://localhost:5173/reset-password?token=" + token;
+        String resetLink = frontendUrl + "/reset-password?token=" + token;
         String htmlMessage = "<!DOCTYPE html><html><head><meta charset='UTF-8'></head>"
             + "<body style='margin:0;padding:0;background-color:#f3f4f8;font-family:Arial,sans-serif;'>"
             + "<table width='100%' cellpadding='0' cellspacing='0' border='0' style='background-color:#f3f4f8;padding:40px 0;'>"

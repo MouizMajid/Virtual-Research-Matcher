@@ -28,7 +28,6 @@ import EmailVerification from "./pages/auth/EmailVerification";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
 
-// import { Login, Register, EmailVerification, ForgotPassword, ResetPassword } from "./pages/auth/AuthPages";
 import NotFound from "./pages/NotFound";
 import CreatePosting from "./pages/CreatePosting";
 import { ProtectedRoute } from "./routes/ProtectedRoutes";
@@ -49,7 +48,6 @@ const App = () => {
           <Route element={<PublicLayout />}>
             <Route path="/" element={<Landing />} />
             <Route path="/public-browse" element={<BrowseProjects />} />
-            <Route path="/about" element={<Landing />} />
           </Route>
 
           {/* Auth routes */}
@@ -103,5 +101,3 @@ const App = () => {
 };
 
 export default App;
-
-

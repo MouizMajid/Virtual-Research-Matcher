@@ -20,6 +20,8 @@ import com.vrm.backend.responses.PostingResponse;
 import com.vrm.backend.service.PostingService;
 import com.vrm.backend.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RequestMapping("/postings")
 @RestController
 public class PostingController {
@@ -32,7 +34,7 @@ public class PostingController {
     }
 
     @PostMapping
-    public ResponseEntity<PostingResponse> createPosting(@RequestBody CreatePostingDto createPostingDto) {
+    public ResponseEntity<PostingResponse> createPosting(@Valid @RequestBody CreatePostingDto createPostingDto) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Posting createdPosting = postingService.createPosting(createPostingDto, user);
         return ResponseEntity.ok(new PostingResponse(createdPosting));
@@ -74,7 +76,7 @@ public class PostingController {
     @PutMapping("/{id}")
     public ResponseEntity<PostingResponse> updatePosting(
         @PathVariable Long id,
-        @RequestBody CreatePostingDto updateDto
+        @Valid @RequestBody CreatePostingDto updateDto
     ) {
         User currentUser = (User) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();

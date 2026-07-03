@@ -4,15 +4,12 @@ import { Button } from "../components/ui/button";
 import { Plus, Eye, Users, Pencil } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import api from "../lib/api";
+import { isOpen } from "../lib/postingUtils";
 
 interface Posting {
   id: number;
   title: string;
   applicationDeadline: string;
-}
-
-function getStatus(deadline: string): "open" | "closed" {
-  return new Date(deadline) >= new Date() ? "open" : "closed";
 }
 
 export default function MyPostings() {
@@ -55,7 +52,7 @@ export default function MyPostings() {
                 [...postings].sort((a, b) => new Date(a.applicationDeadline).getTime() - new Date(b.applicationDeadline).getTime()).map((p) => (
                   <tr key={p.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
                     <td className="px-4 py-3 font-medium">{p.title}</td>
-                    <td className="px-4 py-3"><StatusBadge status={getStatus(p.applicationDeadline)} /></td>
+                    <td className="px-4 py-3"><StatusBadge status={isOpen(p.applicationDeadline) ? "open" : "closed"} /></td>
                     <td className="px-4 py-3 text-muted-foreground">{p.applicationDeadline}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">

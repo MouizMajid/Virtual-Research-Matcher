@@ -17,6 +17,8 @@ import com.vrm.backend.responses.UserInfoResponse;
 import com.vrm.backend.service.UserInfoService;
 import com.vrm.backend.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/users")
 public class UserInfoController {
@@ -37,7 +39,7 @@ public class UserInfoController {
     }
 
     @PutMapping("/me/profile")
-    public ResponseEntity<UserInfoResponse> updateProfile(@RequestBody UpdateUserInfoDto dto) {
+    public ResponseEntity<UserInfoResponse> updateProfile(@Valid @RequestBody UpdateUserInfoDto dto) {
         User currentUser = getCurrentUser();
         UserInfo updated = userInfoService.update(currentUser, dto);
         return ResponseEntity.ok(new UserInfoResponse(updated));

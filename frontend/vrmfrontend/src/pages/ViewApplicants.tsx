@@ -1,6 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { StatusBadge } from "../components/StatusBadge";
+import { Button } from "../components/ui/button";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../lib/api";
 import { toast } from "sonner";
@@ -99,20 +100,24 @@ export default function ViewApplicants() {
                       <div className="flex items-center gap-2">
                         {a.status === "PENDING" && (
                           <>
-                            <button
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               onClick={() => statusMutation.mutate({ appId: a.id, status: "ACCEPTED" })}
                               disabled={statusMutation.isPending}
-                              className="rounded bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-500/20 transition-colors disabled:opacity-50 dark:text-emerald-400"
+                              className="h-7 px-3 text-xs bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20 hover:text-emerald-700 dark:text-emerald-400"
                             >
                               Accept
-                            </button>
-                            <button
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               onClick={() => statusMutation.mutate({ appId: a.id, status: "REJECTED" })}
                               disabled={statusMutation.isPending}
-                              className="rounded bg-red-500/10 px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-500/20 transition-colors disabled:opacity-50 dark:text-red-400"
+                              className="h-7 px-3 text-xs bg-red-500/10 text-red-700 hover:bg-red-500/20 hover:text-red-700 dark:text-red-400"
                             >
                               Reject
-                            </button>
+                            </Button>
                           </>
                         )}
                         {a.status !== "PENDING" && (

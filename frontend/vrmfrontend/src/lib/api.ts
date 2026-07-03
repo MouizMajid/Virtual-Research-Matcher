@@ -2,7 +2,7 @@ import axios from "axios";
 
 // 1. create a custom axios instance
 const api = axios.create({
-  baseURL: "http://localhost:8080", 
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 // 2. interceptor — runs before EVERY request automatically

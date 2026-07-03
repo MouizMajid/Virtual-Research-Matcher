@@ -1,5 +1,6 @@
 import { Github, Linkedin, MapPin, ExternalLink, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "../components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import api from "../lib/api";
 
@@ -50,12 +51,12 @@ export default function Profile() {
   return (
     <div className="space-y-6">
       {/* Banner */}
-      <div className="glass-card overflow-hidden">
-        <div className="h-32 gradient-bg" />
+      <div className="vrmm-card overflow-hidden">
+        <div className="h-32 bg-primary" />
         <div className="relative px-8 pb-6">
           <div className="-mt-12 flex items-end justify-between">
             <div className="flex items-end gap-4">
-              <div className="flex h-24 w-24 items-center justify-center rounded-2xl border-4 border-card bg-primary text-2xl font-bold text-primary-foreground">
+              <div className="flex h-24 w-24 items-center justify-center rounded-lg border-4 border-card bg-primary text-2xl font-bold text-primary-foreground">
                 {initials}
               </div>
               <div className="pb-1">
@@ -65,9 +66,9 @@ export default function Profile() {
                 <p className="text-sm text-muted-foreground">{profile?.headline}</p>
               </div>
             </div>
-            <Link to="/dashboard/edit-profile" className="rounded-xl border border-border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors">
-              Edit Profile
-            </Link>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/dashboard/edit-profile">Edit Profile</Link>
+            </Button>
           </div>
         </div>
       </div>
@@ -76,18 +77,18 @@ export default function Profile() {
         {/* Main */}
         <div className="col-span-2 space-y-6">
           {profile?.bio && (
-            <div className="glass-card p-6">
+            <div className="vrmm-card p-6">
               <h2 className="text-lg font-semibold">About</h2>
               <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{profile.bio}</p>
             </div>
           )}
 
           {profile?.skills && profile.skills.length > 0 && (
-            <div className="glass-card p-6">
+            <div className="vrmm-card p-6">
               <h2 className="text-lg font-semibold">Skills</h2>
               <div className="mt-3 flex flex-wrap gap-2">
                 {profile.skills.map((skill) => (
-                  <span key={skill} className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+                  <span key={skill} className="tag-chip">
                     {skill}
                   </span>
                 ))}
@@ -96,7 +97,7 @@ export default function Profile() {
           )}
 
           {profile?.experiences && profile.experiences.length > 0 && (
-            <div className="glass-card p-6">
+            <div className="vrmm-card p-6">
               <h2 className="text-lg font-semibold">Experience</h2>
               <div className="mt-3 space-y-3">
                 {profile.experiences.map((exp) => (
@@ -113,7 +114,7 @@ export default function Profile() {
 
         {/* Sidebar */}
         <div className="space-y-4">
-          <div className="glass-card p-6">
+          <div className="vrmm-card p-6">
             <h3 className="font-semibold">Details</h3>
             <dl className="mt-3 space-y-3 text-sm">
               {profile?.location && (
@@ -130,7 +131,7 @@ export default function Profile() {
           </div>
 
           {(profile?.university || profile?.department) && (
-            <div className="glass-card p-6">
+            <div className="vrmm-card p-6">
               <h3 className="font-semibold">University</h3>
               {profile.university && <p className="mt-2 text-sm text-muted-foreground">{profile.university}</p>}
               {profile.department && <p className="text-xs text-muted-foreground">{profile.department}</p>}
@@ -138,7 +139,7 @@ export default function Profile() {
           )}
 
           {(profile?.githubUrl || profile?.linkedinUrl || profile?.websiteUrl) && (
-            <div className="glass-card p-6">
+            <div className="vrmm-card p-6">
               <h3 className="font-semibold">Links</h3>
               <div className="mt-3 space-y-2">
                 {profile.githubUrl && (

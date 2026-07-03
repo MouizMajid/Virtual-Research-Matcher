@@ -135,7 +135,7 @@ export default function EditProfile() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Personal Info */}
-        <div className="glass-card p-6 space-y-5">
+        <div className="vrmm-card p-6 space-y-5">
           <h2 className="font-semibold text-lg">Personal Information</h2>
 
           <div className="grid grid-cols-2 gap-4">
@@ -172,7 +172,7 @@ export default function EditProfile() {
         </div>
 
         {/* About */}
-        <div className="glass-card p-6 space-y-5">
+        <div className="vrmm-card p-6 space-y-5">
           <h2 className="font-semibold text-lg">About</h2>
           <div className="space-y-2">
             <Label htmlFor="bio">Bio</Label>
@@ -187,7 +187,7 @@ export default function EditProfile() {
         </div>
 
         {/* Skills */}
-        <div className="glass-card p-6 space-y-5">
+        <div className="vrmm-card p-6 space-y-5">
           <h2 className="font-semibold text-lg">Skills</h2>
           <div className="flex gap-2">
             <Input
@@ -203,7 +203,7 @@ export default function EditProfile() {
           {skills.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {skills.map((skill) => (
-                <span key={skill} className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+                <span key={skill} className="tag-chip gap-1">
                   {skill}
                   <button type="button" onClick={() => removeSkill(skill)} className="hover:text-destructive transition-colors">
                     <X className="h-3 w-3" />
@@ -215,7 +215,7 @@ export default function EditProfile() {
         </div>
 
         {/* Experience */}
-        <div className="glass-card p-6 space-y-5">
+        <div className="vrmm-card p-6 space-y-5">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-lg">Experience</h2>
             <Button type="button" variant="outline" size="sm" onClick={addExperience}>
@@ -224,7 +224,7 @@ export default function EditProfile() {
           </div>
 
           {experiences.map((exp) => (
-            <div key={exp.id} className="rounded-xl border border-border p-4 space-y-3 relative">
+            <div key={exp.id} className="vrmm-card p-4 space-y-3 relative">
               <button type="button" onClick={() => removeExperience(exp.id)} className="absolute right-3 top-3 text-muted-foreground hover:text-destructive transition-colors">
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -255,7 +255,7 @@ export default function EditProfile() {
         </div>
 
         {/* Links */}
-        <div className="glass-card p-6 space-y-5">
+        <div className="vrmm-card p-6 space-y-5">
           <h2 className="font-semibold text-lg">Links</h2>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -275,7 +275,7 @@ export default function EditProfile() {
 
         <div className="flex items-center justify-end gap-3">
           <Button type="button" variant="outline" onClick={() => navigate(-1)}>Cancel</Button>
-          <Button type="submit" disabled={mutation.isPending} className="gradient-bg text-primary-foreground">
+          <Button type="submit" disabled={mutation.isPending}>
             {mutation.isPending ? "Saving..." : "Save Changes"}
           </Button>
         </div>

@@ -94,7 +94,7 @@ export default function CreatePosting() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Basic Info */}
-        <div className="glass-card p-6 space-y-5">
+        <div className="vrmm-card p-6 space-y-5">
           <h2 className="font-semibold text-lg">Basic Information</h2>
 
           <div className="grid grid-cols-2 gap-4">
@@ -108,7 +108,7 @@ export default function CreatePosting() {
               <select
                 id="type"
                 {...register("type", { required: true })}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                className="h-10 w-full rounded border border-border bg-card px-3 text-sm text-foreground transition-colors focus:outline-none focus:border-primary focus:ring-1 focus:ring-ring"
               >
                 <option value="">Select type</option>
                 <option value="PROJECT">Project</option>
@@ -137,7 +137,7 @@ export default function CreatePosting() {
         </div>
 
         {/* Details */}
-        <div className="glass-card p-6 space-y-5">
+        <div className="vrmm-card p-6 space-y-5">
           <h2 className="font-semibold text-lg">Project Details</h2>
 
           <div className="grid grid-cols-2 gap-4">
@@ -155,7 +155,7 @@ export default function CreatePosting() {
               <select
                 id="location"
                 {...register("location", { required: true })}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                className="h-10 w-full rounded border border-border bg-card px-3 text-sm text-foreground transition-colors focus:outline-none focus:border-primary focus:ring-1 focus:ring-ring"
               >
                 <option value="">Select location type</option>
                 <option value="Remote">Remote</option>
@@ -177,7 +177,7 @@ export default function CreatePosting() {
         </div>
 
         {/* Tech Stack Tags */}
-        <div className="glass-card p-6 space-y-5">
+        <div className="vrmm-card p-6 space-y-5">
           <h2 className="font-semibold text-lg">Tech Stack & Requirements</h2>
 
           <div className="space-y-2">
@@ -198,7 +198,7 @@ export default function CreatePosting() {
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary"
+                    className="tag-chip gap-1"
                   >
                     {tag}
                     <button type="button" onClick={() => removeTag(tag)} className="hover:text-destructive transition-colors">
@@ -228,7 +228,7 @@ export default function CreatePosting() {
           <Button type="button" variant="outline" onClick={() => navigate(-1)}>
             Cancel
           </Button>
-          <Button type="submit" disabled={createPostingMutation.isPending} className="gradient-bg text-primary-foreground">
+          <Button type="submit" disabled={createPostingMutation.isPending}>
             {createPostingMutation.isPending ? "Publishing..." : "Publish Posting"}
           </Button>
         </div>

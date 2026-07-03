@@ -3,6 +3,8 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useState } from "react";
 import api from "../lib/api";
 import { toast } from "sonner";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
 
 type PasswordFormFields = {
   currentPassword: string;
@@ -57,75 +59,71 @@ export default function SettingsPage() {
       </div>
 
       {/* Password */}
-      <div className="glass-card p-6">
+      <div className="vrmm-card p-6">
         <div className="flex items-center gap-3 mb-4">
           <Shield className="h-5 w-5 text-primary" />
           <h2 className="font-semibold">Change Password</h2>
         </div>
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <label className="block text-sm font-medium mb-1.5">Current Password</label>
+          <div className="space-y-1.5">
+            <label className="block text-sm font-medium">Current Password</label>
             <div className="relative">
-              <input
+              <Input
                 {...register("currentPassword", { required: "Current password is required" })}
                 type={showCurrent ? "text" : "password"}
-                className="h-10 w-full rounded-xl border border-input bg-card px-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                className="pr-10"
               />
               <button type="button" onClick={() => setShowCurrent(!showCurrent)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
                 {showCurrent ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
-            {errors.currentPassword && <p className="ml-1 text-xs text-red-500 mt-1">{errors.currentPassword.message}</p>}
+            {errors.currentPassword && <p className="text-xs text-destructive mt-1">{errors.currentPassword.message}</p>}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1.5">New Password</label>
+          <div className="space-y-1.5">
+            <label className="block text-sm font-medium">New Password</label>
             <div className="relative">
-              <input
+              <Input
                 {...register("newPassword", {
                   required: "New password is required",
                   validate: (value) => PASSWORD_REGEX.test(value) || "Password must meet all requirements"
                 })}
                 type={showNew ? "text" : "password"}
-                className="h-10 w-full rounded-xl border border-input bg-card px-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                className="pr-10"
               />
               <button type="button" onClick={() => setShowNew(!showNew)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
                 {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
-            {errors.newPassword && <p className="ml-1 text-xs text-red-500 mt-1">{errors.newPassword.message}</p>}
+            {errors.newPassword && <p className="text-xs text-destructive mt-1">{errors.newPassword.message}</p>}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1.5">Confirm New Password</label>
+          <div className="space-y-1.5">
+            <label className="block text-sm font-medium">Confirm New Password</label>
             <div className="relative">
-              <input
+              <Input
                 {...register("confirmPassword", {
                   required: "Please confirm your new password",
                   validate: (value) => value === newPassword || "Passwords do not match"
                 })}
                 type={showConfirm ? "text" : "password"}
-                className="h-10 w-full rounded-xl border border-input bg-card px-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                className="pr-10"
               />
               <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
                 {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
-            {errors.confirmPassword && <p className="ml-1 text-xs text-red-500 mt-1">{errors.confirmPassword.message}</p>}
+            {errors.confirmPassword && <p className="text-xs text-destructive mt-1">{errors.confirmPassword.message}</p>}
           </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-all disabled:opacity-50"
-          >
+          <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Updating..." : "Update Password"}
-          </button>
+          </Button>
         </form>
       </div>
 
       {/* Notifications */}
-      <div className="glass-card p-6">
+      <div className="vrmm-card p-6">
         <div className="flex items-center gap-3 mb-4">
           <Bell className="h-5 w-5 text-primary" />
           <h2 className="font-semibold">Notifications</h2>
@@ -151,7 +149,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Theme */}
-      <div className="glass-card p-6">
+      <div className="vrmm-card p-6">
         <div className="flex items-center gap-3 mb-4">
           <Moon className="h-5 w-5 text-primary" />
           <h2 className="font-semibold">Appearance</h2>
@@ -160,15 +158,18 @@ export default function SettingsPage() {
       </div>
 
       {/* Danger Zone */}
-      <div className="rounded-xl border-2 border-destructive/30 p-6">
+      <div className="rounded-lg border-2 border-destructive/30 p-6">
         <div className="flex items-center gap-3 mb-4">
           <Trash2 className="h-5 w-5 text-destructive" />
           <h2 className="font-semibold text-destructive">Danger Zone</h2>
         </div>
         <p className="text-sm text-muted-foreground">Permanently delete your account and all associated data. This action cannot be undone.</p>
-        <button className="mt-4 rounded-xl border border-destructive bg-destructive/10 px-4 py-2.5 text-sm font-semibold text-destructive hover:bg-destructive/20 transition-colors">
+        <Button
+          variant="outline"
+          className="mt-4 border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
+        >
           Delete Account
-        </button>
+        </Button>
       </div>
     </div>
   );

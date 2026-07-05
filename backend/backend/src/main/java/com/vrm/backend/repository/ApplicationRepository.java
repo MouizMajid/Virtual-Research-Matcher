@@ -11,4 +11,5 @@ import com.vrm.backend.model.Application;
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
     List<Application> findByApplicantId(Long userId);
     List<Application> findByPostingId(Long postingId);
+    void deleteByPostingId(Long postingId);
 }

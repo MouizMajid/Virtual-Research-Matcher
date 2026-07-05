@@ -3,19 +3,23 @@ package com.vrm.backend.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.vrm.backend.dto.CreatePostingDto;
 import com.vrm.backend.model.Posting;
 import com.vrm.backend.model.User;
+import com.vrm.backend.repository.ApplicationRepository;
 import com.vrm.backend.repository.PostingRepository;
 
 @Service
 public class PostingService {
-    
-    private final PostingRepository postingRepository;
 
-    public PostingService(PostingRepository postingRepository) {
+    private final PostingRepository postingRepository;
+    private final ApplicationRepository applicationRepository;
+
+    public PostingService(PostingRepository postingRepository, ApplicationRepository applicationRepository) {
         this.postingRepository = postingRepository;
+        this.applicationRepository = applicationRepository;
     }
 
     public Posting createPosting(CreatePostingDto input, User user) {
@@ -74,11 +78,13 @@ public class PostingService {
         return postingRepository.save(posting);
     }
 
+    @Transactional
     public void deletePosting(Long id, User user) {
         Posting posting = getPostingById(id);
         if (!posting.getCreatedBy().getId().equals(user.getId())) {
             throw new RuntimeException("Unauthorized");
         }
+        applicationRepository.deleteByPostingId(id);
         postingRepository.deleteById(id);
     }
 

@@ -26,16 +26,16 @@ export function Footer() {
           <div>
             <h4 className="text-sm font-semibold">Resources</h4>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-primary transition-colors">Documentation</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">FAQ</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Support</a></li>
+              <li><Link to="/docs" className="hover:text-primary transition-colors">Documentation</Link></li>
+              <li><Link to="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
+              <li><Link to="/support" className="hover:text-primary transition-colors">Support</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="text-sm font-semibold">Legal</h4>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>
+              <li><Link to="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms" className="hover:text-primary transition-colors">Terms of Service</Link></li>
             </ul>
           </div>
         </div>

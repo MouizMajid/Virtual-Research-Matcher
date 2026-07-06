@@ -28,6 +28,12 @@ import EmailVerification from "./pages/auth/EmailVerification";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
 
+import About from "./pages/About";
+import FAQ from "./pages/FAQ";
+import Support from "./pages/Support";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import Documentation from "./pages/Documentation";
 import NotFound from "./pages/NotFound";
 import CreatePosting from "./pages/CreatePosting";
 import { ProtectedRoute } from "./routes/ProtectedRoutes";
@@ -48,6 +54,12 @@ const App = () => {
           <Route element={<PublicLayout />}>
             <Route path="/" element={<Landing />} />
             <Route path="/public-browse" element={<BrowseProjects />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/docs" element={<Documentation />} />
           </Route>
 
           {/* Auth routes */}

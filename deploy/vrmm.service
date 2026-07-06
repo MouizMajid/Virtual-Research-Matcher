@@ -1,0 +1,21 @@
+[Unit]
+Description=VRMM — Virtual Research Match Maker
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=vrmm
+WorkingDirectory=/opt/vrmm
+
+# Secrets file — chmod 640, owned root:vrmm
+EnvironmentFile=/opt/vrmm/.env
+
+ExecStart=/usr/bin/java -jar /opt/vrmm/app.jar --spring.profiles.active=prod
+
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,4 +1,3 @@
-import { Bell } from "lucide-react";
 import { ThemeToggle } from "../ThemeToggle";
 import { useAuth } from "../../context/AuthContext";
 
@@ -17,13 +16,6 @@ export function DashboardTopbar({ title }: DashboardTopbarProps) {
       </div>
 
       <div className="flex items-center gap-3">
-        
-
-        <button className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-secondary transition-colors hover:bg-muted">
-          <Bell className="h-4 w-4" />
-          <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-primary" />
-        </button>
-
         <ThemeToggle />
 
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">

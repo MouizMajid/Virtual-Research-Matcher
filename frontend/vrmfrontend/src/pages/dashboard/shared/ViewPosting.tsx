@@ -1,11 +1,11 @@
 import { useParams, Link } from "react-router-dom";
 import { Calendar, MapPin, Users, ArrowLeft, ExternalLink, Presentation, BriefcaseBusiness } from "lucide-react";
-import { StatusBadge } from "../components/StatusBadge";
-import { Button } from "../components/ui/button";
+import { StatusBadge } from "../../../components/StatusBadge";
+import { Button } from "../../../components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "../context/AuthContext";
-import api from "../lib/api";
-import { isOpen } from "../lib/postingUtils";
+import { useAuth } from "../../../context/AuthContext";
+import api from "../../../lib/api";
+import { isOpen } from "../../../lib/postingUtils";
 
 interface Posting {
   id: number;

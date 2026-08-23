@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import { Github, Linkedin, MapPin, ExternalLink, Mail } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import api from "../lib/api";
-import { normalizeUrl, type UserInfoResponse } from "../lib/profileUtils";
+import api from "../../../lib/api";
+import { normalizeUrl, type UserInfoResponse } from "../../../lib/profileUtils";
 
 export default function PublicProfile() {
   const { id } = useParams();

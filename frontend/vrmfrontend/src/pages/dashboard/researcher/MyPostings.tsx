@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { StatusBadge } from "../components/StatusBadge";
-import { Button } from "../components/ui/button";
+import { StatusBadge } from "../../../components/StatusBadge";
+import { Button } from "../../../components/ui/button";
 import { Plus, Eye, Users, Pencil } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import api from "../lib/api";
-import { isOpen } from "../lib/postingUtils";
+import api from "../../../lib/api";
+import { isOpen } from "../../../lib/postingUtils";
 
 interface Posting {
   id: number;

@@ -3,7 +3,7 @@ import {
   ArrowRight, BookOpen, Target, Sparkles, GraduationCap, Microscope,
   CheckCircle, Zap,
 } from "lucide-react";
-import { Button } from "../components/ui/button";
+import { Button } from "../../components/ui/button";
 
 const features = [
   { icon: Target, title: "Skill-Based Search", description: "Filter research opportunities by skills, location, type, and deadlines to find exactly the right match." },

@@ -1,10 +1,10 @@
 import { useState, useMemo } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
-import { ProjectCard } from "../components/ProjectCard";
+import { ProjectCard } from "../../../components/ProjectCard";
 import { useQuery } from "@tanstack/react-query";
-import api from "../lib/api";
-import { Input } from "../components/ui/input";
-import { isOpen } from "../lib/postingUtils";
+import api from "../../../lib/api";
+import { Input } from "../../../components/ui/input";
+import { isOpen } from "../../../lib/postingUtils";
 
 interface Posting {
   id: number;

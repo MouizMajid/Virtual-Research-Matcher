@@ -1,11 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FolderOpen, Users, Archive, Clock, Plus } from "lucide-react";
-import { MetricCard } from "../components/MetricCard";
-import { StatusBadge } from "../components/StatusBadge";
-import { Button } from "../components/ui/button";
+import { MetricCard } from "../../../components/MetricCard";
+import { StatusBadge } from "../../../components/StatusBadge";
+import { Button } from "../../../components/ui/button";
 import { useQuery, useQueries } from "@tanstack/react-query";
-import api from "../lib/api";
-import { isOpen } from "../lib/postingUtils";
+import api from "../../../lib/api";
+import { isOpen } from "../../../lib/postingUtils";
 
 interface Posting {
   id: number;

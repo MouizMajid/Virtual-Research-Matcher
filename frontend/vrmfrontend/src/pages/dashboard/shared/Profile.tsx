@@ -1,9 +1,9 @@
 import { Github, Linkedin, MapPin, ExternalLink, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Button } from "../components/ui/button";
+import { Button } from "../../../components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import api from "../lib/api";
-import { normalizeUrl, type UserInfoResponse } from "../lib/profileUtils";
+import api from "../../../lib/api";
+import { normalizeUrl, type UserInfoResponse } from "../../../lib/profileUtils";
 
 export default function Profile() {
   const { data: profile, isLoading } = useQuery<UserInfoResponse>({

@@ -1,9 +1,9 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { StatusBadge } from "../components/StatusBadge";
-import { Button } from "../components/ui/button";
+import { StatusBadge } from "../../../components/StatusBadge";
+import { Button } from "../../../components/ui/button";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import api from "../lib/api";
+import api from "../../../lib/api";
 import { toast } from "sonner";
 
 interface Posting {

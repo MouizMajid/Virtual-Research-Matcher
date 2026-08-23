@@ -5,22 +5,32 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PublicLayout } from "./components/layout/PublicLayout";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
 import { AuthProvider } from "./context/AuthContext";
-import Landing from "./pages/Landing";
-import BrowseProjects from "./pages/BrowseProjects";
-import ViewPosting from "./pages/ViewPosting";
-import ApplicationPage from "./pages/ApplicationPage";
-import StudentDashboard from "./pages/StudentDashboard";
-import ResearcherDashboard from "./pages/ResearcherDashboard";
-import MyApplications from "./pages/MyApplications";
-import ViewApplication from "./pages/ViewApplication";
-import MyPostings from "./pages/MyPostings";
-import ViewApplicants from "./pages/ViewApplicants";
-import ResearcherViewApplication from "./pages/ResearcherViewApplication";
-import EditPosting from "./pages/EditPosting";
-import PublicProfile from "./pages/PublicProfile";
-import Profile from "./pages/Profile";
-import SettingsPage from "./pages/SettingsPage";
-import EditProfile from "./pages/EditProfile";
+import Landing from "./pages/public/Landing";
+import About from "./pages/public/About";
+import FAQ from "./pages/public/FAQ";
+import Support from "./pages/public/Support";
+import PrivacyPolicy from "./pages/public/PrivacyPolicy";
+import TermsOfService from "./pages/public/TermsOfService";
+import Documentation from "./pages/public/Documentation";
+
+import BrowseProjects from "./pages/dashboard/shared/BrowseProjects";
+import ViewPosting from "./pages/dashboard/shared/ViewPosting";
+import Profile from "./pages/dashboard/shared/Profile";
+import EditProfile from "./pages/dashboard/shared/EditProfile";
+import PublicProfile from "./pages/dashboard/shared/PublicProfile";
+import SettingsPage from "./pages/dashboard/shared/SettingsPage";
+
+import StudentDashboard from "./pages/dashboard/student/StudentDashboard";
+import MyApplications from "./pages/dashboard/student/MyApplications";
+import ViewApplication from "./pages/dashboard/student/ViewApplication";
+import ApplicationPage from "./pages/dashboard/student/ApplicationPage";
+
+import ResearcherDashboard from "./pages/dashboard/researcher/ResearcherDashboard";
+import MyPostings from "./pages/dashboard/researcher/MyPostings";
+import CreatePosting from "./pages/dashboard/researcher/CreatePosting";
+import EditPosting from "./pages/dashboard/researcher/EditPosting";
+import ViewApplicants from "./pages/dashboard/researcher/ViewApplicants";
+import ResearcherViewApplication from "./pages/dashboard/researcher/ResearcherViewApplication";
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
@@ -28,14 +38,7 @@ import EmailVerification from "./pages/auth/EmailVerification";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
 
-import About from "./pages/About";
-import FAQ from "./pages/FAQ";
-import Support from "./pages/Support";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsOfService from "./pages/TermsOfService";
-import Documentation from "./pages/Documentation";
 import NotFound from "./pages/NotFound";
-import CreatePosting from "./pages/CreatePosting";
 import { ProtectedRoute } from "./routes/ProtectedRoutes";
 import { useTheme } from "./hooks/useTheme";
 

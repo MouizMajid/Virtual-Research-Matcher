@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus, X, Trash2 } from "lucide-react";
-import { Input } from "../components/ui/input";
-import { Textarea } from "../components/ui/textarea";
-import { Label } from "../components/ui/label";
-import { Button } from "../components/ui/button";
+import { Input } from "../../../components/ui/input";
+import { Textarea } from "../../../components/ui/textarea";
+import { Label } from "../../../components/ui/label";
+import { Button } from "../../../components/ui/button";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import api from "../lib/api";
+import api from "../../../lib/api";
 import { toast } from "sonner";
 
 interface ExperienceEntry {

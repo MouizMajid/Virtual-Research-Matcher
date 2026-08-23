@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Plus, X, Calendar, MapPin } from "lucide-react";
-import { Input } from "../components/ui/input";
-import { Textarea } from "../components/ui/textarea";
-import { Label } from "../components/ui/label.tsx";
-import { Button } from "../components/ui/button";
+import { Input } from "../../../components/ui/input";
+import { Textarea } from "../../../components/ui/textarea";
+import { Label } from "../../../components/ui/label.tsx";
+import { Button } from "../../../components/ui/button";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import api from "../lib/api.ts";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import api from "../../../lib/api.ts";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { toast } from "sonner";
 
@@ -23,13 +23,83 @@ type FormFields = {
   requirements: string;
 };
 
-export default function CreatePosting() {
-  const queryClient = useQueryClient();
+interface PostingDetail {
+  id: number;
+  title: string;
+  type: "PROJECT" | "POSITION";
+  description: string;
+  openPositions: number;
+  applicationDeadline: string;
+  location: string;
+  duration: string;
+  stipend: number;
+  requirements: string;
+  tags: string[];
+}
+
+export default function EditPosting() {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormFields>();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormFields>();
+
+  const { data: posting, isLoading } = useQuery<PostingDetail>({
+    queryKey: ["posting", id],
+    queryFn: () => api.get(`/postings/${id}`).then((r) => r.data),
+    enabled: !!id,
+  });
+
+  useEffect(() => {
+    if (!posting) return;
+    reset({
+      projectTitle: posting.title,
+      type: posting.type,
+      description: posting.description,
+      openPositions: posting.openPositions,
+      date: posting.applicationDeadline,
+      location: posting.location,
+      duration: posting.duration,
+      compensation: posting.stipend,
+      requirements: posting.requirements ?? "",
+    });
+    setTags(posting.tags ?? []);
+  }, [posting, reset]);
+
+  const updateMutation = useMutation({
+    mutationFn: (data: object) => api.put(`/postings/${id}`, data).then((r) => r.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-postings"] });
+      queryClient.invalidateQueries({ queryKey: ["posting", id] });
+      toast.success("Success", {
+        description: "Posting updated successfully.",
+      });
+      navigate("/dashboard/my-postings");
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error("Failed to publish posting", {
+        description: error.response?.data?.message ?? "Something went wrong. Please try again.",
+      });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => api.delete(`/postings/${id}`).then((r) => r.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-postings"] });
+      toast.success("Posting deleted", {
+        description: "Your posting has been permanently removed.",
+      });
+      navigate("/dashboard/my-postings");
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error("Failed to delete posting", {
+        description: error.response?.data?.message ?? "Something went wrong. Please try again.",
+      });
+    },
+  });
 
   const addTag = () => {
     const trimmed = tagInput.trim();
@@ -41,40 +111,34 @@ export default function CreatePosting() {
 
   const removeTag = (tag: string) => setTags(tags.filter((t) => t !== tag));
 
-
-  const createPostingMutation = useMutation({
-    mutationFn: (data: object) => api.post("/postings", data).then((r) => r.data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["my-postings"] });
-      queryClient.invalidateQueries({ queryKey: ["postings"] });
-      toast.success("Posting published", {
-        description: "Your research opportunity is now live.",
-      });
-      navigate("/dashboard/my-postings");
-    },
-    onError: (error: AxiosError<{ message: string }>) => {
-      toast.error("Failed to publish posting", {
-        description: error.response?.data?.message ?? "Something went wrong. Please try again.",
-      });
-    },
-  })
-
   const onSubmit: SubmitHandler<FormFields> = (formdata) => {
-    createPostingMutation.mutate({
-        type: formdata.type,
-        title: formdata.projectTitle,
-        description: formdata.description,
-        location: formdata.location,
-        duration: formdata.duration,
-        openPositions: formdata.openPositions,
-        requirements: formdata.requirements,
-        stipend: formdata.compensation,
-        applicationDeadline: formdata.date,
-        tags: tags,
+    updateMutation.mutate({
+      type: formdata.type,
+      title: formdata.projectTitle,
+      description: formdata.description,
+      location: formdata.location,
+      duration: formdata.duration,
+      openPositions: formdata.openPositions,
+      requirements: formdata.requirements,
+      stipend: formdata.compensation,
+      applicationDeadline: formdata.date,
+      tags: tags,
+    });
+  };
+
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const handleDelete = () => {
+    if (!confirmDelete) {
+      setConfirmDelete(true);
+      return;
     }
-    )     
+    deleteMutation.mutate();
+  };
+
+  if (isLoading) {
+    return <div className="py-20 text-center text-muted-foreground">Loading posting...</div>;
   }
- 
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -86,9 +150,9 @@ export default function CreatePosting() {
       </button>
 
       <div>
-        <h1 className="text-2xl font-bold">Create New Posting</h1>
+        <h1 className="text-2xl font-bold">Edit Posting</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Fill in the details below to publish a new research opportunity.
+          Update your research opportunity details below.
         </p>
       </div>
 
@@ -225,18 +289,43 @@ export default function CreatePosting() {
               {...register("requirements")}
             />
           </div>
-
-
         </div>
+        <div className="flex items-center justify-between">
+          {confirmDelete ? (
+            <div className="flex items-center gap-2">
+              <Button type="button" variant="outline" onClick={() => setConfirmDelete(false)} className="text-muted-foreground">
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => deleteMutation.mutate()}
+                disabled={deleteMutation.isPending}
+                className="border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
+              >
+                {deleteMutation.isPending ? "Deleting..." : "Confirm Delete"}
+              </Button>
+            </div>
+          ) : (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
+              className="border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
+            >
+              Delete Posting
+            </Button>
+          )}
 
-        {/* Actions */}
-        <div className="flex items-center justify-end gap-3">
-          <Button type="button" variant="outline" onClick={() => navigate(-1)}>
-            Cancel
-          </Button>
-          <Button type="submit" disabled={createPostingMutation.isPending}>
-            {createPostingMutation.isPending ? "Publishing..." : "Publish Posting"}
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button type="button" variant="outline" onClick={() => navigate(-1)}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={updateMutation.isPending}>
+              {updateMutation.isPending ? "Saving..." : "Save Changes"}
+            </Button>
+          </div>
         </div>
       </form>
     </div>

@@ -27,7 +27,13 @@ export function DashboardSidebar() {
   const links = role === "researcher" ? researcherLinks : studentLinks;
 
   const handleLogout = () => {
-    // Local logout only - CAS single-logout is disabled for now (see below).
+    // Local logout only: clears the JWT and sends the user to the landing page.
+    // A CAS single-logout redirect (ending the campus-wide session too, not just
+    // this app's) was tried and removed - ssocas.uwo.ca rejected the service URL
+    // we passed to /cas/logout with "application not authorized to use CAS".
+    // WTS's domain-wide registration apparently doesn't cover the logout endpoint
+    // the same way it covers login/ticket-validation. Pending a follow-up question
+    // to WTS on what service value IS valid there before revisiting this.
     logout();
     navigate("/");
   };

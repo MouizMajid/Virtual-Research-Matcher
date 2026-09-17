@@ -38,6 +38,8 @@ public class SecurityConfiguration {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(
                 authorize -> authorize
+                    // Covers both /auth/cas/login and /auth/cas/callback - CAS needs to
+                    // reach the callback before the browser has any JWT to authenticate with.
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/postings").hasRole("RESEARCHER")
                     .requestMatchers(HttpMethod.DELETE, "/postings/**").hasRole("RESEARCHER")

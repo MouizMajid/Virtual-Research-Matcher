@@ -62,7 +62,9 @@ const App = () => {
             <Route path="/docs" element={<Documentation />} />
           </Route>
 
-          {/* Auth routes */}
+          {/* Auth routes - CAS SSO only, no self-registration. /login shows the
+              "Sign in with Western" button; /sso-callback is where the backend
+              redirects after CAS auth completes (see SsoCallback.tsx). */}
           <Route path="/login" element={<Login />} />
           <Route path="/sso-callback" element={<SsoCallback />} />
 

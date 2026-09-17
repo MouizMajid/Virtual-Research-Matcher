@@ -60,6 +60,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
+    // Western org-unit code from CAS (e.g. "260170"), not a human-readable name.
+    // Nullable: only populated for users who signed in via CAS.
     @Column(name = "department_number")
     private String departmentNumber;
 

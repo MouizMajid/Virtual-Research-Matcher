@@ -38,6 +38,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+		<!-- CAS SSO client. Only used for Cas30ServiceTicketValidator - deliberately NOT
+		     using Spring Security's own CasAuthenticationFilter, which assumes a
+		     session-based app; this app is stateless JWT, so CasAuthenticationController
+		     drives the validator directly instead. -->
 		<dependency>
 			<groupId>org.apereo.cas.client</groupId>
 			<artifactId>cas-client-core</artifactId>

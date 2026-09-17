@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.apereo.cas.client.validation.Assertion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.vrm.backend.model.User;
@@ -13,6 +15,8 @@ import com.vrm.backend.repository.UserRepository;
 
 @Service
 public class CasAuthenticationService {
+    private static final Logger log = LoggerFactory.getLogger(CasAuthenticationService.class);
+
     private final UserRepository userRepository;
 
     public CasAuthenticationService(UserRepository userRepository) {
@@ -30,6 +34,10 @@ public class CasAuthenticationService {
     // time so an uncertain uwoRole mapping can never silently reassign an existing user.
     public User findOrCreateUser(Assertion assertion) {
         Map<String, Object> attributes = assertion.getPrincipal().getAttributes();
+
+        // TEMPORARY debug logging - remove once attribute shapes (esp. uwoRole) are confirmed.
+        log.info("CAS principal: {}", assertion.getPrincipal().getName());
+        log.info("CAS attributes: {}", attributes);
 
         String email = asString(attributes.get("mail"));
         String firstName = asString(attributes.get("givenName"));

@@ -19,7 +19,7 @@ export function Footer() {
             <h4 className="text-sm font-semibold">Platform</h4>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
               <li><Link to="/public-browse" className="hover:text-primary transition-colors">Browse Projects</Link></li>
-              <li><Link to="/register" className="hover:text-primary transition-colors">Get Started</Link></li>
+              <li><Link to="/login" className="hover:text-primary transition-colors">Get Started</Link></li>
               <li><Link to="/about" className="hover:text-primary transition-colors">About</Link></li>
             </ul>
           </div>
@@ -42,9 +42,8 @@ export function Footer() {
         <div className="mt-10 flex items-center justify-between border-t border-border pt-6">
           <p className="text-xs text-muted-foreground">© 2026 Virtual Research Match Maker. All rights reserved.</p>
           <div className="flex items-center gap-3">
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Twitter className="h-4 w-4" /></a>
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Github className="h-4 w-4" /></a>
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Linkedin className="h-4 w-4" /></a>
+            <a href="https://github.com/MouizMajid/Virtual-Research-Matcher" className="text-muted-foreground hover:text-primary transition-colors"><Github className="h-4 w-4" /></a>
+            <a href="https://www.linkedin.com/company/uwofast/" className="text-muted-foreground hover:text-primary transition-colors"><Linkedin className="h-4 w-4" /></a>
           </div>
         </div>
       </div>

@@ -30,11 +30,8 @@ export function PublicNavbar() {
             </Link>
           ))}
           <div className="mx-2 h-5 w-px bg-border" />
-          <Link to="/login" className="rounded px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted">
-            Login
-          </Link>
-          <Link to="/register" className="ml-1 rounded bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
-            Register
+          <Link to="/login" className="ml-1 rounded bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+            Sign In
           </Link>
           <div className="ml-2">
             <ThemeToggle />

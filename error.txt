@@ -1,0 +1,18 @@
+pierce@we-ws07:~$ sudo ufw status verbose
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22                         ALLOW IN    129.100.229.157
+22                         ALLOW IN    129.100.229.240
+22                         ALLOW IN    172.18.174.169
+22                         ALLOW IN    129.100.229.88
+22                         ALLOW IN    72.143.204.40
+22                         ALLOW IN    142.198.122.20
+22                         ALLOW IN    99.231.25.13
+22                         ALLOW IN    129.100.255.34
+22                         ALLOW IN    172.30.0.0/16
+22                         ALLOW IN    99.244.4.65

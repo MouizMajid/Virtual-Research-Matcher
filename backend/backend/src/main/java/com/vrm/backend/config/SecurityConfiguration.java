@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,16 +20,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-    private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final List<String> allowedOrigins;
 
     public SecurityConfiguration(
-        AuthenticationProvider authenticationProvider,
         JwtAuthenticationFilter jwtAuthenticationFilter,
         @Value("${app.cors.allowed-origins}") List<String> allowedOrigins
     ) {
-        this.authenticationProvider = authenticationProvider;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.allowedOrigins = allowedOrigins;
     }
@@ -57,7 +53,6 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.GET, "/applications/**").hasAnyRole("STUDENT", "RESEARCHER")
 
                     .requestMatchers(HttpMethod.GET, "/users/me").hasAnyRole("STUDENT", "RESEARCHER")
-                    .requestMatchers(HttpMethod.PATCH, "/users/change-password").hasAnyRole("STUDENT", "RESEARCHER")
                     .requestMatchers(HttpMethod.GET, "/users/*/profile").hasAnyRole("STUDENT", "RESEARCHER")
                     .requestMatchers(HttpMethod.GET, "/users/me/profile").hasAnyRole("STUDENT", "RESEARCHER")
                     .requestMatchers(HttpMethod.PUT, "/users/me/profile").hasAnyRole("STUDENT", "RESEARCHER")
@@ -66,7 +61,6 @@ public class SecurityConfiguration {
             )
             .sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

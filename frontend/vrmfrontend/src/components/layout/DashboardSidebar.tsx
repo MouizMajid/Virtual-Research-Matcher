@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, Search, FileText, FolderOpen, User, Settings, LogOut, FlaskConical,
 } from "lucide-react";
@@ -23,12 +23,13 @@ const researcherLinks = [
 export function DashboardSidebar() {
   const { user, role, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const links = role === "researcher" ? researcherLinks : studentLinks;
 
   const handleLogout = () => {
+    // Local logout only - CAS single-logout is disabled for now (see below).
     logout();
-    // Also end the campus-wide CAS session, not just the local app token.
-    window.location.href = `${import.meta.env.VITE_CAS_LOGOUT_URL}?service=${encodeURIComponent(window.location.origin)}`;
+    navigate("/");
   };
 
   return (

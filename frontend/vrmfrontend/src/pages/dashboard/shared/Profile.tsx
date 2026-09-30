@@ -103,7 +103,7 @@ export default function Profile() {
 
           {(profile?.university || profile?.department) && (
             <div className="vrmm-card p-6">
-              <h3 className="font-semibold">University</h3>
+              <h3 className="font-semibold">Affiliated College</h3>
               {profile.university && <p className="mt-2 text-sm text-muted-foreground">{profile.university}</p>}
               {profile.department && <p className="text-xs text-muted-foreground">{profile.department}</p>}
             </div>

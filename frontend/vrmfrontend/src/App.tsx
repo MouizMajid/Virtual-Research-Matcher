@@ -37,6 +37,7 @@ import SsoCallback from "./pages/auth/SsoCallback";
 
 import NotFound from "./pages/NotFound";
 import { ProtectedRoute } from "./routes/ProtectedRoutes";
+import { ScrollToTop } from "./components/ScrollToTop";
 import { useTheme } from "./hooks/useTheme";
 
 const queryClient = new QueryClient();
@@ -49,6 +50,7 @@ const App = () => {
     <TooltipProvider>
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           {/* Public routes */}
           <Route element={<PublicLayout />}>

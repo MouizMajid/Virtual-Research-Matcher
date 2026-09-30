@@ -40,10 +40,29 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-10 flex items-center justify-between border-t border-border pt-6">
-          <p className="text-xs text-muted-foreground">© 2026 Virtual Research Match Maker. All rights reserved.</p>
+          <div>
+            <p className="text-xs text-muted-foreground">© 2026 Virtual Research Match Maker. All rights reserved.</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Developed by Mouiz Majid, under the supervision of Dr. Joshua Pearce.
+            </p>
+          </div>
           <div className="flex items-center gap-3">
-            <a href="https://github.com/MouizMajid/Virtual-Research-Matcher" className="text-muted-foreground hover:text-primary transition-colors"><Github className="h-4 w-4" /></a>
-            <a href="https://www.linkedin.com/company/uwofast/" className="text-muted-foreground hover:text-primary transition-colors"><Linkedin className="h-4 w-4" /></a>
+            <a
+              href="https://github.com/MouizMajid/Virtual-Research-Matcher"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Github className="h-4 w-4" />
+            </a>
+            <a
+              href="https://www.linkedin.com/company/uwofast/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Linkedin className="h-4 w-4" />
+            </a>
           </div>
         </div>
       </div>

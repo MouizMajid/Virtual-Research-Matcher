@@ -6,8 +6,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.apereo.cas.client.validation.Assertion;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.vrm.backend.model.User;
@@ -18,8 +16,6 @@ import com.vrm.backend.repository.UserRepository;
 // it just gets a normal User the same way it always did with email/password login.
 @Service
 public class CasAuthenticationService {
-    private static final Logger log = LoggerFactory.getLogger(CasAuthenticationService.class);
-
     private final UserRepository userRepository;
 
     public CasAuthenticationService(UserRepository userRepository) {
@@ -38,21 +34,16 @@ public class CasAuthenticationService {
     // Finds the user by the CAS "mail" attribute, or provisions a new one on first login.
     // Name/department are refreshed from CAS on every login (CAS is the source of truth
     // for those); role is only set once, at creation time, and never overwritten on
-    // later logins - that way an uncertain/changing uwoRole mapping can never silently
-    // reassign someone who already has an account (e.g. flip a RESEARCHER to STUDENT).
+    // later logins - that way a re-login (e.g. a graduating student later picking up a
+    // staff code) can never silently reassign someone who already has an account.
     public User findOrCreateUser(Assertion assertion) {
         Map<String, Object> attributes = assertion.getPrincipal().getAttributes();
-
-        // TEMPORARY debug logging - remove once attribute shapes (esp. uwoRole) are confirmed
-        // with WTS. This logs PII (name/email) on every login, so it shouldn't stay in prod.
-        log.info("CAS principal: {}", assertion.getPrincipal().getName());
-        log.info("CAS attributes: {}", attributes);
 
         String email = asString(attributes.get("mail"));
         String firstName = asString(attributes.get("givenName"));
         String lastName = asString(attributes.get("sn"));
         String departmentNumber = asString(attributes.get("departmentNumber"));
-        String rawRole = asString(attributes.get("uwoRole"));
+        List<String> roleCodes = asStringList(attributes.get("uwoRole"));
 
         if (email == null || email.isBlank()) {
             throw new IllegalStateException("CAS response did not include a mail attribute");
@@ -77,36 +68,51 @@ public class CasAuthenticationService {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setDepartmentNumber(departmentNumber);
-        user.setRole(mapRole(rawRole));
+        user.setRole(mapRole(roleCodes));
         user.setEnabled(true);
         return userRepository.save(user);
     }
 
-    // KNOWN ISSUE (2026-09-17): a real login returned uwoRole=[UGS, STF] - a LIST of
-    // short institutional codes, not a plain word like "student"/"faculty". asString()
-    // below collapses that list down to just its first element ("UGS"), which doesn't
-    // contain any of the substrings checked here, so this currently throws
-    // UnrecognizedRoleException for real users. Waiting on WTS to confirm the full code
-    // legend (what UGS/STF/etc. actually mean, and which should win when someone - like
-    // a student staff member - has more than one at once) before rewriting this properly.
-    private User.Role mapRole(String rawRole) {
-        if (rawRole == null) {
+    // uwoRole -> STUDENT/RESEARCHER, per WTS's confirmed code legend (2026-09-30) and
+    // Mouiz's product decisions on priority when someone holds more than one code at once
+    // (Western has no notion of a "primary" affiliation - that call is entirely ours):
+    //   FAC              -> RESEARCHER (faculty are unambiguously the PI/poster role)
+    //   UGS or GRS       -> STUDENT     (even if STF is also present - WTS confirmed
+    //                                    UGS+STF together just means a TA/student worker,
+    //                                    still fundamentally a student for our purposes)
+    //   STF alone        -> RESEARCHER (postdocs are tagged STF and often run projects;
+    //                                    revisit once real staff-only logins can be
+    //                                    observed in the logs)
+    //   SAP/FOS/GEN/AFF  -> rejected (prospective students, alumni, and generic/affiliate
+    //                                    accounts don't cleanly fit either role)
+    private User.Role mapRole(List<String> roleCodes) {
+        if (roleCodes.isEmpty()) {
             throw new UnrecognizedRoleException("<missing>");
         }
-        String normalized = rawRole.trim().toLowerCase();
-        if (normalized.contains("faculty") || normalized.contains("staff") || normalized.contains("employee")) {
+        if (roleCodes.contains("FAC")) {
             return User.Role.RESEARCHER;
         }
-        if (normalized.contains("student")) {
+        if (roleCodes.contains("UGS") || roleCodes.contains("GRS")) {
             return User.Role.STUDENT;
         }
-        throw new UnrecognizedRoleException(rawRole);
+        if (roleCodes.contains("STF")) {
+            return User.Role.RESEARCHER;
+        }
+        throw new UnrecognizedRoleException(roleCodes.toString());
     }
 
-    // CAS attribute values can come back as a single value or a List (e.g. uwoRole is
-    // multi-valued). We only need one string out of it, so we take the first element -
-    // this is a simplification that loses information for genuinely multi-valued
-    // attributes like uwoRole (see the KNOWN ISSUE above).
+    // Most CAS attributes are single-valued; uwoRole specifically comes back as a List
+    // of short codes (e.g. [UGS, STF]). Handles both shapes so callers don't have to care.
+    private List<String> asStringList(Object value) {
+        if (value == null) {
+            return List.of();
+        }
+        if (value instanceof List<?> list) {
+            return list.stream().map(String::valueOf).toList();
+        }
+        return List.of(String.valueOf(value));
+    }
+
     private String asString(Object value) {
         if (value == null) {
             return null;

@@ -5,7 +5,7 @@ export default function PrivacyPolicy() {
         <div className="max-w-3xl mx-auto">
           <div className="mb-10">
             <h1 className="text-4xl font-bold tracking-tight">Privacy Policy</h1>
-            <p className="mt-2 text-sm text-muted-foreground">Last updated: July 2026</p>
+            <p className="mt-2 text-sm text-muted-foreground">Last updated: September 2026</p>
           </div>
 
           <div className="space-y-8 text-sm text-muted-foreground leading-relaxed">
@@ -74,7 +74,7 @@ export default function PrivacyPolicy() {
               <h2 className="text-base font-semibold text-foreground">Contact</h2>
               <p>
                 Questions about this privacy policy can be directed to{" "}
-                <a href="mailto:support@vrmm.eng.uwo.ca" className="text-primary hover:underline">support@vrmm.eng.uwo.ca</a>.
+                <a href="mailto:mmajid7@uwo.ca" className="text-primary hover:underline">mmajid7@uwo.ca</a>.
               </p>
             </div>
           </div>

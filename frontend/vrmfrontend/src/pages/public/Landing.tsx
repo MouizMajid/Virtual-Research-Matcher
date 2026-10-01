@@ -40,7 +40,7 @@ export default function Landing() {
             </p>
             <div className="mt-8 flex items-center justify-center gap-3">
               <Button asChild size="lg">
-                <Link to="/register">
+                <Link to="/login">
                   Get Started <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
@@ -110,8 +110,8 @@ export default function Landing() {
               Connect with students and researchers at your institution through VRMM.
             </p>
             <Button asChild variant="outline" size="lg" className="mt-6 bg-card text-foreground border-card hover:bg-card/90">
-              <Link to="/register">
-                Create Free Account <ArrowRight className="h-4 w-4" />
+              <Link to="/login">
+                Sign In with Western <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
           </div>

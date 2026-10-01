@@ -27,10 +27,10 @@ export default function Support() {
                   Issues with the VRMM platform itself — broken features, account problems, incorrect postings, or anything application-related.
                 </p>
                 <a
-                  href="mailto:support@vrmm.eng.uwo.ca"
+                  href="mailto:mmajid7@uwo.ca"
                   className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
                 >
-                  support@vrmm.eng.uwo.ca
+                  mmajid7@uwo.ca
                 </a>
               </div>
             </div>

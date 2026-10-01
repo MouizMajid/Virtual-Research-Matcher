@@ -5,9 +5,20 @@ import { Input } from "../../../components/ui/input";
 import { Textarea } from "../../../components/ui/textarea";
 import { Label } from "../../../components/ui/label";
 import { Button } from "../../../components/ui/button";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../../components/ui/select";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../../lib/api";
 import { toast } from "sonner";
+
+// VRMM is Western-only, so "University" is really just which affiliated college the
+// user belongs to. Kept as the same `university` field end to end (state, payload key,
+// DB column) - this is a display-only change, not a data model change.
+const AFFILIATED_COLLEGES = [
+  "Western University (main campus)",
+  "Ivey Business School",
+  "Huron University College",
+  "King's University College",
+];
 
 interface ExperienceEntry {
   id: string;
@@ -139,8 +150,19 @@ export default function EditProfile() {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="university">University</Label>
-              <Input id="university" value={university} onChange={(e) => setUniversity(e.target.value)} placeholder="e.g. MIT" />
+              <Label htmlFor="university">Affiliated College</Label>
+              <Select value={university} onValueChange={setUniversity}>
+                <SelectTrigger id="university">
+                  <SelectValue placeholder="Select your affiliated college" />
+                </SelectTrigger>
+                <SelectContent>
+                  {AFFILIATED_COLLEGES.map((college) => (
+                    <SelectItem key={college} value={college}>
+                      {college}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="department">Department</Label>

@@ -97,7 +97,7 @@ export default function About() {
           <p className="mt-3 text-muted-foreground">Sign in with your Western University account to explore research opportunities.</p>
           <div className="mt-6 flex items-center justify-center gap-3">
             <Button asChild size="lg">
-              <Link to="/register">Get Started <ArrowRight className="h-4 w-4" /></Link>
+              <Link to="/login">Get Started <ArrowRight className="h-4 w-4" /></Link>
             </Button>
             <Button asChild variant="outline" size="lg">
               <Link to="/public-browse">Browse Projects</Link>

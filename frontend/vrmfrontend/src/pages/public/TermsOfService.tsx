@@ -74,7 +74,7 @@ export default function TermsOfService() {
               <h2 className="text-base font-semibold text-foreground">9. Contact</h2>
               <p>
                 Questions about these terms:{" "}
-                <a href="mailto:support@vrmm.eng.uwo.ca" className="text-primary hover:underline">support@vrmm.eng.uwo.ca</a>
+                <a href="mailto:mmajid7@uwo.ca" className="text-primary hover:underline">mmajid7@uwo.ca</a>
               </p>
             </div>
           </div>

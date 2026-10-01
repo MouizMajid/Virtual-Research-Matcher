@@ -33,13 +33,11 @@ import ViewApplicants from "./pages/dashboard/researcher/ViewApplicants";
 import ResearcherViewApplication from "./pages/dashboard/researcher/ResearcherViewApplication";
 
 import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
-import EmailVerification from "./pages/auth/EmailVerification";
-import ForgotPassword from "./pages/auth/ForgotPassword";
-import ResetPassword from "./pages/auth/ResetPassword";
+import SsoCallback from "./pages/auth/SsoCallback";
 
 import NotFound from "./pages/NotFound";
 import { ProtectedRoute } from "./routes/ProtectedRoutes";
+import { ScrollToTop } from "./components/ScrollToTop";
 import { useTheme } from "./hooks/useTheme";
 
 const queryClient = new QueryClient();
@@ -52,6 +50,7 @@ const App = () => {
     <TooltipProvider>
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           {/* Public routes */}
           <Route element={<PublicLayout />}>
@@ -65,12 +64,11 @@ const App = () => {
             <Route path="/docs" element={<Documentation />} />
           </Route>
 
-          {/* Auth routes */}
+          {/* Auth routes - CAS SSO only, no self-registration. /login shows the
+              "Sign in with Western" button; /sso-callback is where the backend
+              redirects after CAS auth completes (see SsoCallback.tsx). */}
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/email-verification" element={<EmailVerification />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/sso-callback" element={<SsoCallback />} />
 
           {/* Logged-in users (any role) */}
           <Route element={<ProtectedRoute />}>

@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { AuthCard } from "./AuthPages";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
+import { clearSessionExpiredNotice, wasSessionExpired } from "../../lib/session";
 
 // Replaces the old email/password form entirely - CAS is now the only way in.
 // This page itself never talks to the backend via Axios; signing in is a plain
@@ -11,6 +13,12 @@ import { Button } from "../../components/ui/button";
 export default function Login() {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const [sessionExpired] = useState(wasSessionExpired);
+
+  // Show the notice once, not every time this page is visited.
+  useEffect(() => {
+    clearSessionExpiredNotice();
+  }, []);
 
   if (isLoggedIn) {
     navigate("/dashboard/profile", { replace: true });
@@ -24,8 +32,12 @@ export default function Login() {
 
   return (
     <AuthCard
-      title="Welcome back"
-      subtitle="Sign in with your Western University account to continue"
+      title={sessionExpired ? "Your session has expired" : "Welcome back"}
+      subtitle={
+        sessionExpired
+          ? "For your security, you're signed out after an hour. Sign in again to pick up where you left off."
+          : "Sign in with your Western University account to continue"
+      }
     >
       <Button className="w-full" onClick={handleSignIn}>
         Sign in with Western

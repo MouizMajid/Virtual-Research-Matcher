@@ -33,7 +33,10 @@ Virtual-Research-Matcher-1/
 │           ├── main/
 │           │   ├── java/com/vrm/backend/
 │           │   │   ├── BackendApplication.java
+│           │   │   ├── exception/
+│           │   │   │   └── ApiException.java
 │           │   │   ├── config/
+│           │   │   │   ├── ApiError.java
 │           │   │   │   ├── ApplicationConfiguration.java
 │           │   │   │   ├── GlobalExceptionHandler.java
 │           │   │   │   ├── JwtAuthenticationFilter.java
@@ -130,8 +133,12 @@ Virtual-Research-Matcher-1/
             │   └── useTheme.ts
             ├── lib/
             │   ├── api.ts
+            │   ├── apiErrors.ts
+            │   ├── postingDraft.ts
+            │   ├── postingLimits.ts
             │   ├── postingUtils.ts
             │   ├── profileUtils.ts
+            │   ├── session.ts
             │   └── utils.ts
             ├── pages/
             │   ├── NotFound.tsx
@@ -233,7 +240,7 @@ Spring configuration and security infrastructure. These classes wire together th
 | File | Purpose |
 |---|---|
 | `ApplicationConfiguration.java` | Defines the `UserDetailsService` bean (loads users from the DB by email) used by `JwtAuthenticationFilter` on every authenticated request. As of the CAS migration, this is all it defines — there's no password-based `AuthenticationManager`/`AuthenticationProvider`/`PasswordEncoder` anymore, since nothing compares passwords; CAS is the only login path and `JwtAuthenticationFilter` builds the `Authentication` object directly from a validated JWT. |
-| `GlobalExceptionHandler.java` | `@ControllerAdvice` class that catches `RuntimeException` globally and returns a structured HTTP error response. Prevents Spring's default HTML error page from reaching the frontend. |
+| `GlobalExceptionHandler.java` | `@RestControllerAdvice` class that turns every exception into a `{"message": "..."}` response (`ApiError.java`) and logs it. Errors we throw on purpose (`exception/ApiException.java`) and validation failures show their message to the user and log one WARN line. Anything else is treated as a bug: it logs at ERROR with a stack trace, and the browser only gets a generic message. |
 | `JwtAuthenticationFilter.java` | `OncePerRequestFilter` that runs on every request. Reads the `Authorization: Bearer <token>` header, validates the JWT via `JWTService`, loads the user from the DB, and sets the `SecurityContextHolder` so Spring Security knows who is making the request. |
 | `SecurityConfiguration.java` | Configures the HTTP security chain: disables CSRF (stateless JWT API), configures CORS allowed origins, sets session management to `STATELESS`, defines which endpoints are public vs. authenticated vs. role-gated (`/auth/**` is `permitAll()`, which covers the CAS login/callback routes too), and registers `JwtAuthenticationFilter` before Spring's built-in auth filter. |
 
@@ -466,7 +473,11 @@ Utility modules and the configured API client.
 
 | File | Purpose |
 |---|---|
-| `api.ts` | Pre-configured Axios instance. Sets `baseURL` from `import.meta.env.VITE_API_URL`. Attaches a request interceptor that reads the JWT from storage and adds `Authorization: Bearer <token>` to every outgoing request automatically. All API calls in the app use this instance. |
+| `api.ts` | Pre-configured Axios instance. Sets `baseURL` from `import.meta.env.VITE_API_URL`. Attaches a request interceptor that reads the JWT from storage and adds `Authorization: Bearer <token>` to every outgoing request automatically. When a request that carried a token gets a 401, it signs the user out, remembers the current page (`session.ts`), and redirects to `/login`. All API calls in the app use this instance. |
+| `apiErrors.ts` | `getApiErrorMessage()` turns a failed request into a sentence to show the user, using the backend's `{"message": "..."}` when there is one. |
+| `session.ts` | Carries the "session expired" notice and the page to return to across the CAS sign-in redirects, using `sessionStorage`. |
+| `postingDraft.ts` | Saves a posting right before it's submitted and keeps it only if the session expired, so `CreatePosting.tsx` and `EditPosting.tsx` can restore it after sign-in. |
+| `postingLimits.ts` | Length limits for the posting forms. Must match the `@Size` limits in `CreatePostingDto.java`. |
 | `postingUtils.ts` | Shared utility for posting status logic. `isOpen(deadline: string): boolean` returns `true` if the deadline date is in the future. Used by both the researcher dashboard and the browse page to determine open/closed badge state. |
 | `profileUtils.ts` | Shared utilities for user profiles. `normalizeUrl(url: string): string` ensures URLs have a protocol prefix (`https://`) so they work as `<a href>` values. Also exports the `UserInfoResponse` TypeScript type shared between `Profile.tsx` and `PublicProfile.tsx`. |
 | `utils.ts` | General utility. Contains `cn(...classes)` — the shadcn/ui class merging helper built on `clsx` and `tailwind-merge`. Used by all UI components to conditionally combine Tailwind class names safely. |

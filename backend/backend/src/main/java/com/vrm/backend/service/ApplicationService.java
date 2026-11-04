@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.vrm.backend.dto.ApplicationDto;
+import com.vrm.backend.exception.ApiException;
 import com.vrm.backend.model.Application;
 import com.vrm.backend.model.Posting;
 import com.vrm.backend.model.User;
@@ -27,7 +28,7 @@ public class ApplicationService {
 
     public Application createApplication(ApplicationDto dto, User applicant) {
         Posting posting = postingRepository.findById(dto.getPostingId())
-            .orElseThrow(() -> new RuntimeException("Posting not found"));
+            .orElseThrow(() -> ApiException.notFound("Posting not found"));
 
         Application application = new Application();
         application.setCoverLetter(dto.getCoverLetter());
@@ -45,11 +46,11 @@ public class ApplicationService {
 
     public List<Application> getApplicationsForPosting(Posting posting, User user) {
         if (!posting.getCreatedBy().getId().equals(user.getId())) {
-            throw new RuntimeException("You can only view applications for your own postings");
+            throw ApiException.forbidden("You can only view applications for your own postings");
         }
         return applicationRepository.findByPostingId(posting.getId());
     }
-    
+
     public List<Posting> getPostingsAppliedTo(User applicant) {
         return applicationRepository.findByApplicantId(applicant.getId()).stream()
             .map(Application::getPosting)
@@ -59,13 +60,13 @@ public class ApplicationService {
 
     public Application getApplicationById(Long id) {
         return applicationRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Application not found"));
+            .orElseThrow(() -> ApiException.notFound("Application not found"));
     }
 
     public Application getApplicationForApplicant(Long id, User applicant) {
         Application application = getApplicationById(id);
         if (!application.getApplicant().getId().equals(applicant.getId())) {
-            throw new RuntimeException("You can only view your own applications");
+            throw ApiException.forbidden("You can only view your own applications");
         }
         return application;
     }
@@ -73,7 +74,7 @@ public class ApplicationService {
     public Application getApplicationForResearcher(Long id, User researcher) {
         Application application = getApplicationById(id);
         if (!application.getPosting().getCreatedBy().getId().equals(researcher.getId())) {
-            throw new RuntimeException("You can only view applications for your own postings");
+            throw ApiException.forbidden("You can only view applications for your own postings");
         }
         return application;
     }
@@ -81,10 +82,10 @@ public class ApplicationService {
     public Application withdrawApplication(Long id, User applicant) {
         Application application = getApplicationById(id);
         if (!application.getApplicant().getId().equals(applicant.getId())) {
-            throw new RuntimeException("You can only withdraw your own applications");
+            throw ApiException.forbidden("You can only withdraw your own applications");
         }
         if (application.getStatus() == Application.Status.WITHDRAWN) {
-            throw new RuntimeException("Application is already withdrawn");
+            throw ApiException.badRequest("Application is already withdrawn");
         }
         application.setStatus(Application.Status.WITHDRAWN);
         return applicationRepository.save(application);
@@ -93,7 +94,7 @@ public class ApplicationService {
     public Application updateApplicationStatus(Long id, Application.Status status, User researcher) {
         Application application = getApplicationById(id);
         if (!application.getPosting().getCreatedBy().getId().equals(researcher.getId())) {
-            throw new RuntimeException("You can only update status for applications on your own postings");
+            throw ApiException.forbidden("You can only update status for applications on your own postings");
         }
         application.setStatus(status);
         return applicationRepository.save(application);

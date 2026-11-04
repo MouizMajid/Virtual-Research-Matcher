@@ -8,6 +8,7 @@ import { Button } from "../../../components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../../components/ui/select";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../../lib/api";
+import { getApiErrorMessage } from "../../../lib/apiErrors";
 import { toast } from "sonner";
 
 // VRMM is Western-only, so "University" is really just which affiliated college the
@@ -83,9 +84,9 @@ export default function EditProfile() {
       });
       navigate("/dashboard/profile");
     },
-    onError: () => {
+    onError: (error) => {
       toast.error("Failed to save profile", {
-        description: "Something went wrong. Please try again.",
+        description: getApiErrorMessage(error),
       });
     },
   });

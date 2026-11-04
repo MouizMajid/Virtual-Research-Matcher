@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { StatusBadge } from "../../../components/StatusBadge";
 import { Button } from "../../../components/ui/button";
 import api from "../../../lib/api";
+import { getApiErrorMessage } from "../../../lib/apiErrors";
 import { toast } from "sonner";
 
 interface ApplicationDetail {
@@ -45,9 +46,9 @@ export default function ResearcherViewApplication() {
       };
       toast.success(messages[status] ?? "Status updated");
     },
-    onError: () => {
+    onError: (error) => {
       toast.error("Failed to update status", {
-        description: "Something went wrong. Please try again.",
+        description: getApiErrorMessage(error),
       });
     },
   });

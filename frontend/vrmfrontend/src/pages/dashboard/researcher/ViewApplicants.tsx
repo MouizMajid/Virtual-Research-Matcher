@@ -4,6 +4,7 @@ import { StatusBadge } from "../../../components/StatusBadge";
 import { Button } from "../../../components/ui/button";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../../lib/api";
+import { getApiErrorMessage } from "../../../lib/apiErrors";
 import { toast } from "sonner";
 
 interface Posting {
@@ -44,9 +45,9 @@ export default function ViewApplicants() {
       queryClient.invalidateQueries({ queryKey: ["posting-applications", id] });
       toast.success(status === "ACCEPTED" ? "Application accepted" : "Application rejected");
     },
-    onError: () => {
+    onError: (error) => {
       toast.error("Failed to update status", {
-        description: "Something went wrong. Please try again.",
+        description: getApiErrorMessage(error),
       });
     },
   });

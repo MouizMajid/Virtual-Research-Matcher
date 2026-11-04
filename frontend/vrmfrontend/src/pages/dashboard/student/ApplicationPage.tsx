@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../../../lib/api";
+import { getApiErrorMessage } from "../../../lib/apiErrors";
 import { toast } from "sonner";
 import { Textarea } from "../../../components/ui/textarea";
 import { Button } from "../../../components/ui/button";
@@ -37,9 +38,9 @@ export default function ApplicationPage() {
       });
       navigate("/dashboard/my-applications");
     },
-    onError: () => {
+    onError: (error) => {
       toast.error("Failed to submit application", {
-        description: "Something went wrong. Please try again.",
+        description: getApiErrorMessage(error),
       });
     },
   });

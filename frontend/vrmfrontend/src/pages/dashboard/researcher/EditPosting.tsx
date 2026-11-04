@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Plus, X, Calendar, MapPin } from "lucide-react";
 import { Input } from "../../../components/ui/input";
@@ -8,8 +8,11 @@ import { Button } from "../../../components/ui/button";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import api from "../../../lib/api.ts";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
 import { toast } from "sonner";
+import { useAuth } from "../../../context/AuthContext";
+import { getApiErrorMessage, isSessionExpiredError } from "../../../lib/apiErrors";
+import { clearPostingDraft, loadPostingDraft, postingDraftKey, savePostingDraft } from "../../../lib/postingDraft";
+import { POSTING_LIMITS } from "../../../lib/postingLimits";
 
 type FormFields = {
   projectTitle: string;
@@ -19,7 +22,7 @@ type FormFields = {
   date: string;
   location: string;
   duration: string;
-  compensation: number;
+  compensation?: number;
   requirements: string;
 };
 
@@ -46,6 +49,12 @@ export default function EditPosting() {
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormFields>();
 
+  const { user } = useAuth();
+  const draftKey = postingDraftKey(user?.id, id);
+  // Their unsaved edits from when their session expired, if any. Used once, in place of
+  // the server's copy, the first time the posting loads.
+  const pendingDraft = useRef(loadPostingDraft<FormFields>(draftKey));
+
   const { data: posting, isLoading } = useQuery<PostingDetail>({
     queryKey: ["posting", id],
     queryFn: () => api.get(`/postings/${id}`).then((r) => r.data),
@@ -54,6 +63,16 @@ export default function EditPosting() {
 
   useEffect(() => {
     if (!posting) return;
+    if (pendingDraft.current) {
+      reset(pendingDraft.current.values);
+      setTags(pendingDraft.current.tags);
+      pendingDraft.current = null;
+      clearPostingDraft(draftKey);
+      toast.info("We restored your edits", {
+        description: "Your session expired before they were saved. Review them and save again.",
+      });
+      return;
+    }
     reset({
       projectTitle: posting.title,
       type: posting.type,
@@ -66,11 +85,12 @@ export default function EditPosting() {
       requirements: posting.requirements ?? "",
     });
     setTags(posting.tags ?? []);
-  }, [posting, reset]);
+  }, [posting, reset, draftKey]);
 
   const updateMutation = useMutation({
     mutationFn: (data: object) => api.put(`/postings/${id}`, data).then((r) => r.data),
     onSuccess: () => {
+      clearPostingDraft(draftKey);
       queryClient.invalidateQueries({ queryKey: ["my-postings"] });
       queryClient.invalidateQueries({ queryKey: ["posting", id] });
       toast.success("Success", {
@@ -78,9 +98,14 @@ export default function EditPosting() {
       });
       navigate("/dashboard/my-postings");
     },
-    onError: (error: AxiosError<{ message: string }>) => {
-      toast.error("Failed to publish posting", {
-        description: error.response?.data?.message ?? "Something went wrong. Please try again.",
+    onError: (error) => {
+      // Any other failure leaves them on this page with the form intact, so the saved
+      // copy isn't needed. An expired session sends them away, so that's when it's kept.
+      if (!isSessionExpiredError(error)) {
+        clearPostingDraft(draftKey);
+      }
+      toast.error("Failed to save changes", {
+        description: getApiErrorMessage(error),
       });
     },
   });
@@ -94,15 +119,23 @@ export default function EditPosting() {
       });
       navigate("/dashboard/my-postings");
     },
-    onError: (error: AxiosError<{ message: string }>) => {
+    onError: (error) => {
       toast.error("Failed to delete posting", {
-        description: error.response?.data?.message ?? "Something went wrong. Please try again.",
+        description: getApiErrorMessage(error),
       });
     },
   });
 
   const addTag = () => {
     const trimmed = tagInput.trim();
+    if (trimmed.length > POSTING_LIMITS.tagLength) {
+      toast.error(`Each tag must be ${POSTING_LIMITS.tagLength} characters or fewer`);
+      return;
+    }
+    if (tags.length >= POSTING_LIMITS.tagCount) {
+      toast.error(`A posting can have at most ${POSTING_LIMITS.tagCount} tags`);
+      return;
+    }
     if (trimmed && !tags.includes(trimmed)) {
       setTags([...tags, trimmed]);
       setTagInput("");
@@ -112,6 +145,7 @@ export default function EditPosting() {
   const removeTag = (tag: string) => setTags(tags.filter((t) => t !== tag));
 
   const onSubmit: SubmitHandler<FormFields> = (formdata) => {
+    savePostingDraft(draftKey, { values: formdata, tags });
     updateMutation.mutate({
       type: formdata.type,
       title: formdata.projectTitle,
@@ -164,8 +198,11 @@ export default function EditPosting() {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="title">Project Title *</Label>
-              <Input id="title" placeholder="e.g. Machine Learning for Climate Prediction" {...register("projectTitle", { required: true })} />
-              {errors.projectTitle && <p className="text-xs text-destructive mt-1">Project title is required</p>}
+              <Input id="title" placeholder="e.g. Machine Learning for Climate Prediction" {...register("projectTitle", {
+                required: "Project title is required",
+                maxLength: { value: POSTING_LIMITS.title, message: `Project title must be ${POSTING_LIMITS.title} characters or fewer` },
+              })} />
+              {errors.projectTitle && <p className="text-xs text-destructive mt-1">{errors.projectTitle.message}</p>}
             </div>
 
             <div className="space-y-2">
@@ -189,9 +226,12 @@ export default function EditPosting() {
               id="description"
               placeholder="Describe the research project, goals, and what the student will work on..."
               className="min-h-[140px]"
-              {...register("description", { required: true })}
+              {...register("description", {
+                required: "Description is required",
+                maxLength: { value: POSTING_LIMITS.description, message: "Description must be 20,000 characters or fewer" },
+              })}
             />
-            {errors.description && <p className="text-xs text-destructive mt-1">Description is required</p>}
+            {errors.description && <p className="text-xs text-destructive mt-1">{errors.description.message}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -237,7 +277,10 @@ export default function EditPosting() {
 
           <div className="space-y-2">
             <Label htmlFor="duration">Duration</Label>
-            <Input id="duration" placeholder="e.g. 6 months, 1 semester" {...register("duration")} />
+            <Input id="duration" placeholder="e.g. 6 months, 1 semester" {...register("duration", {
+              maxLength: { value: POSTING_LIMITS.duration, message: `Duration must be ${POSTING_LIMITS.duration} characters or fewer` },
+            })} />
+            {errors.duration && <p className="text-xs text-destructive mt-1">{errors.duration.message}</p>}
           </div>
 
           <div className="space-y-2">
@@ -286,8 +329,11 @@ export default function EditPosting() {
               id="requirements"
               placeholder="List any required skills, coursework, or experience..."
               className="min-h-[100px]"
-              {...register("requirements")}
+              {...register("requirements", {
+                maxLength: { value: POSTING_LIMITS.requirements, message: "Requirements must be 20,000 characters or fewer" },
+              })}
             />
+            {errors.requirements && <p className="text-xs text-destructive mt-1">{errors.requirements.message}</p>}
           </div>
         </div>
         <div className="flex items-center justify-between">

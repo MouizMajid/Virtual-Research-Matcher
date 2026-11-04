@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 import {jwtDecode} from "jwt-decode";  // npm install jwt-decode
+import { markSessionExpired } from "../lib/session";
 
 // 1. Define the shape of your auth data
 type Role = "student" | "researcher" | null;
@@ -43,6 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       localStorage.removeItem("token");
       sessionStorage.removeItem("token");
+      markSessionExpired();
       return null;
     }
   });

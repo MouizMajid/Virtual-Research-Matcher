@@ -2,6 +2,7 @@ package com.vrm.backend.service;
 
 import org.springframework.stereotype.Service;
 
+import com.vrm.backend.exception.ApiException;
 import com.vrm.backend.model.User;
 import com.vrm.backend.repository.UserRepository;
 
@@ -14,7 +15,8 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElseThrow();
+        return userRepository.findById(id)
+            .orElseThrow(() -> ApiException.notFound("User not found"));
     }
 }
 

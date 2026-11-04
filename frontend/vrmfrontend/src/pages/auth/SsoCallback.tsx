@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { AuthCard } from "./AuthPages";
+import { takeReturnPath } from "../../lib/session";
 
 // Mirrors the error codes CasAuthenticationController.callback() can redirect here with.
 const ERROR_MESSAGES: Record<string, string> = {
@@ -33,7 +34,8 @@ export default function SsoCallback() {
       // Same login() as the old password form used - AuthContext doesn't know or
       // care that this JWT came from CAS instead of a login form.
       login(token, true);
-      navigate("/dashboard/profile", { replace: true });
+      // Back to the page they were on if their session expired, otherwise the default.
+      navigate(takeReturnPath() ?? "/dashboard/profile", { replace: true });
       return;
     }
 

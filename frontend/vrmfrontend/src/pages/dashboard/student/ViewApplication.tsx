@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { StatusBadge } from "../../../components/StatusBadge";
 import { Button } from "../../../components/ui/button";
 import api from "../../../lib/api";
+import { getApiErrorMessage } from "../../../lib/apiErrors";
 import { toast } from "sonner";
 
 interface ApplicationDetail {
@@ -37,9 +38,9 @@ export default function ViewApplication() {
       });
       navigate("/dashboard/student");
     },
-    onError: () => {
+    onError: (error) => {
       toast.error("Failed to withdraw application", {
-        description: "Something went wrong. Please try again.",
+        description: getApiErrorMessage(error),
       });
     },
   });

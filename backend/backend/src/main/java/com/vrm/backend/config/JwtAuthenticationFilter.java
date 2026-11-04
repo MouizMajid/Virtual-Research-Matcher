@@ -11,10 +11,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
 import com.vrm.backend.service.JWTService;
 
+import io.jsonwebtoken.JwtException;
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,6 +32,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
     // user can access protected resources, if an error occurs during this 
     // process, it uses the HandlerExceptionResolver to handle the exception and 
     // return an appropriate response
+
+    // Set when a token was sent but rejected, so the 401 can say "session expired"
+    // instead of "please sign in".
+    public static final String TOKEN_REJECTED_ATTRIBUTE = "vrmm.tokenRejected";
+
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     private final JWTService jwtService;
@@ -62,7 +69,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         }
 
         try {
-            // remove Bearer and get the token
+            // remove Bearer and get the token. A token that's expired, tampered with, or
+            // belongs to a deleted user just means this request isn't logged in: public
+            // endpoints still work, and protected ones get a clean 401 from the
+            // authenticationEntryPoint in SecurityConfiguration.
             final String jwt = authHeader.substring(7);
             // then extract the username (email) from the token using the JWTService
             final String userEmail = jwtService.extractUsername(jwt);
@@ -87,11 +97,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
-            // continue the filter chain to allow the request to reach its destination (such as a controller)
-            filterChain.doFilter(request, response);
+        } catch (JwtException | IllegalArgumentException | UsernameNotFoundException e) {
+            SecurityContextHolder.clearContext();
+            request.setAttribute(TOKEN_REJECTED_ATTRIBUTE, true);
         } catch (Exception e) {
+            // Not a token problem, e.g. the database is down: report it as a real error.
             handlerExceptionResolver.resolveException(request, response, null, e);
+            return;
         }
+
+        // continue the filter chain to allow the request to reach its destination (such as a controller)
+        filterChain.doFilter(request, response);
     }
 
 }

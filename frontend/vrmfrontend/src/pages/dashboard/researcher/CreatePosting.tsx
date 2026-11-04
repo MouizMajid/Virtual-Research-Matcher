@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus, X, Calendar, MapPin } from "lucide-react";
 import { Input } from "../../../components/ui/input";
@@ -8,8 +8,11 @@ import { Button } from "../../../components/ui/button";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import api from "../../../lib/api.ts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
 import { toast } from "sonner";
+import { useAuth } from "../../../context/AuthContext";
+import { getApiErrorMessage, isSessionExpiredError } from "../../../lib/apiErrors";
+import { clearPostingDraft, loadPostingDraft, postingDraftKey, savePostingDraft } from "../../../lib/postingDraft";
+import { POSTING_LIMITS } from "../../../lib/postingLimits";
 
 type FormFields = {
   projectTitle: string;
@@ -19,20 +22,43 @@ type FormFields = {
   date: string;
   location: string;
   duration: string;
-  compensation: number;
+  compensation?: number;
   requirements: string;
 };
 
 export default function CreatePosting() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const [tags, setTags] = useState<string[]>([]);
+  const { user } = useAuth();
+  const draftKey = postingDraftKey(user?.id);
+  // Whatever they were submitting when their session expired, if anything.
+  const [restoredDraft] = useState(() => loadPostingDraft<FormFields>(draftKey));
+  const [tags, setTags] = useState<string[]>(restoredDraft?.tags ?? []);
   const [tagInput, setTagInput] = useState("");
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormFields>();
+  const { register, handleSubmit, formState: { errors } } = useForm<FormFields>({
+    defaultValues: restoredDraft?.values,
+  });
+
+  useEffect(() => {
+    if (restoredDraft) {
+      clearPostingDraft(draftKey);
+      toast.info("We restored your posting", {
+        description: "Your session expired before it was published. Review it and publish again.",
+      });
+    }
+  }, [restoredDraft, draftKey]);
 
   const addTag = () => {
     const trimmed = tagInput.trim();
+    if (trimmed.length > POSTING_LIMITS.tagLength) {
+      toast.error(`Each tag must be ${POSTING_LIMITS.tagLength} characters or fewer`);
+      return;
+    }
+    if (tags.length >= POSTING_LIMITS.tagCount) {
+      toast.error(`A posting can have at most ${POSTING_LIMITS.tagCount} tags`);
+      return;
+    }
     if (trimmed && !tags.includes(trimmed)) {
       setTags([...tags, trimmed]);
       setTagInput("");
@@ -45,6 +71,7 @@ export default function CreatePosting() {
   const createPostingMutation = useMutation({
     mutationFn: (data: object) => api.post("/postings", data).then((r) => r.data),
     onSuccess: () => {
+      clearPostingDraft(draftKey);
       queryClient.invalidateQueries({ queryKey: ["my-postings"] });
       queryClient.invalidateQueries({ queryKey: ["postings"] });
       toast.success("Posting published", {
@@ -52,14 +79,20 @@ export default function CreatePosting() {
       });
       navigate("/dashboard/my-postings");
     },
-    onError: (error: AxiosError<{ message: string }>) => {
+    onError: (error) => {
+      // Any other failure leaves them on this page with the form intact, so the saved
+      // copy isn't needed. An expired session sends them away, so that's when it's kept.
+      if (!isSessionExpiredError(error)) {
+        clearPostingDraft(draftKey);
+      }
       toast.error("Failed to publish posting", {
-        description: error.response?.data?.message ?? "Something went wrong. Please try again.",
+        description: getApiErrorMessage(error),
       });
     },
   })
 
   const onSubmit: SubmitHandler<FormFields> = (formdata) => {
+    savePostingDraft(draftKey, { values: formdata, tags });
     createPostingMutation.mutate({
         type: formdata.type,
         title: formdata.projectTitle,
@@ -100,8 +133,11 @@ export default function CreatePosting() {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="title">Project Title *</Label>
-              <Input id="title" placeholder="e.g. Machine Learning for Climate Prediction" {...register("projectTitle", { required: true })} />
-              {errors.projectTitle && <p className="text-xs text-destructive mt-1">Project title is required</p>}
+              <Input id="title" placeholder="e.g. Machine Learning for Climate Prediction" {...register("projectTitle", {
+                required: "Project title is required",
+                maxLength: { value: POSTING_LIMITS.title, message: `Project title must be ${POSTING_LIMITS.title} characters or fewer` },
+              })} />
+              {errors.projectTitle && <p className="text-xs text-destructive mt-1">{errors.projectTitle.message}</p>}
             </div>
 
             <div className="space-y-2">
@@ -125,9 +161,12 @@ export default function CreatePosting() {
               id="description"
               placeholder="Describe the research project, goals, and what the student will work on..."
               className="min-h-[140px]"
-              {...register("description", { required: true })}
+              {...register("description", {
+                required: "Description is required",
+                maxLength: { value: POSTING_LIMITS.description, message: "Description must be 20,000 characters or fewer" },
+              })}
             />
-            {errors.description && <p className="text-xs text-destructive mt-1">Description is required</p>}
+            {errors.description && <p className="text-xs text-destructive mt-1">{errors.description.message}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -173,7 +212,10 @@ export default function CreatePosting() {
 
           <div className="space-y-2">
             <Label htmlFor="duration">Duration</Label>
-            <Input id="duration" placeholder="e.g. 6 months, 1 semester" {...register("duration")} />
+            <Input id="duration" placeholder="e.g. 6 months, 1 semester" {...register("duration", {
+              maxLength: { value: POSTING_LIMITS.duration, message: `Duration must be ${POSTING_LIMITS.duration} characters or fewer` },
+            })} />
+            {errors.duration && <p className="text-xs text-destructive mt-1">{errors.duration.message}</p>}
           </div>
 
           <div className="space-y-2">
@@ -222,8 +264,11 @@ export default function CreatePosting() {
               id="requirements"
               placeholder="List any required skills, coursework, or experience..."
               className="min-h-[100px]"
-              {...register("requirements")}
+              {...register("requirements", {
+                maxLength: { value: POSTING_LIMITS.requirements, message: "Requirements must be 20,000 characters or fewer" },
+              })}
             />
+            {errors.requirements && <p className="text-xs text-destructive mt-1">{errors.requirements.message}</p>}
           </div>
 
 

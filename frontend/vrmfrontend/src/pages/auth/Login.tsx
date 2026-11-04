@@ -35,7 +35,7 @@ export default function Login() {
       title={sessionExpired ? "Your session has expired" : "Welcome back"}
       subtitle={
         sessionExpired
-          ? "For your security, you're signed out after an hour. Sign in again to pick up where you left off."
+          ? "For your security, you're signed out after 4 hours. Sign in again to pick up where you left off."
           : "Sign in with your Western University account to continue"
       }
     >
